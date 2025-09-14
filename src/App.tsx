@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import InstitutionPage from "./pages/InstitutionPage";
 import CoursePage from "./pages/CoursePage";
 import VideoPlayerPage from "./pages/VideoPlayerPage";
+import AuthPage from "./pages/AuthPage";
+import MyCoursesPage from "./pages/MyCoursesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/institution/:institutionId" element={<InstitutionPage />} />
           <Route path="/course/:courseId" element={<CoursePage />} />
           <Route path="/watch/:courseId" element={<VideoPlayerPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/my-courses" element={<MyCoursesPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

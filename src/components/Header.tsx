@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronDown, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,10 +27,12 @@ const Header = () => {
 
           {/* Left side - Navigation */}
           <div className="flex items-center space-x-4 space-x-reverse">
-            <Button variant="default" className="btn-academic">
-              <User className="w-4 h-4 ml-2" />
-              כניסה למנויים
-            </Button>
+            <Link to="/auth">
+              <Button variant="default" className="btn-academic">
+                <User className="w-4 h-4 ml-2" />
+                כניסה למנויים
+              </Button>
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
