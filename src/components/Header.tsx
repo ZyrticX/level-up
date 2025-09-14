@@ -43,7 +43,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="start" 
-                className="bg-popover border border-border shadow-elegant min-w-[150px]"
+                className="bg-popover border border-border shadow-lg min-w-[150px]"
               >
                 <DropdownMenuItem className="text-right">
                   הגדרות

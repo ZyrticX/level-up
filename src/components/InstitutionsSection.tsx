@@ -72,7 +72,7 @@ const InstitutionsSection = () => {
                 >
                   <div className="text-center">
                     <div className="relative mb-6">
-                      <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-elegant group-hover:shadow-lg transition-all duration-300">
+                      <div className="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                         <IconComponent className="w-10 h-10 text-primary-foreground" />
                       </div>
                     </div>
