@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,35 +10,54 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Academic color palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 27%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Professional blue primary */
+    --primary: 220 91% 51%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 220 91% 95%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Academic purple secondary */
+    --secondary: 259 94% 51%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 259 94% 95%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 182 25% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 182 25% 95%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 91% 51%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Academic gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows for depth */
+    --shadow-elegant: 0 10px 25px -5px hsl(var(--primary) / 0.1), 0 4px 6px -2px hsl(var(--primary) / 0.05);
+    --shadow-card: 0 4px 6px -1px hsl(220 22% 65% / 0.1), 0 2px 4px -1px hsl(220 22% 65% / 0.06);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +121,44 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-hebrew;
+  }
+
+  /* RTL Support for Hebrew */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  .font-hebrew {
+    font-family: 'Assistant', 'Heebo', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Academic button variants */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-secondary text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-elegant hover:shadow-lg transition-all duration-300 hover:scale-105;
+  }
+
+  .btn-academic {
+    @apply bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200;
+  }
+
+  .btn-outline-academic {
+    @apply border-2 border-primary text-primary bg-transparent px-6 py-2.5 rounded-lg font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200;
+  }
+
+  /* Card variants */
+  .card-academic {
+    @apply bg-card border border-border rounded-xl p-6 shadow-card hover:shadow-elegant transition-all duration-300;
+  }
+
+  .card-institution {
+    @apply card-academic hover:scale-105 cursor-pointer bg-gradient-to-br from-background to-muted;
+  }
+
+  /* Text gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }
 }
