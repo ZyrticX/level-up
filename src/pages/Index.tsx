@@ -6,30 +6,6 @@ import levelupLogo from '@/assets/levelup-logo-1.jpg';
 const Index = () => {
   return (
     <div className="min-h-screen bg-background font-sans" dir="rtl">
-      {/* Header */}
-      <header className="bg-background border-b border-border sticky top-0 z-50 shadow-subtle">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Right side - Logo */}
-            <Link to="/" className="flex items-center space-x-3">
-              <img 
-                src={levelupLogo} 
-                alt="LevelUp" 
-                className="h-20 w-auto rounded-md"
-              />
-            </Link>
-
-            {/* Left side - Navigation */}
-            <div className="flex items-center space-x-4 space-x-reverse">
-              <Link to="/auth">
-                <button className="btn-primary">
-                  כניסה למערכת
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="section-hero py-20">
