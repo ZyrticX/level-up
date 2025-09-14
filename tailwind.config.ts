@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        hebrew: ['Assistant', 'Heebo', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Crimson Text', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",

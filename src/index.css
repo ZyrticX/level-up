@@ -1,109 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Heebo:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Professional Academic Design System 
+All colors MUST be HSL. Inspired by top university websites.
 */
 
 @layer base {
   :root {
-    /* Academic color palette */
+    /* Professional Academic Color Palette */
     --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
+    --foreground: 210 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 210 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 210 20% 15%;
 
-    /* Professional blue primary */
-    --primary: 220 91% 51%;
+    /* University Blue - Professional and trustworthy */
+    --primary: 210 85% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 220 91% 95%;
+    --primary-light: 210 85% 95%;
 
-    /* Academic purple secondary */
-    --secondary: 259 94% 51%;
+    /* Academic Grey - Secondary color for balance */
+    --secondary: 210 15% 25%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 259 94% 95%;
+    --secondary-light: 210 15% 95%;
 
-    --muted: 220 13% 95%;
-    --muted-foreground: 220 9% 46%;
+    /* Neutral greys for professional look */
+    --muted: 210 10% 96%;
+    --muted-foreground: 210 10% 45%;
 
-    --accent: 182 25% 50%;
+    --accent: 210 50% 50%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 182 25% 95%;
+    --accent-light: 210 50% 95%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 91% 51%;
+    --border: 210 12% 88%;
+    --input: 210 12% 88%;
+    --ring: 210 85% 45%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Academic gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    /* Professional gradients - subtle and clean */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(210 75% 35%));
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--background)), hsl(var(--muted)));
+    --gradient-section: linear-gradient(180deg, hsl(var(--muted)) 0%, hsl(var(--background)) 100%);
 
-    /* Shadows for depth */
-    --shadow-elegant: 0 10px 25px -5px hsl(var(--primary) / 0.1), 0 4px 6px -2px hsl(var(--primary) / 0.05);
-    --shadow-card: 0 4px 6px -1px hsl(220 22% 65% / 0.1), 0 2px 4px -1px hsl(220 22% 65% / 0.06);
+    /* Subtle shadows for depth */
+    --shadow-subtle: 0 1px 3px 0 hsl(210 20% 15% / 0.1), 0 1px 2px 0 hsl(210 20% 15% / 0.06);
+    --shadow-medium: 0 4px 6px -1px hsl(210 20% 15% / 0.1), 0 2px 4px -1px hsl(210 20% 15% / 0.06);
+    --shadow-large: 0 10px 15px -3px hsl(210 20% 15% / 0.1), 0 4px 6px -2px hsl(210 20% 15% / 0.05);
 
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    /* Professional transitions */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 210 25% 8%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 210 25% 8%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 210 25% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 85% 55%;
+    --primary-foreground: 210 25% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 210 15% 15%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 15% 15%;
+    --muted-foreground: 210 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 210 50% 40%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 65% 45%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 210 15% 20%;
+    --input: 210 15% 20%;
+    --ring: 210 85% 55%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -121,7 +116,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-hebrew;
+    @apply bg-background text-foreground font-sans;
   }
 
   /* RTL Support for Hebrew */
@@ -129,36 +124,80 @@ All colors MUST be HSL.
     direction: rtl;
   }
 
-  .font-hebrew {
-    font-family: 'Assistant', 'Heebo', system-ui, -apple-system, sans-serif;
+  /* Professional Typography */
+  .font-sans {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Crimson Text', Georgia, serif;
+  }
+
+  /* Academic Headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-semibold leading-tight;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
   }
 }
 
 @layer components {
-  /* Academic button variants */
-  .btn-hero {
-    @apply bg-gradient-to-r from-primary to-secondary text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105;
+  /* Professional Button Variants */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium transition-all duration-200 hover:bg-primary/90;
   }
 
-  .btn-academic {
-    @apply bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200;
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium transition-all duration-200 hover:bg-secondary/90;
   }
 
-  .btn-outline-academic {
-    @apply border-2 border-primary text-primary bg-transparent px-6 py-2.5 rounded-lg font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200;
+  .btn-outline {
+    @apply border border-primary text-primary bg-transparent px-6 py-3 rounded-md font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200;
   }
 
-  /* Card variants */
+  /* Professional Card Variants */
   .card-academic {
-    @apply bg-card border border-border rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300;
+    @apply bg-card border border-border rounded-lg shadow-subtle hover:shadow-medium transition-all duration-200;
   }
 
-  .card-institution {
-    @apply card-academic hover:scale-105 cursor-pointer bg-gradient-to-br from-background to-muted;
+  .card-feature {
+    @apply card-academic p-6 text-center;
   }
 
-  /* Text gradients */
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  .card-course {
+    @apply card-academic p-6 hover:scale-105 cursor-pointer bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20;
+  }
+
+  /* Section Styling */
+  .section-hero {
+    @apply bg-gradient-to-br from-primary to-secondary text-white;
+  }
+
+  .section-feature {
+    @apply bg-gradient-to-b from-muted to-background;
+  }
+
+  /* Professional Text Styles */
+  .text-academic {
+    @apply text-foreground leading-relaxed;
+  }
+
+  .text-subtitle {
+    @apply text-muted-foreground text-lg leading-relaxed;
+  }
+
+  /* Badge Styling */
+  .badge-academic {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20;
   }
 }

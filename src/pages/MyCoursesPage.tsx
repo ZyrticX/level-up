@@ -58,19 +58,19 @@ const MyCoursesPage = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8">
-        {/* Large Orange Welcome Section */}
+        {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-gradient-to-l from-orange-500 to-orange-600 text-white p-8 rounded-2xl shadow-lg text-center">
-            <p className="text-xl opacity-90 mb-2">שלום שוב, כיף לראות אותך!</p>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">הקורסים שלי</h1>
-            <p className="text-lg opacity-90">המשך ללמוד מהמקום שעצרת</p>
+          <div className="bg-primary text-white p-8 rounded-lg shadow-medium text-center">
+            <p className="text-lg opacity-90 mb-2">שלום שוב, כיף לראות אותך!</p>
+            <h1 className="text-white mb-2 font-semibold">הקורסים שלי</h1>
+            <p className="text-white/80">המשך ללמוד מהמקום שעצרת</p>
           </div>
         </div>
 
         {/* Courses Section */}
         {userCourses.length > 0 ? (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
+            <h2 className="text-foreground mb-8 text-center">
               הקורסים הפעילים שלך ({userCourses.length})
             </h2>
             
@@ -81,22 +81,22 @@ const MyCoursesPage = () => {
                   <Link
                     key={course.id}
                     to={`/course/${course.id}`}
-                    className="bg-gradient-to-br from-purple-600 to-purple-700 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer block"
+                    className="card-course group"
                   >
                     <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
-                        <IconComponent className="w-8 h-8 text-white" />
+                      <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
+                        <IconComponent className="w-8 h-8 text-primary" />
                       </div>
                       
-                      <h3 className="text-lg font-semibold mb-3 leading-tight">
+                      <h3 className="text-foreground mb-3 font-semibold leading-tight">
                         {course.name}
                       </h3>
                       
                       <div className="space-y-2 mb-4">
-                        <p className="text-purple-200 text-sm">
+                        <p className="text-muted-foreground text-sm">
                           <span className="font-medium">חוג:</span> {course.department}
                         </p>
-                        <p className="text-purple-200 text-sm">
+                        <p className="text-muted-foreground text-sm">
                           <span className="font-medium">מוסד:</span> {course.institution}
                         </p>
                       </div>
@@ -104,25 +104,25 @@ const MyCoursesPage = () => {
                       {/* Progress Bar */}
                       <div className="mb-4">
                         <div className="flex justify-between text-sm mb-2">
-                          <span>התקדמות</span>
-                          <span>{course.progress}%</span>
+                          <span className="text-muted-foreground">התקדמות</span>
+                          <span className="text-primary font-medium">{course.progress}%</span>
                         </div>
-                        <div className="w-full bg-purple-400/30 rounded-full h-2">
+                        <div className="w-full bg-muted rounded-full h-2">
                           <div 
-                            className="bg-white h-2 rounded-full transition-all duration-300"
+                            className="bg-primary h-2 rounded-full transition-all duration-300"
                             style={{ width: `${course.progress}%` }}
                           />
                         </div>
                       </div>
 
                       {/* Last Watched */}
-                      <div className="text-purple-200 text-xs mb-4">
+                      <div className="text-muted-foreground text-xs mb-4">
                         <Clock className="w-3 h-3 inline ml-1" />
                         צפייה אחרונה: {course.lastWatched}
                       </div>
                       
-                      <div className="pt-4 border-t border-purple-400/30">
-                        <span className="text-sm font-medium">לחץ לצפייה בקורס</span>
+                      <div className="pt-4 border-t border-border">
+                        <span className="text-sm font-medium text-primary">לחץ לצפייה בקורס</span>
                       </div>
                     </div>
                   </Link>
@@ -133,13 +133,13 @@ const MyCoursesPage = () => {
             {/* Quick Action Buttons */}
             <div className="flex flex-wrap gap-4 justify-center mt-8">
               <Link to="/watch/physics-101">
-                <Button className="btn-academic">
+                <Button className="btn-primary">
                   <BookOpen className="w-4 h-4 ml-2" />
                   המשך הקורס האחרון
                 </Button>
               </Link>
               <Link to="/">
-                <Button variant="outline">
+                <Button className="btn-outline">
                   <Star className="w-4 h-4 ml-2" />
                   חפש קורסים נוספים
                 </Button>
@@ -157,7 +157,7 @@ const MyCoursesPage = () => {
                 גלו את מגוון הקורסים הרחב שלנו ובחרו את הנושא שמעניין אתכם ביותר.
               </p>
               <Link to="/">
-                <Button className="btn-hero text-lg px-8 py-3">
+                <Button className="btn-primary text-lg px-8 py-3">
                   עברו לקטלוג הקורסים
                 </Button>
               </Link>
@@ -168,25 +168,25 @@ const MyCoursesPage = () => {
         {/* Quick Stats Section */}
         {userCourses.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-            <Card className="text-center">
+            <Card className="card-academic text-center">
               <CardContent className="py-8">
                 <BookOpen className="w-10 h-10 text-primary mx-auto mb-3" />
                 <div className="text-3xl font-bold text-foreground mb-1">{userCourses.length}</div>
                 <div className="text-sm text-muted-foreground">קורסים פעילים</div>
               </CardContent>
             </Card>
-            <Card className="text-center">
+            <Card className="card-academic text-center">
               <CardContent className="py-8">
-                <Clock className="w-10 h-10 text-green-500 mx-auto mb-3" />
+                <Clock className="w-10 h-10 text-primary mx-auto mb-3" />
                 <div className="text-3xl font-bold text-foreground mb-1">
                   {Math.round(userCourses.reduce((acc, course) => acc + course.progress, 0) / userCourses.length)}%
                 </div>
                 <div className="text-sm text-muted-foreground">התקדמות ממוצעת</div>
               </CardContent>
             </Card>
-            <Card className="text-center">
+            <Card className="card-academic text-center">
               <CardContent className="py-8">
-                <Users className="w-10 h-10 text-blue-500 mx-auto mb-3" />
+                <Users className="w-10 h-10 text-primary mx-auto mb-3" />
                 <div className="text-3xl font-bold text-foreground mb-1">
                   {userCourses.filter(course => course.progress > 0).length}
                 </div>
@@ -197,7 +197,66 @@ const MyCoursesPage = () => {
         )}
       </main>
 
-      <Footer />
+      {/* Footer */}
+      <footer className="bg-muted border-t border-border">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-6xl mx-auto">
+            {/* Main Footer Content */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+              {/* Logo and Description */}
+              <div className="md:col-span-2">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <GraduationCap className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-xl font-semibold text-foreground">LevelUp</span>
+                </div>
+                <p className="text-muted-foreground leading-relaxed max-w-md">
+                  פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 
+                  המותאמים במיוחד לבחינות הסופיות של מוסדות הלימוד השונים.
+                </p>
+              </div>
+
+              {/* Quick Links */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-4">קישורים מהירים</h3>
+                <ul className="space-y-3">
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">אודותינו</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">שאלות נפוצות</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">תמיכה טכנית</a></li>
+                </ul>
+              </div>
+
+              {/* Support */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-4">תמיכה</h3>
+                <ul className="space-y-3">
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">מרכז עזרה</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">דרכי תשלום</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">החזרים וביטולים</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">מדיניות השימוש</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="border-t border-border pt-8">
+              {/* Legal Links and Copyright */}
+              <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div className="flex flex-wrap justify-center md:justify-start gap-6">
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">תקנון האתר</a>
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
+                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a>
+                </div>
+
+                <div className="text-sm text-muted-foreground">
+                  © 2024 LevelUp. כל הזכויות שמורות.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
