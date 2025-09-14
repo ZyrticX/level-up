@@ -20,7 +20,7 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp" 
-              className="h-16 w-auto rounded-md"
+              className="h-20 w-auto rounded-md"
             />
           </Link>
 

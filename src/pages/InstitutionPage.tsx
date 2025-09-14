@@ -90,7 +90,7 @@ const InstitutionPage = () => {
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-16 w-auto rounded-md"
+                className="h-20 w-auto rounded-md"
               />
             </Link>
 
@@ -205,7 +205,7 @@ const InstitutionPage = () => {
                   <img 
                     src={levelupLogo} 
                     alt="LevelUp" 
-                    className="h-12 w-auto rounded-md"
+                    className="h-16 w-auto rounded-md"
                   />
                 </div>
                 <p className="text-gray-600 leading-relaxed">
