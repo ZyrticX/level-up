@@ -15,7 +15,7 @@ const Index = () => {
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-10 w-auto rounded-md"
+                className="h-16 w-auto rounded-md"
               />
             </Link>
 
@@ -196,7 +196,7 @@ const Index = () => {
                   <img 
                     src={levelupLogo} 
                     alt="LevelUp" 
-                    className="h-8 w-auto rounded-md"
+                    className="h-12 w-auto rounded-md"
                   />
                 </div>
                 <p className="text-muted-foreground leading-relaxed max-w-md">

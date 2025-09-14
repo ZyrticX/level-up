@@ -16,7 +16,7 @@ const Footer = () => {
                 <img 
                   src={levelupLogo} 
                   alt="LevelUp" 
-                  className="h-10 w-auto rounded-md"
+                  className="h-14 w-auto rounded-md"
                 />
               </div>
               <p className="text-muted-foreground leading-relaxed">
