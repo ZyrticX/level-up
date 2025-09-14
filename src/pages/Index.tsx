@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import { ChevronDown, User, BookOpen, GraduationCap, ArrowLeft, Building, Wrench, Church } from 'lucide-react';
 
 const Index = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background font-hebrew" dir="rtl">
       {/* Header */}
@@ -110,17 +112,18 @@ const Index = () => {
             {/* Institutions Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[
-                { name: 'האוניברסיטה העברית', icon: Building, desc: 'מוסד אקדמי מוביל' },
-                { name: 'המכללה האקדמית', icon: GraduationCap, desc: 'מכללה אקדמית מובילה' },
-                { name: 'המכון הטכנולוגי', icon: Wrench, desc: 'מכון טכנולוגי מתקדם' },
-                { name: 'בית המדרש העליון', icon: Church, desc: 'מוסד לימודי מסורתי' },
-                { name: 'המכללה למדעים', icon: Building, desc: 'מכללה למדעים מדויקים' },
-                { name: 'האקדמיה לאמנויות', icon: GraduationCap, desc: 'אקדמיה לאמנויות יפות' }
+                { name: 'האוניברסיטה העברית', icon: Building, desc: 'מוסד אקדמי מוביל', id: 'hebrew-university' },
+                { name: 'המכללה האקדמית', icon: GraduationCap, desc: 'מכללה אקדמית מובילה', id: 'academic-college' },
+                { name: 'המכון הטכנולוגי', icon: Wrench, desc: 'מכון טכנולוגי מתקדם', id: 'technion' },
+                { name: 'בית המדרש העליון', icon: Church, desc: 'מוסד לימודי מסורתי', id: 'seminary' },
+                { name: 'המכללה למדעים', icon: Building, desc: 'מכללה למדעים מדויקים', id: 'science-college' },
+                { name: 'האקדמיה לאמנויות', icon: GraduationCap, desc: 'אקדמיה לאמנויות יפות', id: 'arts-academy' }
               ].map((institution, index) => {
                 const IconComponent = institution.icon;
                 return (
                   <div
                     key={index}
+                    onClick={() => navigate(`/institution/${institution.id}`)}
                     className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group bg-gradient-to-br from-white to-gray-50"
                   >
                     <div className="text-center">
