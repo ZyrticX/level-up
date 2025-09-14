@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, User, BookOpen, GraduationCap, Cpu, Zap, Calculator, Atom, FlaskConical, Dna, ArrowRight } from 'lucide-react';
 
 const InstitutionPage = () => {
@@ -30,10 +30,10 @@ const InstitutionPage = () => {
 
   const coursesByDepartment = {
     "מדעי המחשב": [
-      { name: "מבוא למדעי המחשב", icon: Cpu, code: "CS101" },
-      { name: "מבני נתונים ואלגוריתמים", icon: BookOpen, code: "CS102" },
-      { name: "תכנות מתקדם", icon: Cpu, code: "CS201" },
-      { name: "בסיסי נתונים", icon: BookOpen, code: "CS301" }
+      { name: "מבוא למדעי המחשב", icon: Cpu, code: "CS101", id: "intro-cs" },
+      { name: "מבני נתונים ואלגוריתמים", icon: BookOpen, code: "CS102", id: "data-structures" },
+      { name: "תכנות מתקדם", icon: Cpu, code: "CS201", id: "advanced-programming" },
+      { name: "בסיסי נתונים", icon: BookOpen, code: "CS301", id: "databases" }
     ],
     "הנדסת חשמל": [
       { name: "מעגלים חשמליים", icon: Zap, code: "EE101" },
@@ -54,10 +54,10 @@ const InstitutionPage = () => {
       { name: "חשבון הסתברויות", icon: Calculator, code: "MATH401" }
     ],
     "פיזיקה": [
-      { name: "מכניקה קלאסית", icon: Atom, code: "PHYS101" },
-      { name: "אלקטרומגנטיות", icon: Atom, code: "PHYS201" },
-      { name: "פיזיקה קוונטית", icon: Atom, code: "PHYS301" },
-      { name: "תרמודינמיקה", icon: Atom, code: "PHYS401" }
+      { name: "פיזיקה 1 - מכניקה קלאסית", icon: Atom, code: "PHYS101", id: "physics-101" },
+      { name: "אלקטרומגנטיות", icon: Atom, code: "PHYS201", id: "electromagnetics" },
+      { name: "פיזיקה קוונטית", icon: Atom, code: "PHYS301", id: "quantum-physics" },
+      { name: "תרמודינמיקה", icon: Atom, code: "PHYS401", id: "thermodynamics" }
     ],
     "כימיה": [
       { name: "כימיה כללית", icon: FlaskConical, code: "CHEM101" },
@@ -77,10 +77,6 @@ const InstitutionPage = () => {
     setSelectedDepartment(department);
   };
 
-  const handleCourseClick = (courseName: string, courseCode: string) => {
-    console.log(`Navigating to course: ${courseName} (${courseCode})`);
-    // Here you would typically navigate to the course page
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-hebrew" dir="rtl">
@@ -166,10 +162,10 @@ const InstitutionPage = () => {
             {coursesByDepartment[selectedDepartment as keyof typeof coursesByDepartment]?.map((course, index) => {
               const IconComponent = course.icon;
               return (
-                <div
+                <Link
                   key={index}
-                  onClick={() => handleCourseClick(course.name, course.code)}
-                  className="bg-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 hover:bg-purple-700"
+                  to={`/course/${course.id}`}
+                  className="bg-purple-600 text-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 hover:bg-purple-700 block"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
@@ -188,7 +184,7 @@ const InstitutionPage = () => {
                       <span className="text-sm font-medium">לחץ לצפייה בקורס</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
