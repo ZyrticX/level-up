@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import levelupLogo from '@/assets/levelup-logo.png';
+import levelupLogo from '@/assets/levelup-logo-1.jpg';
 
 const Header = () => {
   return (
@@ -16,14 +16,13 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
-          <div className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3">
             <img 
               src={levelupLogo} 
               alt="LevelUp" 
-              className="h-12 w-auto"
+              className="h-10 w-auto rounded-md"
             />
-            <span className="text-2xl font-bold text-gradient">LevelUp</span>
-          </div>
+          </Link>
 
           {/* Left side - Navigation */}
           <div className="flex items-center space-x-4 space-x-reverse">

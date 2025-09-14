@@ -207,7 +207,7 @@ const MyCoursesPage = () => {
               <div className="md:col-span-2">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <GraduationCap className="w-5 h-5 text-white" />
+                    <span className="text-sm font-bold text-primary-foreground">LU</span>
                   </div>
                   <span className="text-xl font-semibold text-foreground">LevelUp</span>
                 </div>

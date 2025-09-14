@@ -20,23 +20,23 @@ All colors MUST be HSL. Inspired by top university websites.
     --popover: 0 0% 100%;
     --popover-foreground: 210 20% 15%;
 
-    /* University Blue - Professional and trustworthy */
-    --primary: 210 85% 45%;
+    /* LevelUp Brand Colors - Based on Logo */
+    --primary: 225 85% 35%;         /* Deep blue from logo */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 210 85% 95%;
+    --primary-light: 225 85% 95%;
 
-    /* Academic Grey - Secondary color for balance */
-    --secondary: 210 15% 25%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-light: 210 15% 95%;
+    /* Academic Orange/Yellow - Secondary from logo */
+    --secondary: 42 95% 60%;        /* Orange/yellow from logo */
+    --secondary-foreground: 225 85% 15%;
+    --secondary-light: 42 95% 95%;
 
     /* Neutral greys for professional look */
     --muted: 210 10% 96%;
     --muted-foreground: 210 10% 45%;
 
-    --accent: 210 50% 50%;
+    --accent: 225 75% 50%;          /* Lighter blue accent */
     --accent-foreground: 0 0% 100%;
-    --accent-light: 210 50% 95%;
+    --accent-light: 225 75% 95%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -47,10 +47,10 @@ All colors MUST be HSL. Inspired by top university websites.
 
     --radius: 0.5rem;
 
-    /* Professional gradients - subtle and clean */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(210 75% 35%));
+    /* LevelUp Brand gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
     --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-section: linear-gradient(180deg, hsl(var(--muted)) 0%, hsl(var(--background)) 100%);
+    --gradient-section: linear-gradient(180deg, hsl(var(--primary-light)) 0%, hsl(var(--background)) 100%);
 
     /* Subtle shadows for depth */
     --shadow-subtle: 0 1px 3px 0 hsl(210 20% 15% / 0.1), 0 1px 2px 0 hsl(210 20% 15% / 0.06);
@@ -80,8 +80,8 @@ All colors MUST be HSL. Inspired by top university websites.
     --popover: 210 25% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 85% 55%;
-    --primary-foreground: 210 25% 8%;
+    --primary: 225 85% 45%;         /* Lighter primary for dark mode */
+    --primary-foreground: 225 85% 5%;
 
     --secondary: 210 15% 15%;
     --secondary-foreground: 210 40% 98%;
@@ -89,8 +89,8 @@ All colors MUST be HSL. Inspired by top university websites.
     --muted: 210 15% 15%;
     --muted-foreground: 210 20% 65%;
 
-    --accent: 210 50% 40%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 225 75% 60%;          /* Accent for dark mode */
+    --accent-foreground: 225 75% 5%;
 
     --destructive: 0 65% 45%;
     --destructive-foreground: 210 40% 98%;
@@ -175,7 +175,7 @@ All colors MUST be HSL. Inspired by top university websites.
   }
 
   .card-course {
-    @apply card-academic p-6 hover:scale-105 cursor-pointer bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20;
+    @apply card-academic p-6 hover:scale-105 cursor-pointer bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20 hover:border-secondary/30;
   }
 
   /* Section Styling */
