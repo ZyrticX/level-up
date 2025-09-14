@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowRight, Download, Folder, FileText, Video, Users, Clock, Calendar, MessageCircle } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Download, 
+  Folder, 
+  FileText, 
+  Video, 
+  Users, 
+  Clock, 
+  Calendar, 
+  MessageCircle 
+} from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
