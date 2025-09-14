@@ -190,6 +190,13 @@ const CoursePage = () => {
                   >
                     רכוש עכשיו
                   </Button>
+                  {isPurchased && (
+                    <Link to={`/watch/${courseId}`}>
+                      <Button className="w-full mt-2 btn-academic">
+                        צפה בתוכן הקורס
+                      </Button>
+                    </Link>
+                  )}
                 </CardContent>
               </Card>
             )}
