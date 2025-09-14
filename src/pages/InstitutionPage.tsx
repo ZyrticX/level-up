@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, User, BookOpen, GraduationCap, Cpu, Zap, Calculator, Atom, FlaskConical, Dna, ArrowRight } from 'lucide-react';
+import levelupLogo from '@/assets/levelup-logo-1.jpg';
 
 const InstitutionPage = () => {
   const { institutionId } = useParams();
@@ -85,12 +86,13 @@ const InstitutionPage = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Right side - Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-8 h-8 text-white" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LevelUp</span>
-            </div>
+            <Link to="/" className="flex items-center space-x-3">
+              <img 
+                src={levelupLogo} 
+                alt="LevelUp" 
+                className="h-10 w-auto rounded-md"
+              />
+            </Link>
 
             {/* Left side - Navigation */}
             <div className="flex items-center space-x-4 space-x-reverse">
@@ -200,10 +202,11 @@ const InstitutionPage = () => {
               {/* Logo and Description */}
               <div className="md:col-span-2">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                    <GraduationCap className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">LevelUp</span>
+                  <img 
+                    src={levelupLogo} 
+                    alt="LevelUp" 
+                    className="h-8 w-auto rounded-md"
+                  />
                 </div>
                 <p className="text-gray-600 leading-relaxed">
                   פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
+import levelupLogo from '@/assets/levelup-logo-1.jpg';
 
 const Index = () => {
   return (
@@ -10,12 +11,13 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Right side - Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-semibold text-foreground">LevelUp</span>
-            </div>
+            <Link to="/" className="flex items-center space-x-3">
+              <img 
+                src={levelupLogo} 
+                alt="LevelUp" 
+                className="h-10 w-auto rounded-md"
+              />
+            </Link>
 
             {/* Left side - Navigation */}
             <div className="flex items-center space-x-4 space-x-reverse">
@@ -191,10 +193,11 @@ const Index = () => {
               {/* Logo and Description */}
               <div className="md:col-span-2">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <GraduationCap className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-xl font-semibold text-foreground">LevelUp</span>
+                  <img 
+                    src={levelupLogo} 
+                    alt="LevelUp" 
+                    className="h-8 w-auto rounded-md"
+                  />
                 </div>
                 <p className="text-muted-foreground leading-relaxed max-w-md">
                   פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 

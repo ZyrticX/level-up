@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import levelupLogo from '@/assets/levelup-logo.png';
+import levelupLogo from '@/assets/levelup-logo-1.jpg';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -16,9 +16,8 @@ const Footer = () => {
                 <img 
                   src={levelupLogo} 
                   alt="LevelUp" 
-                  className="h-10 w-auto"
+                  className="h-10 w-auto rounded-md"
                 />
-                <span className="text-xl font-bold text-gradient">LevelUp</span>
               </div>
               <p className="text-muted-foreground leading-relaxed">
                 פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 
