@@ -10,6 +10,7 @@ import VideoPlayerPage from "./pages/VideoPlayerPage";
 import AuthPage from "./pages/AuthPage";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import NotFound from "./pages/NotFound";
+import Header from "./components/Header";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/institution/:institutionId" element={<InstitutionPage />} />

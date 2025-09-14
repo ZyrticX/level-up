@@ -18,6 +18,7 @@ import levelupLogo from '@/assets/levelup-logo-1.jpg';
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // This would come from auth context in real app
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
 
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-sm">
@@ -28,7 +29,7 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp - פלטפורמת הלמידה המקוונת" 
-              className="h-16 w-auto rounded-md shadow-sm"
+              className="h-20 w-auto rounded-md shadow-sm"
             />
           </Link>
 
@@ -46,8 +47,8 @@ const Header = () => {
             </Link>
 
             {isLoggedIn && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenu open={optionsOpen} onOpenChange={setOptionsOpen}>
+                <DropdownMenuTrigger asChild onMouseEnter={() => setOptionsOpen(true)}>
                   <Button 
                     variant="outline" 
                     className="border-border hover:bg-accent hover:text-accent-foreground font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
@@ -62,6 +63,7 @@ const Header = () => {
                   align="start" 
                   className="bg-popover border border-border shadow-lg min-w-[160px] rounded-lg p-1"
                   sideOffset={8}
+                  onMouseLeave={() => setOptionsOpen(false)}
                 >
                   <DropdownMenuItem className="text-right hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 cursor-pointer">
                     <Settings className="w-4 h-4 ml-2" />
@@ -88,7 +90,7 @@ const Header = () => {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] sm:w-[350px]" dir="rtl">
+            <SheetContent side="right" className="w-[280px] sm:w-[350px]" dir="rtl">
               <div className="flex flex-col space-y-4 mt-8">
                 <div className="flex items-center justify-center pb-6 border-b border-border">
                   <img 
