@@ -165,24 +165,26 @@ All colors MUST be HSL. Inspired by top university websites.
 }
 
 @layer components {
-  /* Professional Button Variants */
+  /* Refined Button Variants */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium hover:bg-primary/90;
+    @apply bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-medium tracking-wide;
+    box-shadow: 0 1px 3px 0 hsl(var(--primary) / 0.2);
     transition: var(--transition-smooth);
+  }
+
+  .btn-primary:hover {
+    @apply bg-primary/90;
+    box-shadow: 0 4px 12px 0 hsl(var(--primary) / 0.3);
+    transform: translateY(-1px);
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium hover:bg-secondary/90;
-    transition: var(--transition-smooth);
-  }
-
-  .btn-outline {
-    @apply border border-primary text-primary bg-transparent px-6 py-3 rounded-md font-medium hover:bg-primary hover:text-primary-foreground;
+    @apply bg-background text-foreground border border-border/60 px-6 py-2.5 rounded-lg font-medium tracking-wide hover:bg-accent/50;
     transition: var(--transition-smooth);
   }
 
   .btn-ghost {
-    @apply text-foreground hover:bg-accent hover:text-accent-foreground px-4 py-2 rounded-md font-medium;
+    @apply text-foreground hover:bg-accent/60 px-4 py-2 rounded-lg font-medium;
     transition: var(--transition-fast);
   }
 
