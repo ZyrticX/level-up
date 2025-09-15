@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, User, Menu, X, Settings } from 'lucide-react';
+import { ChevronDown, User, Menu, X, Settings, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -16,7 +16,7 @@ import {
 import levelupLogo from '@/assets/levelup-logo-1.jpg';
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // This would come from auth context in real app
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // This would come from auth context in real app
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
 
@@ -65,6 +65,12 @@ const Header = () => {
                   sideOffset={8}
                   onMouseLeave={() => setOptionsOpen(false)}
                 >
+                  <DropdownMenuItem asChild className="text-right hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 cursor-pointer">
+                    <Link to="/admin">
+                      <Shield className="w-4 h-4 ml-2" />
+                      ניהול
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="text-right hover:bg-accent hover:text-accent-foreground rounded-md px-3 py-2 cursor-pointer">
                     <Settings className="w-4 h-4 ml-2" />
                     הגדרות
@@ -113,6 +119,15 @@ const Header = () => {
                 {isLoggedIn && (
                   <div className="space-y-2 pt-4 border-t border-border">
                     <h3 className="text-sm font-medium text-muted-foreground px-2">אפשרויות</h3>
+                    <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start text-right hover:bg-accent hover:text-accent-foreground py-3"
+                      >
+                        <Shield className="w-4 h-4 ml-2" />
+                        ניהול
+                      </Button>
+                    </Link>
                     <Button 
                       variant="ghost" 
                       className="w-full justify-start text-right hover:bg-accent hover:text-accent-foreground py-3"
