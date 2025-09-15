@@ -32,20 +32,18 @@ const Header = () => {
   return (
     <header className="bg-background border-b border-border/20 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6 py-3 md:py-4">
-        <div className="hidden lg:grid lg:grid-cols-3 lg:items-center" dir="rtl">
+        <div className="flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
-          <div className="flex justify-end">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <img 
-                src={levelupLogo} 
-                alt="LevelUp Logo" 
-                className="h-16 md:h-20 lg:h-28 xl:h-32 w-auto"
-              />
-            </Link>
-          </div>
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <img 
+              src={levelupLogo} 
+              alt="LevelUp Logo" 
+              className="h-16 md:h-20 lg:h-28 xl:h-32 w-auto"
+            />
+          </Link>
 
-          {/* Center - Navigation */}
-          <nav className="flex items-center justify-center gap-6">
+          {/* Center Navigation - Desktop only */}
+          <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
             {navigationItems.map((item) => (
               <Link 
                 key={item.label}
@@ -58,7 +56,7 @@ const Header = () => {
           </nav>
 
           {/* Left side - Buttons */}
-          <div className="flex items-center justify-start gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <Link to="/auth">
               <Button 
                 variant="outline" 
@@ -99,18 +97,6 @@ const Header = () => {
               </DropdownMenu>
             )}
           </div>
-        </div>
-
-        {/* Mobile Layout */}
-        <div className="flex lg:hidden items-center justify-between" dir="rtl">
-          {/* Mobile Logo */}
-          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-            <img 
-              src={levelupLogo} 
-              alt="LevelUp Logo" 
-              className="h-16 md:h-20 w-auto"
-            />
-          </Link>
 
           {/* Mobile Menu Button */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
