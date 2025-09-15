@@ -32,74 +32,85 @@ const Header = () => {
   return (
     <header className="bg-background border-b border-border/20 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6 py-3 md:py-4">
-        <div className="flex items-center justify-between" dir="rtl">
+        <div className="hidden lg:grid lg:grid-cols-3 lg:items-center" dir="rtl">
           {/* Right side - Logo */}
+          <div className="flex justify-end">
+            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+              <img 
+                src={levelupLogo} 
+                alt="LevelUp Logo" 
+                className="h-16 md:h-20 lg:h-28 xl:h-32 w-auto"
+              />
+            </Link>
+          </div>
+
+          {/* Center - Navigation */}
+          <nav className="flex items-center justify-center gap-6">
+            {navigationItems.map((item) => (
+              <Link 
+                key={item.label}
+                to={item.href}
+                className="text-foreground/80 hover:text-primary transition-colors text-sm font-medium"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Left side - Buttons */}
+          <div className="flex items-center justify-start gap-3">
+            <Link to="/auth">
+              <Button 
+                variant="outline" 
+                className="text-sm font-medium"
+                aria-label="כניסה לאזור המנויים"
+              >
+                <User className="w-4 h-4 ml-2" />
+                כניסה למנויים
+              </Button>
+            </Link>
+
+            {isLoggedIn && (
+              <DropdownMenu open={optionsOpen} onOpenChange={setOptionsOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground"
+                    aria-label="תפריט אפשרויות"
+                  >
+                    אפשרויות
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="start" 
+                  className="bg-background border border-border min-w-[140px] shadow-md"
+                  sideOffset={8}
+                >
+                  <DropdownMenuItem className="text-right cursor-pointer">
+                    <Settings className="w-4 h-4 ml-2" />
+                    הגדרות
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-right cursor-pointer">
+                    <LogOut className="w-4 h-4 ml-2" />
+                    התנתק
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="flex lg:hidden items-center justify-between" dir="rtl">
+          {/* Mobile Logo */}
           <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
             <img 
               src={levelupLogo} 
               alt="LevelUp Logo" 
-              className="h-16 md:h-20 lg:h-28 xl:h-32 w-auto"
+              className="h-16 md:h-20 w-auto"
             />
           </Link>
-
-          {/* Desktop Navigation - Left side */}
-          <div className="hidden lg:flex items-center gap-8">
-            {/* Text Menu */}
-            <nav className="flex items-center gap-6">
-              {navigationItems.map((item) => (
-                <Link 
-                  key={item.label}
-                  to={item.href}
-                  className="text-foreground/80 hover:text-primary transition-colors text-sm font-medium"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Buttons */}
-            <div className="flex items-center gap-3">
-              <Link to="/auth">
-                <Button 
-                  variant="outline" 
-                  className="text-sm font-medium"
-                  aria-label="כניסה לאזור המנויים"
-                >
-                  <User className="w-4 h-4 ml-2" />
-                  כניסה למנויים
-                </Button>
-              </Link>
-
-              {isLoggedIn && (
-                <DropdownMenu open={optionsOpen} onOpenChange={setOptionsOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="text-sm font-medium text-foreground/80 hover:text-foreground"
-                      aria-label="תפריט אפשרויות"
-                    >
-                      אפשרויות
-                      <ChevronDown className="w-4 h-4 mr-2" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    align="start" 
-                    className="bg-background border border-border min-w-[140px] shadow-md"
-                    sideOffset={8}
-                  >
-                    <DropdownMenuItem className="text-right cursor-pointer">
-                      <Settings className="w-4 h-4 ml-2" />
-                      הגדרות
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="text-right cursor-pointer">
-                      <LogOut className="w-4 h-4 ml-2" />
-                      התנתק
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-          </div>
 
           {/* Mobile Menu Button */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
