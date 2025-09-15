@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, Menu, Settings, LogOut, BookOpen, Building, Info, Phone } from 'lucide-react';
+import levelupLogo from '@/assets/levelup-logo.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -34,9 +35,11 @@ const Header = () => {
         <div className="flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
           <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-            <div className="text-2xl font-bold text-primary">
-              LevelUp
-            </div>
+            <img 
+              src={levelupLogo} 
+              alt="LevelUp Logo" 
+              className="h-10 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation - Left side */}
