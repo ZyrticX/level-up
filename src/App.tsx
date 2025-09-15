@@ -9,6 +9,7 @@ import CoursePage from "./pages/CoursePage";
 import VideoPlayerPage from "./pages/VideoPlayerPage";
 import AuthPage from "./pages/AuthPage";
 import MyCoursesPage from "./pages/MyCoursesPage";
+import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/watch/:courseId" element={<VideoPlayerPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/my-courses" element={<MyCoursesPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
