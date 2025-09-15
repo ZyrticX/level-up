@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, User, Menu, Settings, LogOut, BookOpen, Building, Info, Phone } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo.png';
+import levelupLogo from '@/assets/levelup-logo-transparent.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
