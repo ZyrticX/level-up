@@ -21,11 +21,11 @@ const Header = () => {
   const [optionsOpen, setOptionsOpen] = useState(false);
 
   return (
-    <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-sm">
+    <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50" style={{ boxShadow: "var(--shadow-subtle)" }}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
-          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80" style={{ transition: "var(--transition-fast)" }}>
             <img 
               src={levelupLogo} 
               alt="LevelUp - פלטפורמת הלמידה המקוונת" 
@@ -38,7 +38,8 @@ const Header = () => {
             <Link to="/auth">
               <Button 
                 variant="default" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-2.5 rounded-lg shadow-subtle hover:shadow-medium"
+                style={{ transition: "var(--transition-smooth)" }}
                 aria-label="כניסה לאזור המנויים"
               >
                 <User className="w-4 h-4 ml-2" />
@@ -51,7 +52,8 @@ const Header = () => {
                 <DropdownMenuTrigger asChild onMouseEnter={() => setOptionsOpen(true)}>
                   <Button 
                     variant="outline" 
-                    className="border-border hover:bg-accent hover:text-accent-foreground font-medium px-4 py-2.5 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="border-border hover:bg-accent hover:text-accent-foreground font-medium px-4 py-2.5 rounded-lg shadow-subtle hover:shadow-medium"
+                    style={{ transition: "var(--transition-smooth)" }}
                     aria-label="תפריט אפשרויות"
                   >
                     <Settings className="w-4 h-4 ml-2" />
@@ -61,7 +63,8 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="start" 
-                  className="bg-popover border border-border shadow-lg min-w-[160px] rounded-lg p-1"
+                  className="bg-popover border border-border min-w-[160px] rounded-lg p-1"
+                  style={{ boxShadow: "var(--shadow-large)" }}
                   sideOffset={8}
                   onMouseLeave={() => setOptionsOpen(false)}
                 >
@@ -109,7 +112,8 @@ const Header = () => {
                 <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button 
                     variant="default" 
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 rounded-lg transition-all duration-200"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 rounded-lg"
+                    style={{ transition: "var(--transition-smooth)" }}
                   >
                     <User className="w-4 h-4 ml-2" />
                     כניסה למנויים

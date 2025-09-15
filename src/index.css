@@ -26,9 +26,10 @@ All colors MUST be HSL. Inspired by top university websites.
     --primary-light: 225 85% 95%;
 
     /* Academic Orange/Yellow - Secondary from logo */
-    --secondary: 42 95% 60%;        /* Orange/yellow from logo */
+    --secondary: 42 95% 50%;        /* Orange/yellow from logo */
     --secondary-foreground: 225 85% 15%;
     --secondary-light: 42 95% 95%;
+    --secondary-dark: 42 95% 40%;
 
     /* Neutral greys for professional look */
     --muted: 210 10% 96%;
@@ -37,6 +38,7 @@ All colors MUST be HSL. Inspired by top university websites.
     --accent: 225 75% 50%;          /* Lighter blue accent */
     --accent-foreground: 0 0% 100%;
     --accent-light: 225 75% 95%;
+    --accent-dark: 225 75% 40%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -59,6 +61,15 @@ All colors MUST be HSL. Inspired by top university websites.
 
     /* Professional transitions */
     --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+    
+    /* Brand consistent colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 42 95% 50%;
+    --warning-foreground: 225 85% 15%;
+    --info: 225 85% 35%;
+    --info-foreground: 0 0% 100%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -83,8 +94,9 @@ All colors MUST be HSL. Inspired by top university websites.
     --primary: 225 85% 45%;         /* Lighter primary for dark mode */
     --primary-foreground: 225 85% 5%;
 
-    --secondary: 210 15% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 42 95% 60%;        /* Keep secondary consistent in dark mode */
+    --secondary-foreground: 225 85% 15%;
+    --secondary-dark: 42 95% 50%;
 
     --muted: 210 15% 15%;
     --muted-foreground: 210 20% 65%;
@@ -154,20 +166,29 @@ All colors MUST be HSL. Inspired by top university websites.
 @layer components {
   /* Professional Button Variants */
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium transition-all duration-200 hover:bg-primary/90;
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium hover:bg-primary/90;
+    transition: var(--transition-smooth);
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium transition-all duration-200 hover:bg-secondary/90;
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-medium shadow-subtle hover:shadow-medium hover:bg-secondary/90;
+    transition: var(--transition-smooth);
   }
 
   .btn-outline {
-    @apply border border-primary text-primary bg-transparent px-6 py-3 rounded-md font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-200;
+    @apply border border-primary text-primary bg-transparent px-6 py-3 rounded-md font-medium hover:bg-primary hover:text-primary-foreground;
+    transition: var(--transition-smooth);
+  }
+
+  .btn-ghost {
+    @apply text-foreground hover:bg-accent hover:text-accent-foreground px-4 py-2 rounded-md font-medium;
+    transition: var(--transition-fast);
   }
 
   /* Professional Card Variants */
   .card-academic {
-    @apply bg-card border border-border rounded-lg shadow-subtle hover:shadow-medium transition-all duration-200;
+    @apply bg-card border border-border rounded-lg shadow-subtle hover:shadow-medium;
+    transition: var(--transition-smooth);
   }
 
   .card-feature {
@@ -176,6 +197,11 @@ All colors MUST be HSL. Inspired by top university websites.
 
   .card-course {
     @apply card-academic p-6 hover:scale-105 cursor-pointer bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20 hover:border-secondary/30;
+    transition: var(--transition-smooth);
+  }
+
+  .card-admin {
+    @apply bg-card border border-border rounded-lg shadow-subtle p-6;
   }
 
   /* Section Styling */

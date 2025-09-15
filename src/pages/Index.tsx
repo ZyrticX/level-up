@@ -23,11 +23,11 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth" className="inline-block">
-                <button className="bg-white text-primary px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/95 transition-all duration-200 shadow-medium">
+                <button className="bg-background text-primary px-8 py-4 rounded-md font-semibold text-lg hover:bg-background/95 shadow-medium hover:shadow-large" style={{ transition: "var(--transition-smooth)" }}>
                   התחל ללמוד עכשיו
                 </button>
               </Link>
-              <button className="border border-white/30 text-white px-8 py-4 rounded-md font-medium text-lg hover:bg-white/10 transition-all duration-200">
+              <button className="border border-background/30 text-background px-8 py-4 rounded-md font-medium text-lg hover:bg-background/10" style={{ transition: "var(--transition-smooth)" }}>
                 גלה עוד
               </button>
             </div>
@@ -152,7 +152,7 @@ const Index = () => {
               הצטרפו אלינו היום והתחילו את המסע שלכם להצלחה אקדמית
             </p>
             <Link to="/auth" className="inline-block">
-              <button className="bg-white text-primary px-8 py-4 rounded-md font-semibold text-lg hover:bg-white/95 transition-all duration-200 shadow-medium">
+              <button className="bg-background text-primary px-8 py-4 rounded-md font-semibold text-lg hover:bg-background/95 shadow-medium hover:shadow-large" style={{ transition: "var(--transition-smooth)" }}>
                 הירשמו עכשיו
               </button>
             </Link>
