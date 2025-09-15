@@ -20,26 +20,26 @@ All colors MUST be HSL. Inspired by top university websites.
     --popover: 0 0% 100%;
     --popover-foreground: 210 20% 15%;
 
-    /* Classic Blue-White Color Palette */
-    --primary: 214 84% 56%;         /* Classic professional blue */
+    /* Subtle Blue-White Color Palette */
+    --primary: 214 84% 56%;         /* Classic blue for important elements only */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 214 84% 94%;
+    --primary-light: 214 84% 97%;
     --primary-dark: 214 84% 46%;
 
-    /* Clean secondary colors */
-    --secondary: 210 20% 96%;       /* Light gray for secondary elements */
-    --secondary-foreground: 210 20% 15%;
-    --secondary-light: 210 20% 98%;
-    --secondary-dark: 210 20% 88%;
+    /* Neutral grays for most elements */
+    --secondary: 0 0% 98%;          /* Almost white for backgrounds */
+    --secondary-foreground: 210 10% 20%;
+    --secondary-light: 0 0% 100%;
+    --secondary-dark: 210 10% 94%;
 
     /* Neutral greys for professional look */
     --muted: 210 10% 96%;
     --muted-foreground: 210 10% 45%;
 
-    --accent: 214 84% 86%;          /* Very light blue accent */
-    --accent-foreground: 214 84% 16%;
-    --accent-light: 214 84% 95%;
-    --accent-dark: 214 84% 66%;
+    --accent: 210 15% 94%;          /* Very light gray accent */
+    --accent-foreground: 210 15% 25%;
+    --accent-light: 210 15% 98%;
+    --accent-dark: 210 15% 88%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -50,10 +50,10 @@ All colors MUST be HSL. Inspired by top university websites.
 
     --radius: 0.5rem;
 
-    /* LevelUp Brand gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
-    --gradient-section: linear-gradient(180deg, hsl(var(--primary-light)) 0%, hsl(var(--background)) 100%);
+    /* Subtle gradients using minimal blue */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(214 60% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(214 45% 70%) 100%);
+    --gradient-section: linear-gradient(180deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 100%);
 
     /* Subtle shadows for depth */
     --shadow-subtle: 0 1px 3px 0 hsl(210 20% 15% / 0.1), 0 1px 2px 0 hsl(210 20% 15% / 0.06);
