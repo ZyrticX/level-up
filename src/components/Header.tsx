@@ -32,7 +32,7 @@ const Header = () => {
   return (
     <header className="bg-background border-b border-border/20 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6 py-3 md:py-4">
-        <div className="flex items-center justify-between" dir="rtl">
+        <div className="relative flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
           <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
             <img 
