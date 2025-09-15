@@ -10,6 +10,7 @@ import VideoPlayerPage from "./pages/VideoPlayerPage";
 import AuthPage from "./pages/AuthPage";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import AdminPage from "./pages/AdminPage";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 
@@ -21,17 +22,17 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Header />
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/institution/:institutionId" element={<InstitutionPage />} />
-          <Route path="/course/:courseId" element={<CoursePage />} />
-          <Route path="/watch/:courseId" element={<VideoPlayerPage />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/my-courses" element={<MyCoursesPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/" element={<><Header /><Index /></>} />
+          <Route path="/institution/:institutionId" element={<><Header /><InstitutionPage /></>} />
+          <Route path="/course/:courseId" element={<><Header /><CoursePage /></>} />
+          <Route path="/watch/:courseId" element={<><Header /><VideoPlayerPage /></>} />
+          <Route path="/auth" element={<><Header /><AuthPage /></>} />
+          <Route path="/my-courses" element={<><Header /><MyCoursesPage /></>} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/courses" element={<AdminPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<><Header /><NotFound /></>} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

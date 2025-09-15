@@ -21,15 +21,12 @@ const Index = () => {
               <br />
               של מוסדות הלימוד השונים במדינה
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Link to="/auth" className="inline-block">
                 <button className="bg-background text-primary px-8 py-4 rounded-md font-semibold text-lg hover:bg-background/95 shadow-medium hover:shadow-large" style={{ transition: "var(--transition-smooth)" }}>
                   התחל ללמוד עכשיו
                 </button>
               </Link>
-              <button className="border border-background/30 text-background px-8 py-4 rounded-md font-medium text-lg hover:bg-background/10" style={{ transition: "var(--transition-smooth)" }}>
-                גלה עוד
-              </button>
             </div>
           </div>
         </div>

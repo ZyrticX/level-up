@@ -55,47 +55,16 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Left side - Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Left side - Simplified Button */}
+          <div className="hidden lg:flex items-center">
             <Link to="/auth">
               <Button 
-                variant="outline" 
-                className="text-sm font-medium"
+                className="bg-primary text-primary-foreground hover:bg-primary-dark font-medium px-6 py-2"
                 aria-label="כניסה לאזור המנויים"
               >
-                <User className="w-4 h-4 ml-2" />
                 כניסה למנויים
               </Button>
             </Link>
-
-            {isLoggedIn && (
-              <DropdownMenu open={optionsOpen} onOpenChange={setOptionsOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground"
-                    aria-label="תפריט אפשרויות"
-                  >
-                    אפשרויות
-                    <ChevronDown className="w-4 h-4 mr-2" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="start" 
-                  className="bg-background border border-border min-w-[140px] shadow-md"
-                  sideOffset={8}
-                >
-                  <DropdownMenuItem className="text-right cursor-pointer">
-                    <Settings className="w-4 h-4 ml-2" />
-                    הגדרות
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-right cursor-pointer">
-                    <LogOut className="w-4 h-4 ml-2" />
-                    התנתק
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -140,36 +109,11 @@ const Header = () => {
                 {/* Mobile Auth Button */}
                 <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button 
-                    variant="outline" 
-                    className="w-full text-sm font-medium"
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary-dark font-medium"
                   >
-                    <User className="w-4 h-4 ml-2" />
                     כניסה למנויים
                   </Button>
                 </Link>
-
-                {/* Mobile Options */}
-                {isLoggedIn && (
-                  <div className="space-y-2 pt-4 border-t border-border">
-                    <h3 className="text-sm font-medium text-muted-foreground px-3">אפשרויות</h3>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-right p-3"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <Settings className="w-4 h-4 ml-3" />
-                      הגדרות
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-right p-3"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <LogOut className="w-4 h-4 ml-3" />
-                      התנתק
-                    </Button>
-                  </div>
-                )}
               </div>
             </SheetContent>
           </Sheet>
