@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, BookOpen, Building, Info, Phone } from 'lucide-react';
+import { Menu, BookOpen, Building, Info, Phone, Settings } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-transparent.png';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +15,7 @@ const Header = () => {
   const navigationItems = [
     { label: "קורסים", href: "/courses", icon: BookOpen },
     { label: "המוסדות שלי", href: "/institutions", icon: Building },
+    { label: "ממשק ניהול", href: "/admin", icon: Settings },
     { label: "אודות", href: "/about", icon: Info },
     { label: "צור קשר", href: "/contact", icon: Phone },
   ];
