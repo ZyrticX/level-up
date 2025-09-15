@@ -14,6 +14,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
+// Professional academic header component
+
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
