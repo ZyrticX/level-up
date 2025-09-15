@@ -31,14 +31,14 @@ const Header = () => {
 
   return (
     <header className="bg-background border-b border-border/20 sticky top-0 z-50 shadow-sm">
-      <div className="container mx-auto px-6 py-3">
+      <div className="container mx-auto px-6 py-3 md:py-4">
         <div className="flex items-center justify-between" dir="rtl">
           {/* Right side - Logo */}
           <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
             <img 
               src={levelupLogo} 
               alt="LevelUp Logo" 
-              className="h-16 w-auto"
+              className="h-16 md:h-20 lg:h-28 xl:h-32 w-auto"
             />
           </Link>
 
