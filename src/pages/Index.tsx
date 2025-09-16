@@ -46,47 +46,48 @@ const Index = () => {
       {/* Features Section */}
       <section className="section-feature relative py-16 sm:py-20 lg:py-24">
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12 sm:mb-16 animate-slide-up">
-            <div className="flex justify-center mb-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="flex justify-center mb-4">
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-20 sm:h-24 lg:h-28 w-auto drop-shadow-2xl"
+                className="h-32 sm:h-40 lg:h-48 w-auto drop-shadow-2xl"
               />
             </div>
-            <p className="text-subtitle max-w-3xl mx-auto text-lg sm:text-xl px-2 font-medium">
-              אנו מציעים חוויית למידה מותאמת אישית עם תוכן פרימיום ותמיכה מקצועית ברמה הגבוהה ביותר
+            <h2 className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl">למה לבחור ב-LevelUp?</h2>
+            <p className="text-subtitle max-w-2xl mx-auto text-sm sm:text-base px-2">
+              אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 max-w-7xl mx-auto">
-            <div className="card-feature group animate-fade-in">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <BookOpen className="w-8 h-8 text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+            <div className="card-feature">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-foreground mb-4 text-xl font-bold">תוכן פרימיום</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                חומר לימוד מקיף ומעודכן ברמה הגבוהה ביותר, מותאם לסילבוס של מוסדות הלימוד המובילים בישראל
+              <h3 className="text-foreground mb-3">תוכן איכותי</h3>
+              <p className="text-muted-foreground">
+                חומר לימוד מקיף ומעודכן, מותאם לסילבוס של מוסדות הלימוד המובילים בישראל
               </p>
             </div>
 
-            <div className="card-feature group animate-fade-in animation-delay-200">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Users className="w-8 h-8 text-primary" />
+            <div className="card-feature">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Users className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-foreground mb-4 text-xl font-bold">קהילה אליטיסטית</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                הצטרף לקהילה של הסטודנטים המובחרים והמצטיינים במוסדות הלימוד הטובים ביותר במדינה
+              <h3 className="text-foreground mb-3">קהילה תומכת</h3>
+              <p className="text-muted-foreground">
+                הצטרף לקהילה של סטודנטים מובחרים ובעלי ביצועים גבוהים במוסדות השונים
               </p>
             </div>
 
-            <div className="card-feature group animate-fade-in animation-delay-400">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Award className="w-8 h-8 text-primary" />
+            <div className="card-feature">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Award className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-foreground mb-4 text-xl font-bold">הישגים מוכחים</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                אלפי סטודנטים השיגו הצלחה יוצאת דופן בבחינות הסופיות עם הפלטפורמה המתקדמת שלנו
+              <h3 className="text-foreground mb-3">הצלחה מוכחת</h3>
+              <p className="text-muted-foreground">
+                אלפי סטודנטים כבר השיגו הצלחה בבחינות הסופיות עם העזרה של הפלטפורמה שלנו
               </p>
             </div>
           </div>
