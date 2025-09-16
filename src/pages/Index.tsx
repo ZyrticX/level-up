@@ -55,7 +55,7 @@ const Index = () => {
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-32 md:h-40 lg:h-48 xl:h-56 w-auto drop-shadow-2xl"
+                className="h-36 md:h-44 lg:h-52 xl:h-60 w-auto drop-shadow-2xl"
               />
             </div>
             <h2 id="features-title" className="text-h2 text-foreground mb-4 md:mb-6 text-right">למה לבחור ב-LevelUp?</h2>
