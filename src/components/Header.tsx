@@ -38,10 +38,13 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
-              className="h-12 w-auto transition-transform group-hover:scale-105 flex-shrink-0"
+              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 flex-shrink-0"
               style={{ 
                 height: '48px',
-                filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 16px rgba(255, 255, 255, 0.1))'
+                filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.2)) brightness(1.1) contrast(1.05)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '6px',
+                padding: '2px'
               }}
             />
           </Link>
