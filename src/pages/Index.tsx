@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-main-logo.png';
+import levelupLogo from '@/assets/levelup-logo-new-final.jpg';
 
 const Index = () => {
   return (
