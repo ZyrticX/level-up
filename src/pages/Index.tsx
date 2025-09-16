@@ -9,7 +9,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="section-hero relative py-20 sm:py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 to-transparent opacity-30"></div>
+        <div className="absolute inset-0 bg-transparent"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-5xl mx-auto">
             <div className="animate-fade-in">
