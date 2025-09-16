@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, User, BookOpen, GraduationCap, Cpu, Zap, Calculator, Atom, FlaskConical, Dna, ArrowRight } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-1.jpg';
+import levelupLogo from '@/assets/levelup-logo-transparent-final.png';
 
 const InstitutionPage = () => {
   const { institutionId } = useParams();
@@ -90,7 +90,7 @@ const InstitutionPage = () => {
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-20 w-auto rounded-md"
+                className="h-20 w-auto"
               />
             </Link>
 
@@ -205,7 +205,7 @@ const InstitutionPage = () => {
                   <img 
                     src={levelupLogo} 
                     alt="LevelUp" 
-                    className="h-16 w-auto rounded-md"
+                    className="h-16 w-auto"
                   />
                 </div>
                 <p className="text-gray-600 leading-relaxed">
