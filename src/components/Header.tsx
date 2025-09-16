@@ -1,8 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, BookOpen, Building, Info, Phone, Settings } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-transparent-final.png';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Sheet,
   SheetContent,
@@ -11,24 +19,25 @@ import {
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('lu_auth') === '1';
 
   const navigationItems = [
-    { label: "קורסים", href: "/courses", icon: BookOpen },
-    { label: "המוסדות שלי", href: "/institutions", icon: Building },
-    { label: "ממשק ניהול", href: "/admin", icon: Settings },
-    { label: "אודות", href: "/about", icon: Info },
-    { label: "צור קשר", href: "/contact", icon: Phone },
+    { label: "קורסים", href: "/courses" },
+    { label: "המוסדות שלי", href: "/institutions" },
+    { label: "אודות", href: "/about" },
+    { label: "צור קשר", href: "/contact" },
   ];
 
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-        <div className="relative flex items-center justify-between h-14 sm:h-16 lg:h-20" dir="rtl">
+        <div className="relative flex flex-row-reverse items-center justify-between h-14 sm:h-16 lg:h-20" dir="rtl">
           {/* Logo */}
           <Link to="/" className="flex items-center group min-w-0">
             <img 
               src={levelupLogo} 
-              alt="LevelUp" 
+              alt="LevelUp – לוגו" 
               className="h-10 sm:h-12 lg:h-16 w-auto transition-transform group-hover:scale-105 flex-shrink-0"
             />
             <div className="mr-2 sm:mr-3 hidden xs:block min-w-0">
@@ -38,30 +47,59 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6" dir="ltr">
-            {navigationItems.map((item) => (
-              <Link 
-                key={item.label}
-                to={item.href}
-                className="relative px-3 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-all duration-200 group whitespace-nowrap"
-              >
-                <span className="relative z-10">{item.label}</span>
-                <div className="absolute inset-0 bg-accent/50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-x-6" aria-label="ניווט ראשי" dir="rtl">
+            {navigationItems.map((item) => {
+              const active = location.pathname.startsWith(item.href);
+              return (
+                <Link 
+                  key={item.label}
+                  to={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  className={`px-1 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${active ? 'text-foreground' : 'text-foreground/70 hover:text-foreground'}`}
+                >
+                  <span className="underline-offset-8 hover:underline">{item.label}</span>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Auth Button */}
-          <div className="hidden md:flex items-center">
-            <Link to="/auth">
-              <Button 
-                variant="default"
-                size="sm"
-                className="font-medium px-4 lg:px-6 text-sm shadow-sm hover:shadow-md transition-all duration-200"
-              >
-                כניסה למנויים
-              </Button>
-            </Link>
+          <div className="hidden md:flex items-center gap-3">
+            {!isLoggedIn ? (
+              <Link to="/auth">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  className="font-medium px-4 lg:px-6 text-sm shadow-sm hover:shadow-md transition-all duration-200"
+                  aria-label="כניסה למנויים"
+                >
+                  כניסה למנויים
+                </Button>
+              </Link>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="font-medium">
+                    אפשרויות
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>חשבון</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings">הגדרות</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      localStorage.removeItem('lu_auth');
+                      window.location.reload();
+                    }}
+                  >
+                    התנתק
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -71,6 +109,7 @@ const Header = () => {
                 variant="ghost" 
                 size="sm"
                 className="md:hidden p-2 flex-shrink-0"
+                aria-label="פתח תפריט"
               >
                 <Menu className="h-5 w-5" />
               </Button>
@@ -83,20 +122,16 @@ const Header = () => {
                 </div>
                 
                 <nav className="flex flex-col space-y-2">
-                  {navigationItems.map((item) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <Link 
-                        key={item.label}
-                        to={item.href} 
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center text-right p-4 hover:bg-accent/70 rounded-lg transition-all duration-200 group"
-                      >
-                        <IconComponent className="w-5 h-5 ml-3 text-muted-foreground group-hover:text-foreground" />
-                        <span className="font-medium">{item.label}</span>
-                      </Link>
-                    );
-                  })}
+                  {navigationItems.map((item) => (
+                    <Link 
+                      key={item.label}
+                      to={item.href} 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-right p-4 hover:bg-accent/70 rounded-lg transition-all duration-200 font-medium"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </nav>
 
                 <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
