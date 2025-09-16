@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-high-contrast.png';
+import levelupLogo from '@/assets/levelup-logo-final.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -34,13 +34,14 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex flex-row-reverse items-center justify-between h-16 sm:h-18 lg:h-20" dir="rtl">
           {/* Logo */}
-          <Link to="/" className="flex items-center group min-w-0 mr-8">
+          <Link to="/" className="flex items-center group min-w-0" style={{ paddingRight: '24px' }}>
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
               className="w-auto transition-transform group-hover:scale-105 flex-shrink-0"
               style={{ 
-                height: '88px',
+                maxHeight: '48px',
+                height: '48px',
                 imageRendering: 'crisp-edges'
               }}
             />
