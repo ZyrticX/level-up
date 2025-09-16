@@ -8,74 +8,85 @@ const Index = () => {
     <div className="min-h-screen bg-background font-sans" dir="rtl">
 
       {/* Hero Section */}
-      <section className="section-hero py-12 sm:py-16 lg:py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-white mb-4 sm:mb-6 font-semibold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl leading-tight">
-              פלטפורמת הלמידה המובילה
-              <br className="hidden sm:block" />
-              <span className="sm:hidden"> </span>למוסדות לימוד בישראל
-            </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed px-2">
-              מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות
-              <br className="hidden sm:block" />
-              <span className="sm:hidden"> </span>של מוסדות הלימוד השונים במדינה
-            </p>
-            <div className="flex justify-center px-4">
+      <section className="section-hero relative py-20 sm:py-24 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-50"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="animate-fade-in">
+              <h1 className="text-white mb-6 sm:mb-8 font-bold text-3xl sm:text-4xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
+                פלטפורמת הלמידה
+                <br />
+                <span className="text-gradient-light bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">המתקדמת בישראל</span>
+              </h1>
+              <p className="text-lg sm:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto font-medium">
+                מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות
+                <br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>של המוסדות האקדמיים המובילים במדינה
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4 animate-scale-in">
               <Link to="/auth" className="inline-block w-full sm:w-auto">
-                <button className="bg-background text-primary px-6 sm:px-8 py-3 sm:py-4 rounded-md font-semibold text-base sm:text-lg hover:bg-background/95 shadow-medium hover:shadow-large w-full sm:w-auto" style={{ transition: "var(--transition-smooth)" }}>
+                <button className="btn-primary text-lg w-full sm:w-auto min-w-[200px] group">
                   התחל ללמוד עכשיו
+                  <span className="mr-3 group-hover:mr-2 transition-all duration-300">←</span>
                 </button>
               </Link>
+              <button className="btn-secondary text-lg w-full sm:w-auto min-w-[180px]">
+                צפה בדמו
+              </button>
             </div>
           </div>
         </div>
+        {/* Floating Elements */}
+        <div className="absolute top-1/4 left-8 w-20 h-20 bg-white/10 rounded-full animate-float blur-sm"></div>
+        <div className="absolute top-1/3 right-12 w-16 h-16 bg-white/10 rounded-full animate-float animation-delay-2000 blur-sm"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-white/10 rounded-full animate-float animation-delay-4000 blur-sm"></div>
       </section>
 
       {/* Features Section */}
-      <section className="section-feature py-12 sm:py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="flex justify-center mb-4">
+      <section className="section-feature relative py-16 sm:py-20 lg:py-24">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12 sm:mb-16 animate-slide-up">
+            <div className="flex justify-center mb-6">
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-16 sm:h-20 lg:h-24 w-auto"
+                className="h-20 sm:h-24 lg:h-28 w-auto drop-shadow-2xl"
               />
             </div>
-            <p className="text-subtitle max-w-2xl mx-auto text-sm sm:text-base px-2">
-              אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
+            <p className="text-subtitle max-w-3xl mx-auto text-lg sm:text-xl px-2 font-medium">
+              אנו מציעים חוויית למידה מותאמת אישית עם תוכן פרימיום ותמיכה מקצועית ברמה הגבוהה ביותר
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
-            <div className="card-feature">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-6 h-6 text-primary" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 max-w-7xl mx-auto">
+            <div className="card-feature group animate-fade-in">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-foreground mb-3">תוכן איכותי</h3>
-              <p className="text-muted-foreground">
-                חומר לימוד מקיף ומעודכן, מותאם לסילבוס של מוסדות הלימוד המובילים בישראל
+              <h3 className="text-foreground mb-4 text-xl font-bold">תוכן פרימיום</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                חומר לימוד מקיף ומעודכן ברמה הגבוהה ביותר, מותאם לסילבוס של מוסדות הלימוד המובילים בישראל
               </p>
             </div>
 
-            <div className="card-feature">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-6 h-6 text-primary" />
+            <div className="card-feature group animate-fade-in animation-delay-200">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-foreground mb-3">קהילה תומכת</h3>
-              <p className="text-muted-foreground">
-                הצטרף לקהילה של סטודנטים מובחרים ובעלי ביצועים גבוהים במוסדות השונים
+              <h3 className="text-foreground mb-4 text-xl font-bold">קהילה אליטיסטית</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                הצטרף לקהילה של הסטודנטים המובחרים והמצטיינים במוסדות הלימוד הטובים ביותר במדינה
               </p>
             </div>
 
-            <div className="card-feature">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Award className="w-6 h-6 text-primary" />
+            <div className="card-feature group animate-fade-in animation-delay-400">
+              <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Award className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-foreground mb-3">הצלחה מוכחת</h3>
-              <p className="text-muted-foreground">
-                אלפי סטודנטים כבר השיגו הצלחה בבחינות הסופיות עם העזרה של הפלטפורמה שלנו
+              <h3 className="text-foreground mb-4 text-xl font-bold">הישגים מוכחים</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                אלפי סטודנטים השיגו הצלחה יוצאת דופן בבחינות הסופיות עם הפלטפורמה המתקדמת שלנו
               </p>
             </div>
           </div>
