@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-final.jpg';
+import LogoTransparency from '@/components/LogoTransparency';
 
 const Index = () => {
   return (
@@ -41,6 +42,13 @@ const Index = () => {
         <div className="absolute top-1/4 left-8 w-20 h-20 bg-white/10 rounded-full animate-float blur-sm"></div>
         <div className="absolute top-1/3 right-12 w-16 h-16 bg-white/10 rounded-full animate-float animation-delay-2000 blur-sm"></div>
         <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-white/10 rounded-full animate-float animation-delay-4000 blur-sm"></div>
+      </section>
+
+      {/* Logo Transparency Tool */}
+      <section className="py-12 bg-muted/50">
+        <div className="container mx-auto px-4">
+          <LogoTransparency />
+        </div>
       </section>
 
       {/* Features Section */}
