@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
+import levelupLogo from '@/assets/levelup-logo-high-contrast.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -38,13 +38,10 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
-              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 flex-shrink-0"
+              className="w-auto transition-transform group-hover:scale-105 flex-shrink-0"
               style={{ 
                 height: '48px',
-                filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.2)) brightness(1.1) contrast(1.05)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '6px',
-                padding: '2px'
+                imageRendering: 'crisp-edges'
               }}
             />
           </Link>
