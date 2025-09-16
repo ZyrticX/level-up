@@ -40,7 +40,7 @@ const Header = () => {
               alt="LevelUp – לוגו" 
               className="w-auto transition-transform group-hover:scale-105 flex-shrink-0"
               style={{ 
-                height: '56px',
+                height: '64px',
                 imageRendering: 'crisp-edges'
               }}
             />
