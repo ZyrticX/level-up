@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Phone, Lock, GraduationCap } from 'lucide-react';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -211,117 +212,117 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
+      <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-md mx-auto">
-          {/* Tab Navigation */}
-          <div className="flex mb-6 bg-muted rounded-lg p-1">
-            <button
-              onClick={() => setActiveTab('login')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'login'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              כניסה למערכת
-            </button>
-            <button
-              onClick={() => setActiveTab('signup')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'signup'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              הרשמה למערכת
-            </button>
-          </div>
+      <main className="section-standard">
+        <div className="container-standard">
+          <div className="max-w-md mx-auto space-elements">
+            {/* Tab Navigation */}
+            <div className="flex bg-muted rounded-xl p-1">
+              <button
+                onClick={() => setActiveTab('login')}
+                className={`flex-1 py-3 px-4 rounded-lg text-nav font-medium transition-colors ${
+                  activeTab === 'login'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                כניסה למערכת
+              </button>
+              <button
+                onClick={() => setActiveTab('signup')}
+                className={`flex-1 py-3 px-4 rounded-lg text-nav font-medium transition-colors ${
+                  activeTab === 'signup'
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                הרשמה למערכת
+              </button>
+            </div>
 
-          {/* Login Form */}
-          {activeTab === 'login' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-center">
-                  כניסה למשתמשים רשומים
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">כתובת מייל</label>
-                    <div className="relative">
-                      <Mail className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="email"
-                        value={loginForm.email}
-                        onChange={(e) => handleLoginChange('email', e.target.value)}
-                        className="pr-10"
-                        placeholder="הכניסו את כתובת המייל שלכם"
-                      />
+            {/* Login Form */}
+            {activeTab === 'login' && (
+              <Card className="card-academic">
+                <CardHeader>
+                  <CardTitle className="text-h2 text-foreground text-right">
+                    כניסה למשתמשים רשומים
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleLogin} className="space-elements">
+                    <div>
+                      <label className="block text-nav font-medium mb-2 text-right">כתובת מייל</label>
+                      <div className="relative">
+                        <Mail className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="email"
+                          value={loginForm.email}
+                          onChange={(e) => handleLoginChange('email', e.target.value)}
+                          className="pr-10 text-paragraph"
+                          placeholder="הכניסו את כתובת המייל שלכם"
+                        />
+                      </div>
+                      {errors.email && <p className="text-destructive text-nav mt-1 text-right">{errors.email}</p>}
                     </div>
-                    {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
-                  </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2">סיסמה</label>
-                    <div className="relative">
-                      <Lock className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type={showPassword ? 'text' : 'password'}
-                        value={loginForm.password}
-                        onChange={(e) => handleLoginChange('password', e.target.value)}
-                        className="pr-10 pl-10"
-                        placeholder="הכניסו את הסיסמה שלכם"
-                      />
+                    <div>
+                      <label className="block text-nav font-medium mb-2 text-right">סיסמה</label>
+                      <div className="relative">
+                        <Lock className="absolute right-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type={showPassword ? 'text' : 'password'}
+                          value={loginForm.password}
+                          onChange={(e) => handleLoginChange('password', e.target.value)}
+                          className="pr-10 pl-10 text-paragraph"
+                          placeholder="הכניסו את הסיסמה שלכם"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute left-3 top-3 text-muted-foreground hover:text-foreground"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                      {errors.password && <p className="text-destructive text-nav mt-1 text-right">{errors.password}</p>}
+                    </div>
+
+                    <button type="submit" className="btn-primary w-full">
+                      התחבר
+                    </button>
+
+                    <div className="space-elements">
                       <button
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute left-3 top-3 text-muted-foreground hover:text-foreground"
+                        onClick={handleForgotPassword}
+                        className="btn-ghost w-full"
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        שכחתי סיסמה
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('signup')}
+                        className="btn-secondary w-full"
+                      >
+                        עדיין לא רשומים? עברו להרשמה
                       </button>
                     </div>
-                    {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
-                  </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
 
-                  <Button type="submit" className="w-full btn-academic">
-                    התחבר
-                  </Button>
-
-                  <div className="space-y-2">
-                    <Button
-                      type="button"
-                      onClick={handleForgotPassword}
-                      variant="ghost"
-                      className="w-full"
-                    >
-                      שכחתי סיסמה
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => setActiveTab('signup')}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      עדיין לא רשומים? עברו להרשמה
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Signup Form */}
-          {activeTab === 'signup' && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-center">
-                  הרשמה למערכת
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSignup} className="space-y-4">
+            {/* Signup Form */}
+            {activeTab === 'signup' && (
+              <Card className="card-academic">
+                <CardHeader>
+                  <CardTitle className="text-h2 text-foreground text-right">
+                    הרשמה למערכת
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSignup} className="space-elements">
                   {/* Personal Information */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -496,13 +497,14 @@ const AuthPage = () => {
                   </div>
                   {errors.agreedToTerms && <p className="text-destructive text-sm mt-1">{errors.agreedToTerms}</p>}
 
-                  <Button type="submit" className="w-full btn-hero">
-                    הירשם
-                  </Button>
+                    <button type="submit" className="btn-primary w-full">
+                      הירשם
+                    </button>
                 </form>
               </CardContent>
             </Card>
-          )}
+            )}
+          </div>
         </div>
       </main>
 

@@ -9,31 +9,27 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="section-hero relative py-16 md:py-20 lg:py-32 xl:py-40 overflow-hidden" aria-labelledby="hero-title">
-        <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
-          <div className="max-w-6xl mx-auto">
+        <div className="container-standard text-center relative z-10">
+          <div className="max-w-6xl mx-auto space-elements">
             <div className="animate-fade-in">
               <h1 
                 id="hero-title" 
-                className="text-h1 text-white mb-6 md:mb-8 text-right drop-shadow-lg"
+                className="text-h1 text-white mb-6 drop-shadow-lg text-right"
               >
-                פלטפורמת הלמידה
-                <br />
-                <span className="text-gradient-light">המתקדמת בישראל</span>
+                פלטפורמת הלמידה המתקדמת בישראל
               </h1>
-              <p className="text-paragraph text-white/95 mb-8 md:mb-10 text-right max-w-4xl mx-auto drop-shadow-md">
-                מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות
-                <br className="hidden sm:block" />
-                <span className="sm:hidden"> </span>של המוסדות האקדמיים המובילים במדינה
+              <p className="text-paragraph text-white/95 mb-8 text-right max-w-4xl mx-auto drop-shadow-md">
+                מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center animate-scale-in">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-scale-in">
               <Link to="/auth" className="inline-block w-full sm:w-auto">
-                <button className="btn-primary text-button w-full sm:w-auto min-w-[200px] px-6 py-3 group shadow-lg hover:shadow-xl">
+                <button className="btn-primary">
                   התחל ללמוד עכשיו
-                  <span className="mr-3 group-hover:mr-2 transition-all duration-300">←</span>
+                  <ArrowLeft className="w-5 h-5 mr-3" />
                 </button>
               </Link>
-              <button className="btn-secondary text-button w-full sm:w-auto min-w-[180px] px-6 py-3 shadow-md hover:shadow-lg">
+              <button className="btn-secondary">
                 צפה בדמו
               </button>
             </div>
@@ -48,18 +44,18 @@ const Index = () => {
 
 
       {/* Features Section */}
-      <section className="section-feature relative py-12 md:py-16 lg:py-24 xl:py-32" aria-labelledby="features-title">
-        <div className="container mx-auto px-4 lg:px-8 relative z-10 max-w-7xl">
-          <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <div className="flex justify-center mb-6 md:mb-8">
+      <section className="section-standard" aria-labelledby="features-title">
+        <div className="container-standard space-elements">
+          <div className="text-center space-elements">
+            <div className="flex justify-center">
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
                 className="h-52 md:h-60 lg:h-72 xl:h-80 w-auto drop-shadow-2xl"
               />
             </div>
-            <h2 id="features-title" className="text-h2 text-foreground mb-4 md:mb-6 text-right">למה לבחור ב-LevelUp?</h2>
-            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right px-2">
+            <h2 id="features-title" className="text-h2 text-foreground text-right">למה לבחור ב-LevelUp?</h2>
+            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right">
               אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
             </p>
           </div>
@@ -99,11 +95,11 @@ const Index = () => {
       </section>
 
       {/* Institutions Section */}
-      <section className="py-12 md:py-16 lg:py-20 xl:py-24" aria-labelledby="institutions-title">
-        <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
-          <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <h2 id="institutions-title" className="text-h2 text-foreground mb-4 md:mb-6 text-right">מוסדות הלימוד שלנו</h2>
-            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right px-2">
+      <section className="section-standard" aria-labelledby="institutions-title">
+        <div className="container-standard space-elements">
+          <div className="text-center space-elements">
+            <h2 id="institutions-title" className="text-h2 text-foreground text-right">מוסדות הלימוד שלנו</h2>
+            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right">
               אנו עובדים עם המוסדות המובילים בישראל כדי להבטיח תוכן מדויק ועדכני
             </p>
           </div>
@@ -126,9 +122,9 @@ const Index = () => {
                   <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-200">
                     <GraduationCap className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-primary" />
                   </div>
-                  <h3 className="text-h3 text-foreground mb-2 md:mb-3 text-right">{institution.name}</h3>
-                  <p className="text-paragraph text-muted-foreground mb-3 md:mb-4 text-right">{institution.subtitle}</p>
-                  <div className="badge-academic text-button text-right">
+                  <h3 className="text-h3 text-foreground text-right">{institution.name}</h3>
+                  <p className="text-paragraph text-muted-foreground text-right">{institution.subtitle}</p>
+                  <div className="badge-academic text-nav text-right">
                     {institution.courses}
                   </div>
                 </div>
@@ -139,23 +135,23 @@ const Index = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="section-feature py-12 md:py-16 lg:py-20 xl:py-24" aria-labelledby="stats-title">
-        <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-12 text-center">
-            <div className="p-4 md:p-6 lg:p-8">
-              <div className="text-h2 font-bold text-primary mb-2 md:mb-4">15,000+</div>
+      <section className="section-feature section-standard" aria-labelledby="stats-title">
+        <div className="container-standard">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+            <div className="space-elements">
+              <div className="text-h2 font-bold text-primary">15,000+</div>
               <div className="text-paragraph text-muted-foreground">סטודנטים רשומים</div>
             </div>
-            <div className="p-4 md:p-6 lg:p-8">
-              <div className="text-h2 font-bold text-primary mb-2 md:mb-4">250+</div>
+            <div className="space-elements">
+              <div className="text-h2 font-bold text-primary">250+</div>
               <div className="text-paragraph text-muted-foreground">קורסים זמינים</div>
             </div>
-            <div className="p-4 md:p-6 lg:p-8">
-              <div className="text-h2 font-bold text-primary mb-2 md:mb-4">95%</div>
+            <div className="space-elements">
+              <div className="text-h2 font-bold text-primary">95%</div>
               <div className="text-paragraph text-muted-foreground">שיעור הצלחה</div>
             </div>
-            <div className="p-4 md:p-6 lg:p-8">
-              <div className="text-h2 font-bold text-primary mb-2 md:mb-4">6</div>
+            <div className="space-elements">
+              <div className="text-h2 font-bold text-primary">6</div>
               <div className="text-paragraph text-muted-foreground">מוסדות לימוד</div>
             </div>
           </div>
@@ -163,15 +159,15 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-white py-12 md:py-16 lg:py-20 xl:py-24" aria-labelledby="cta-title">
-        <div className="container mx-auto px-4 lg:px-8 text-center max-w-5xl">
-          <div className="max-w-3xl mx-auto">
-            <h2 id="cta-title" className="text-h2 text-white mb-4 md:mb-6 text-right">מוכנים להתחיל?</h2>
-            <p className="text-paragraph text-white/95 mb-6 md:mb-8 px-2 text-right">
+      <section className="bg-primary text-white section-standard" aria-labelledby="cta-title">
+        <div className="container-standard text-center">
+          <div className="max-w-3xl mx-auto space-elements">
+            <h2 id="cta-title" className="text-h2 text-white text-right">מוכנים להתחיל?</h2>
+            <p className="text-paragraph text-white/95 text-right">
               הצטרפו אלינו היום והתחילו את המסע שלכם להצלחה אקדמית
             </p>
             <Link to="/auth" className="inline-block w-full sm:w-auto">
-              <button className="bg-background text-primary px-8 py-3 rounded-md text-button hover:bg-background/95 shadow-medium hover:shadow-large w-full sm:w-auto transition-all duration-300">
+              <button className="bg-white text-primary btn-secondary">
                 הירשמו עכשיו
               </button>
             </Link>
