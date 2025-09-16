@@ -34,11 +34,12 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="relative flex flex-row-reverse items-center justify-between h-14 sm:h-16 lg:h-20" dir="rtl">
           {/* Logo */}
-          <Link to="/" className="flex items-center group min-w-0 ml-6">
+          <Link to="/" className="flex items-center group min-w-0 mr-6">
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
               className="h-12 w-auto transition-transform group-hover:scale-105 flex-shrink-0"
+              style={{ height: '48px' }}
             />
           </Link>
 
