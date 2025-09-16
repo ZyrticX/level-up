@@ -263,13 +263,23 @@ All colors MUST be HSL. Inspired by top university websites.
     @apply card-academic p-8;
   }
 
-  /* Premium Section Styling */
+  /* Premium Section Styling - Enhanced for production */
   .section-hero {
-    background: var(--gradient-hero);
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--primary-dark)) 25%, 
+      hsl(var(--secondary)) 50%, 
+      hsl(var(--secondary-dark)) 75%, 
+      hsl(var(--accent)) 100%);
+    background-attachment: fixed;
+    background-size: 120% 120%;
+    background-position: center;
+    min-height: 75vh;
     position: relative;
     overflow: hidden;
   }
-
+  
+  /* Fallback gradient overlay for production consistency */
   .section-hero::before {
     content: '';
     position: absolute;
@@ -277,8 +287,19 @@ All colors MUST be HSL. Inspired by top university websites.
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--gradient-mesh);
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.95) 0%, 
+      rgba(99, 102, 241, 0.9) 25%, 
+      rgba(139, 92, 246, 0.85) 50%, 
+      rgba(168, 85, 247, 0.8) 75%, 
+      rgba(236, 72, 153, 0.9) 100%);
+    z-index: 1;
     pointer-events: none;
+  }
+  
+  .section-hero > * {
+    position: relative;
+    z-index: 2;
   }
 
   .section-feature {
@@ -309,11 +330,33 @@ All colors MUST be HSL. Inspired by top university websites.
     font-weight: 450;
   }
 
+  /* Text Gradient - Enhanced visibility */
   .text-gradient {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--accent)) 50%, 
+      hsl(var(--primary)) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Light text gradient for hero */
+  .text-gradient-light {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 1) 0%, 
+      rgba(255, 255, 255, 0.95) 25%,
+      rgba(240, 249, 255, 0.9) 50%,
+      rgba(255, 255, 255, 0.85) 75%,
+      rgba(255, 255, 255, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
   }
 
   /* Premium Badge System */

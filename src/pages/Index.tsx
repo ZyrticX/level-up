@@ -5,20 +5,22 @@ import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background font-sans" dir="rtl">
+    <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
 
       {/* Hero Section */}
-      <section className="section-hero relative py-20 sm:py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-transparent"></div>
+      <section className="section-hero relative py-20 sm:py-24 lg:py-32 overflow-hidden" aria-labelledby="hero-title">
         <div className="container mx-auto px-4 text-center relative z-10">
-          <div className="w-full max-w-none mx-auto" style={{ width: 'min(70%, 1200px)' }}>
-            <div className="animate-fade-in sm:max-w-[90%] sm:mx-auto lg:max-w-none">
-              <h1 className="text-white mb-6 sm:mb-8 font-bold text-3xl sm:text-4xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
+          <div className="w-full max-w-none mx-auto" style={{ width: 'min(85%, 1200px)' }}>
+            <div className="animate-fade-in sm:max-w-[95%] sm:mx-auto lg:max-w-none">
+              <h1 
+                id="hero-title" 
+                className="text-white mb-6 sm:mb-8 font-bold text-3xl sm:text-4xl lg:text-6xl xl:text-7xl leading-tight tracking-tight drop-shadow-lg"
+              >
                 פלטפורמת הלמידה
                 <br />
-                <span className="text-gradient-light bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">המתקדמת בישראל</span>
+                <span className="text-gradient-light">המתקדמת בישראל</span>
               </h1>
-              <p className="text-lg sm:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto font-medium">
+              <p className="text-lg sm:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto font-medium drop-shadow-md">
                 מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות
                 <br className="hidden sm:block" />
                 <span className="sm:hidden"> </span>של המוסדות האקדמיים המובילים במדינה
@@ -26,26 +28,27 @@ const Index = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4 animate-scale-in">
               <Link to="/auth" className="inline-block w-full sm:w-auto">
-                <button className="btn-primary text-lg w-full sm:w-auto min-w-[200px] group">
+                <button className="btn-primary text-lg w-full sm:w-auto min-w-[200px] group shadow-lg hover:shadow-xl">
                   התחל ללמוד עכשיו
                   <span className="mr-3 group-hover:mr-2 transition-all duration-300">←</span>
                 </button>
               </Link>
-              <button className="btn-secondary text-lg w-full sm:w-auto min-w-[180px]">
+              <button className="btn-secondary text-lg w-full sm:w-auto min-w-[180px] shadow-md hover:shadow-lg">
                 צפה בדמו
               </button>
             </div>
           </div>
         </div>
-        {/* Floating Elements */}
-        <div className="absolute top-1/4 left-8 w-20 h-20 bg-white/10 rounded-full animate-float blur-sm"></div>
-        <div className="absolute top-1/3 right-12 w-16 h-16 bg-white/10 rounded-full animate-float animation-delay-2000 blur-sm"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-white/10 rounded-full animate-float animation-delay-4000 blur-sm"></div>
+        {/* Enhanced Floating Elements */}
+        <div className="absolute top-1/4 left-8 w-20 h-20 bg-white/15 rounded-full animate-float blur-sm shadow-lg"></div>
+        <div className="absolute top-1/3 right-12 w-16 h-16 bg-white/15 rounded-full animate-float animation-delay-2000 blur-sm shadow-lg"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-white/15 rounded-full animate-float animation-delay-4000 blur-sm shadow-lg"></div>
+        <div className="absolute top-1/2 right-1/4 w-8 h-8 bg-white/20 rounded-full animate-float animation-delay-1000 blur-sm shadow-md"></div>
       </section>
 
 
       {/* Features Section */}
-      <section className="section-feature relative py-16 sm:py-20 lg:py-24">
+      <section className="section-feature relative py-16 sm:py-20 lg:py-24" aria-labelledby="features-title">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-8 sm:mb-12">
             <div className="flex justify-center mb-4">
@@ -55,7 +58,7 @@ const Index = () => {
                 className="h-40 sm:h-48 lg:h-56 w-auto drop-shadow-2xl"
               />
             </div>
-            <h2 className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl">למה לבחור ב-LevelUp?</h2>
+            <h2 id="features-title" className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl font-bold">למה לבחור ב-LevelUp?</h2>
             <p className="text-subtitle max-w-2xl mx-auto text-sm sm:text-base px-2">
               אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
             </p>
@@ -96,10 +99,10 @@ const Index = () => {
       </section>
 
       {/* Institutions Section */}
-      <section className="py-12 sm:py-16">
+      <section className="py-12 sm:py-16" aria-labelledby="institutions-title">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl">מוסדות הלימוד שלנו</h2>
+            <h2 id="institutions-title" className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl font-bold">מוסדות הלימוד שלנו</h2>
             <p className="text-subtitle max-w-2xl mx-auto text-sm sm:text-base px-2">
               אנו עובדים עם המוסדות המובילים בישראל כדי להבטיח תוכן מדויק ועדכני
             </p>
@@ -136,7 +139,7 @@ const Index = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="section-feature py-12 sm:py-16">
+      <section className="section-feature py-12 sm:py-16" aria-labelledby="stats-title">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto text-center">
             <div className="p-4">
@@ -160,10 +163,10 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-white py-12 sm:py-16">
+      <section className="bg-primary text-white py-12 sm:py-16" aria-labelledby="cta-title">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-white mb-4 text-xl sm:text-2xl lg:text-3xl">מוכנים להתחיל?</h2>
+            <h2 id="cta-title" className="text-white mb-4 text-xl sm:text-2xl lg:text-3xl font-bold">מוכנים להתחיל?</h2>
             <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8 px-2">
               הצטרפו אלינו היום והתחילו את המסע שלכם להצלחה אקדמית
             </p>
@@ -237,7 +240,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 };
 
