@@ -47,7 +47,7 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-x-6" aria-label="ניווט ראשי" dir="rtl">
+          <nav className="hidden lg:flex items-center gap-x-8" aria-label="ניווט ראשי" dir="rtl">
             {navigationItems.map((item) => {
               const active = location.pathname.startsWith(item.href);
               return (
