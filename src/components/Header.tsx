@@ -57,7 +57,7 @@ const Header = () => {
                   aria-current={active ? 'page' : undefined}
                   className={`px-1 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${active ? 'text-foreground' : 'text-foreground/70 hover:text-foreground'}`}
                 >
-                  <span className="underline-offset-8 hover:underline px-2 py-1">{item.label}</span>
+                  <span className="underline-offset-8 hover:underline px-2 py-1 mx-2 tracking-wide">{item.label}</span>
                 </Link>
               );
             })}
