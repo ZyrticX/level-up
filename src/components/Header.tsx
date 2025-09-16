@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, BookOpen, Building, Info, Phone, Settings } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-new-final.jpg';
+import levelupLogo from '@/assets/levelup-logo-transparent-final.png';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
