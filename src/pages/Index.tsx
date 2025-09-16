@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-transparent-final.png';
+import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 
 const Index = () => {
   return (
@@ -13,6 +13,15 @@ const Index = () => {
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="max-w-5xl mx-auto">
             <div className="animate-fade-in">
+              <div className="flex justify-center mb-6 sm:mb-8">
+                <img
+                  src={levelupLogo}
+                  alt="LevelUp – לוגו שקוף"
+                  className="h-16 sm:h-20 lg:h-24 w-auto"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
               <h1 className="text-white mb-6 sm:mb-8 font-bold text-3xl sm:text-4xl lg:text-6xl xl:text-7xl leading-tight tracking-tight">
                 פלטפורמת הלמידה
                 <br />
