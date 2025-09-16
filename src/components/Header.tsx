@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, BookOpen, Building, Info, Phone, Settings } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-text-only-logo.png';
+import levelupLogo from '@/assets/levelup-logo-final.png';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -29,7 +29,7 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp" 
-              className="h-8 sm:h-10 lg:h-12 w-auto transition-transform group-hover:scale-105 flex-shrink-0"
+              className="h-10 sm:h-12 lg:h-16 w-auto transition-transform group-hover:scale-105 flex-shrink-0"
             />
             <div className="mr-2 sm:mr-3 hidden xs:block min-w-0">
               <div className="text-base sm:text-lg lg:text-xl font-bold text-foreground tracking-tight truncate">LevelUp</div>

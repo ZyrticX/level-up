@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-text-only-logo.png';
+import levelupLogo from '@/assets/levelup-logo-final.png';
 
 const Index = () => {
   return (
@@ -52,7 +52,7 @@ const Index = () => {
               <img 
                 src={levelupLogo} 
                 alt="LevelUp" 
-                className="h-32 sm:h-40 lg:h-48 w-auto drop-shadow-2xl"
+                className="h-40 sm:h-48 lg:h-56 w-auto drop-shadow-2xl"
               />
             </div>
             <h2 className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl">למה לבחור ב-LevelUp?</h2>
@@ -188,7 +188,7 @@ const Index = () => {
                   <img 
                     src={levelupLogo} 
                     alt="LevelUp" 
-                    className="h-12 sm:h-16 w-auto rounded-md"
+                    className="h-16 sm:h-20 w-auto"
                   />
                 </div>
                 <p className="text-muted-foreground leading-relaxed text-sm sm:text-base max-w-md mx-auto sm:mx-0">
