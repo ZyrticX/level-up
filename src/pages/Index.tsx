@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-1.jpg';
+import levelupLogo from '@/assets/levelup-main-logo.png';
 
 const Index = () => {
   return (
@@ -36,7 +36,13 @@ const Index = () => {
       <section className="section-feature py-12 sm:py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-foreground mb-4 text-xl sm:text-2xl lg:text-3xl">למה לבחור ב-LevelUp?</h2>
+            <div className="flex justify-center mb-4">
+              <img 
+                src={levelupLogo} 
+                alt="LevelUp" 
+                className="h-16 sm:h-20 lg:h-24 w-auto"
+              />
+            </div>
             <p className="text-subtitle max-w-2xl mx-auto text-sm sm:text-base px-2">
               אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
             </p>
