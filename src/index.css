@@ -318,14 +318,14 @@ All colors MUST be HSL. Inspired by top university websites.
     @apply card-academic p-8;
   }
 
-  /* Premium Section Styling - Enhanced for production */
+  /* Premium Section Styling - Blue and White Hero */
   .section-hero {
     background: linear-gradient(135deg, 
-      hsl(var(--primary)) 0%, 
-      hsl(var(--primary-dark)) 25%, 
-      hsl(var(--secondary)) 50%, 
-      hsl(var(--secondary-dark)) 75%, 
-      hsl(var(--accent)) 100%);
+      hsl(221, 83%, 53%) 0%, 
+      hsl(221, 83%, 63%) 25%, 
+      hsl(221, 70%, 70%) 50%, 
+      hsl(221, 60%, 80%) 75%, 
+      hsl(0, 0%, 100%) 100%);
     background-attachment: fixed;
     background-size: 120% 120%;
     background-position: center;
@@ -334,7 +334,7 @@ All colors MUST be HSL. Inspired by top university websites.
     overflow: hidden;
   }
   
-  /* Fallback gradient overlay for production consistency */
+  /* Blue to white gradient overlay for production consistency */
   .section-hero::before {
     content: '';
     position: absolute;
@@ -344,10 +344,10 @@ All colors MUST be HSL. Inspired by top university websites.
     bottom: 0;
     background: linear-gradient(135deg, 
       rgba(59, 130, 246, 0.95) 0%, 
-      rgba(99, 102, 241, 0.9) 25%, 
-      rgba(139, 92, 246, 0.85) 50%, 
-      rgba(168, 85, 247, 0.8) 75%, 
-      rgba(236, 72, 153, 0.9) 100%);
+      rgba(96, 165, 250, 0.9) 25%, 
+      rgba(147, 197, 253, 0.8) 50%, 
+      rgba(191, 219, 254, 0.7) 75%, 
+      rgba(255, 255, 255, 0.9) 100%);
     z-index: 1;
     pointer-events: none;
   }
