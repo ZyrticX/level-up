@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import levelupLogo from '@/assets/levelup-logo-final.png';
+import levelupLogo from '@/assets/levelup-logo-new.png';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
