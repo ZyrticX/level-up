@@ -8,8 +8,8 @@ const Index = () => {
     <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
 
       {/* Hero Section */}
-      <section className="section-hero relative py-16 md:py-20 lg:py-32 xl:py-40 overflow-hidden" aria-labelledby="hero-title">
-        <div className="container-standard text-center relative z-10">
+      <section className="section-hero relative py-16 md:py-20 lg:py-24 overflow-hidden flex items-center" aria-labelledby="hero-title">
+        <div className="container-standard text-center relative z-10 w-full">
           <div className="max-w-6xl mx-auto space-elements">
             <div className="animate-fade-in">
               <h1 
@@ -22,14 +22,14 @@ const Index = () => {
                 מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-scale-in">
-              <Link to="/auth" className="inline-block w-full sm:w-auto">
-                <button className="btn-primary">
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center animate-scale-in">
+              <Link to="/auth" className="inline-block w-full sm:w-auto max-w-xs">
+                <button className="btn-primary w-full">
                   התחל ללמוד עכשיו
                   <ArrowLeft className="w-5 h-5 mr-3" />
                 </button>
               </Link>
-              <button className="btn-secondary">
+              <button className="btn-secondary w-full sm:w-auto max-w-xs">
                 צפה בדמו
               </button>
             </div>
@@ -104,7 +104,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
               { id: 'technion', name: 'הטכניון', subtitle: 'מכון טכנולוגי לישראל', courses: '45+ קורסים' },
               { id: 'hebrew-university', name: 'האוניברסיטה העברית', subtitle: 'ירושלים', courses: '38+ קורסים' },
@@ -166,8 +166,8 @@ const Index = () => {
             <p className="text-paragraph text-white/95 text-right">
               הצטרפו אלינו היום והתחילו את המסע שלכם להצלחה אקדמית
             </p>
-            <Link to="/auth" className="inline-block w-full sm:w-auto">
-              <button className="bg-white text-primary btn-secondary">
+            <Link to="/auth" className="inline-block w-full sm:w-auto max-w-xs mx-auto">
+              <button className="bg-white text-primary btn-secondary w-full">
                 הירשמו עכשיו
               </button>
             </Link>

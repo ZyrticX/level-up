@@ -31,23 +31,21 @@ const Header = () => {
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex flex-row-reverse items-center justify-between h-16 sm:h-18 lg:h-20" dir="rtl">
+        <div className="relative flex items-center justify-between h-16 sm:h-18 lg:h-20" dir="rtl">
           {/* Logo */}
-          <Link to="/" className="flex items-center group min-w-0" style={{ paddingRight: '24px' }}>
+          <Link to="/" className="flex items-center group min-w-0">
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
-              className="w-auto transition-transform group-hover:scale-105 flex-shrink-0"
+              className="w-auto h-12 transition-transform group-hover:scale-105 flex-shrink-0"
               style={{ 
-                maxHeight: '48px',
-                height: '48px',
                 imageRendering: 'crisp-edges'
               }}
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-x-10" aria-label="ניווט ראשי" dir="rtl">
+          <nav className="hidden lg:flex items-center space-x-8 ml-auto" aria-label="ניווט ראשי">
             {navigationItems.map((item) => {
               const active = location.pathname.startsWith(item.href);
               return (
@@ -71,13 +69,13 @@ const Header = () => {
           </nav>
 
           {/* Auth Button */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             {!isLoggedIn ? (
               <Link to="/auth">
                 <Button 
                   variant="default"
                   size="sm"
-                  className="font-medium px-6 lg:px-8 py-2.5 text-sm shadow-sm hover:shadow-md transition-all duration-200 bg-primary hover:bg-primary/90 text-white"
+                  className="font-medium px-6 py-2.5 text-sm shadow-sm hover:shadow-md transition-all duration-200 bg-primary hover:bg-primary/90 text-white"
                   aria-label="כניסה למנויים"
                 >
                   כניסה למנויים
@@ -115,7 +113,7 @@ const Header = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="md:hidden p-2 flex-shrink-0"
+                className="lg:hidden p-2 flex-shrink-0"
                 aria-label="פתח תפריט"
               >
                 <Menu className="h-5 w-5" />
@@ -141,11 +139,34 @@ const Header = () => {
                   ))}
                 </nav>
 
-                <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button className="w-full font-medium py-3">
-                    כניסה למנויים
-                  </Button>
-                </Link>
+                <div className="space-y-4">
+                  {!isLoggedIn ? (
+                    <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button className="w-full font-medium py-3">
+                        כניסה למנויים
+                      </Button>
+                    </Link>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full font-medium py-3">
+                          הגדרות
+                        </Button>
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        className="w-full font-medium py-3"
+                        onClick={() => {
+                          localStorage.removeItem('lu_auth');
+                          setIsMobileMenuOpen(false);
+                          window.location.reload();
+                        }}
+                      >
+                        התנתק
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             </SheetContent>
           </Sheet>

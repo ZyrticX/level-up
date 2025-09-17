@@ -226,12 +226,18 @@ All colors MUST be HSL. Inspired by top university websites.
 }
 
 @layer components {
-  /* Premium Button System */
+  /* Premium Button System - Enhanced Responsive */
   .btn-primary {
-    @apply relative overflow-hidden bg-primary text-primary-foreground px-8 py-3.5 rounded-xl font-semibold tracking-wide;
+    @apply relative overflow-hidden bg-primary text-primary-foreground px-6 py-3 md:px-8 md:py-3.5 rounded-xl font-semibold tracking-wide w-full max-w-xs;
     background: var(--gradient-primary);
     box-shadow: var(--shadow-medium), var(--shadow-glow);
     transition: var(--transition-smooth);
+  }
+
+  @screen md {
+    .btn-primary {
+      @apply w-auto max-w-none;
+    }
   }
 
   .btn-primary::before {
@@ -255,8 +261,14 @@ All colors MUST be HSL. Inspired by top university websites.
   }
 
   .btn-secondary {
-    @apply relative overflow-hidden bg-gradient-to-r from-background to-secondary/50 backdrop-blur-sm text-foreground border border-border/60 px-8 py-3.5 rounded-xl font-semibold tracking-wide;
+    @apply relative overflow-hidden bg-gradient-to-r from-background to-secondary/50 backdrop-blur-sm text-foreground border border-border/60 px-6 py-3 md:px-8 md:py-3.5 rounded-xl font-semibold tracking-wide w-full max-w-xs;
     transition: var(--transition-smooth);
+  }
+
+  @screen md {
+    .btn-secondary {
+      @apply w-auto max-w-none;
+    }
   }
 
   .btn-secondary:hover {
@@ -318,7 +330,7 @@ All colors MUST be HSL. Inspired by top university websites.
     @apply card-academic p-8;
   }
 
-  /* Premium Section Styling - Blue and White Hero */
+  /* Premium Section Styling - Enhanced Responsive */
   .section-hero {
     background: linear-gradient(135deg, 
       hsl(221, 83%, 53%) 0%, 
@@ -329,9 +341,23 @@ All colors MUST be HSL. Inspired by top university websites.
     background-attachment: fixed;
     background-size: 120% 120%;
     background-position: center;
-    min-height: 75vh;
+    min-height: 60vh;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  @screen md {
+    .section-hero {
+      min-height: 70vh;
+    }
+  }
+
+  @screen lg {
+    .section-hero {
+      min-height: 75vh;
+    }
   }
   
   /* Blue to white gradient overlay for production consistency */
@@ -464,6 +490,49 @@ All colors MUST be HSL. Inspired by top university websites.
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  /* Additional Responsive Utilities */
+  .container-standard {
+    @apply max-w-7xl mx-auto px-4;
+  }
+
+  @screen sm {
+    .container-standard {
+      @apply px-6;
+    }
+  }
+
+  @screen lg {
+    .container-standard {
+      @apply px-8;
+    }
+  }
+
+  .space-elements > * + * {
+    @apply mt-6;
+  }
+
+  @screen md {
+    .space-elements > * + * {
+      @apply mt-8;
+    }
+  }
+
+  .section-standard {
+    @apply py-16;
+  }
+
+  @screen md {
+    .section-standard {
+      @apply py-20;
+    }
+  }
+
+  @screen lg {
+    .section-standard {
+      @apply py-24;
     }
   }
 }
