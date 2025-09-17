@@ -25,7 +25,6 @@ const Header = () => {
   const navigationItems = [
     { label: "קורסים", href: "/courses" },
     { label: "המוסדות שלי", href: "/institutions" },
-    { label: "אודות", href: "/about" },
     { label: "צור קשר", href: "/contact" },
   ];
 
