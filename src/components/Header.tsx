@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new.png';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,16 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('lu_auth') === '1';
-
 
   return (
     <header className="bg-muted/50 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
@@ -76,57 +67,6 @@ const Header = () => {
               </DropdownMenu>
             )}
           </div>
-
-          {/* Mobile Menu */}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="lg:hidden p-2 flex-shrink-0"
-                aria-label="פתח תפריט"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80" dir="rtl">
-              <div className="flex flex-col space-y-8 mt-6">
-                <div className="text-center pb-6 border-b border-border/50">
-                  <div className="text-xl font-bold text-foreground">LevelUp</div>
-                  <div className="text-sm text-muted-foreground mt-1">פלטפורמת למידה מתקדמת</div>
-                </div>
-
-                <div className="space-y-4">
-                  {!isLoggedIn ? (
-                    <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button className="w-full font-medium py-3">
-                        כניסה למנויים
-                      </Button>
-                    </Link>
-                  ) : (
-                    <div className="space-y-2">
-                      <Link to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full font-medium py-3">
-                          הגדרות
-                        </Button>
-                      </Link>
-                      <Button 
-                        variant="outline" 
-                        className="w-full font-medium py-3"
-                        onClick={() => {
-                          localStorage.removeItem('lu_auth');
-                          setIsMobileMenuOpen(false);
-                          window.location.reload();
-                        }}
-                      >
-                        התנתק
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>
