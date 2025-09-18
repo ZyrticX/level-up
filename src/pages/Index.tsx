@@ -36,13 +36,6 @@ const Index = () => {
       <section className="section-standard" aria-labelledby="features-title">
         <div className="container-standard space-elements">
           <div className="text-center space-elements">
-            <div className="flex justify-center">
-              <img 
-                src={levelupLogo} 
-                alt="LevelUp" 
-                className="h-52 md:h-60 lg:h-72 xl:h-80 w-auto drop-shadow-2xl"
-              />
-            </div>
             <h2 id="features-title" className="text-h2 text-foreground text-right">למה לבחור ב-LevelUp?</h2>
             <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right">
               אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
