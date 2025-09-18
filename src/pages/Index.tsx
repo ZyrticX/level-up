@@ -36,7 +36,7 @@ const Index = () => {
       <section className="section-standard" aria-labelledby="features-title">
         <div className="container-standard space-elements">
           <div className="text-center space-elements">
-            <h2 id="features-title" className="text-h2 text-foreground text-right">למה לבחור ב-LevelUp?</h2>
+            <h2 id="features-title" className="text-h2 text-foreground text-center">למה לבחור ב-LevelUp?</h2>
             <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right">
               אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
             </p>
