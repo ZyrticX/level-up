@@ -25,17 +25,18 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <Header />
           <Routes>
-            <Route path="/" element={<Layout><Header /><Index /></Layout>} />
-            <Route path="/institution/:institutionId" element={<Layout><Header /><InstitutionPage /></Layout>} />
-            <Route path="/course/:courseId" element={<Layout><Header /><CoursePage /></Layout>} />
-            <Route path="/watch/:courseId" element={<Layout><Header /><VideoPlayerPage /></Layout>} />
-            <Route path="/auth" element={<Layout><Header /><AuthPage /></Layout>} />
-            <Route path="/my-courses" element={<Layout><Header /><MyCoursesPage /></Layout>} />
+            <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/institution/:institutionId" element={<Layout><InstitutionPage /></Layout>} />
+            <Route path="/course/:courseId" element={<Layout><CoursePage /></Layout>} />
+            <Route path="/watch/:courseId" element={<Layout><VideoPlayerPage /></Layout>} />
+            <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
+            <Route path="/my-courses" element={<Layout><MyCoursesPage /></Layout>} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/courses" element={<AdminPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<Layout><Header /><NotFound /></Layout>} />
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
