@@ -94,7 +94,7 @@ const Index = () => {
         <div className="container-standard space-elements">
           <div className="text-center space-elements">
             <h2 id="institutions-title" className="text-h2 text-foreground text-center">בחרו את מוסדות הלימוד שלנו</h2>
-            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-right">
+            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-center">
               אנו עובדים עם המוסדות המובילים בישראל כדי להבטיח תוכן מדויק ועדכני
             </p>
           </div>
