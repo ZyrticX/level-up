@@ -50,15 +50,15 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border pt-6 md:pt-8 lg:pt-10">
-          {/* Legal Links and Copyright */}
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 lg:gap-8">
+          {/* Legal Links - Centered */}
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
               <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון האתר</a>
               <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
               <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a>
             </div>
 
-            <div className="text-nav text-muted-foreground text-center md:text-right">
+            <div className="text-nav text-muted-foreground text-center">
               © {currentYear} LevelUp. כל הזכויות שמורות.
             </div>
           </div>
