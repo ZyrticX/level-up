@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-12" dir="rtl">
         <div className="max-w-6xl mx-auto">
           {/* Main Footer Content */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Logo and Description */}
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-4">
@@ -34,46 +34,7 @@ const Footer = () => {
                     href="#" 
                     className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   >
-                    אודותינו
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="#" 
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    צור קשר
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="#" 
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    שאלות נפוצות
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="#" 
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    תמיכה טכנית
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">תמיכה</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a 
-                    href="#" 
-                    className="text-muted-foreground hover:text-primary transition-colors duration-200"
-                  >
-                    מרכז עזרה
+                    מדריכי רכישה
                   </a>
                 </li>
                 <li>
@@ -89,7 +50,7 @@ const Footer = () => {
                     href="#" 
                     className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   >
-                    החזרים וביטולים
+                    תמיכה טכנית
                   </a>
                 </li>
                 <li>
@@ -97,7 +58,7 @@ const Footer = () => {
                     href="#" 
                     className="text-muted-foreground hover:text-primary transition-colors duration-200"
                   >
-                    מדיניות השימוש
+                    חוקי השימוש
                   </a>
                 </li>
               </ul>
