@@ -209,9 +209,7 @@ const Index = () => {
 
             {/* Quick Links */}
             <div className="text-center md:text-right">
-              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">כפתורי ניווט 
-
-            </h3>
+              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט בתר</h3>
               <ul className="space-y-3 md:space-y-4">
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">אודותינו</a></li>
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
