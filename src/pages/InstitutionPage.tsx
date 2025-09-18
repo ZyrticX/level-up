@@ -82,9 +82,6 @@ const InstitutionPage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      {/* Use the existing Header component */}
-      <Header />
-
       <main className="section-standard">
         <div className="container-standard space-elements">
           {/* Back to Home Button */}
