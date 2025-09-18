@@ -35,7 +35,7 @@ const Index = () => {
       {/* Features Section */}
       <section className="section-standard" aria-labelledby="features-title">
         <div className="container-standard space-elements">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center max-w-6xl mx-auto" dir="ltr">
             <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
                 <FileText className="w-8 h-8 md:w-10 md:h-10 text-primary" />
