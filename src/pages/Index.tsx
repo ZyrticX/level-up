@@ -211,10 +211,11 @@ const Index = () => {
             <div className="text-center md:text-right">
               <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט בתר</h3>
               <ul className="space-y-3 md:space-y-4">
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">אודותינו</a></li>
+                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">דף הבית</a></li>
+                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a></li>
+                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a></li>
+                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון ותנאי שימוש</a></li>
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">שאלות נפוצות</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תמיכה טכנית</a></li>
               </ul>
             </div>
 
