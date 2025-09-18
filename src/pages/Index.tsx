@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield } from 'lucide-react';
+import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 
 const Index = () => {
@@ -101,22 +101,24 @@ const Index = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
-              { id: 'bar-ilan', name: 'אוניברסיטת בר אילן', subtitle: 'רמת גן', courses: '45+ קורסים' },
-              { id: 'ben-gurion', name: 'אוניברסיטת בן גוריון', subtitle: 'בנגב', courses: '38+ קורסים' },
-              { id: 'afeka', name: 'מכללת אפקה', subtitle: 'מכללה טכנולוגית', courses: '52+ קורסים' },
-              { id: 'hadassah', name: 'מכללת חפיש', subtitle: 'מכללה אקדמית', courses: '34+ קורסים' },
-              { id: 'ariel', name: 'אוניברסיטת אריאל שבשומרון', subtitle: 'שומרון', courses: '28+ קורסים' },
-              { id: 'ben-gurion-2', name: 'אוניברסיטת בן גוריון', subtitle: 'באר שבע', courses: '31+ קורסים' }
-            ].map((institution) => (
-              <Link
-                key={institution.id}
-                to={`/institution/${institution.id}`}
-                className="card-course group p-6 md:p-8"
-              >
-                <div className="text-center">
-                  <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-200">
-                    <GraduationCap className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-primary" />
-                  </div>
+              { id: 'bar-ilan', name: 'אוניברסיטת בר אילן', subtitle: 'רמת גן', courses: '45+ קורסים', icon: Building },
+              { id: 'ben-gurion', name: 'אוניברסיטת בן גוריון', subtitle: 'בנגב', courses: '38+ קורסים', icon: Building },
+              { id: 'afeka', name: 'מכללת אפקה', subtitle: 'מכללה טכנולוגית', courses: '52+ קורסים', icon: Wrench },
+              { id: 'hadassah', name: 'מכללת חפיש', subtitle: 'מכללה אקדמית', courses: '34+ קורסים', icon: GraduationCap },
+              { id: 'ariel', name: 'אוניברסיטת אריאל שבשומרון', subtitle: 'שומרון', courses: '28+ קורסים', icon: Building },
+              { id: 'ben-gurion-2', name: 'אוניברסיטת בן גוריון', subtitle: 'באר שבע', courses: '31+ קורסים', icon: Building }
+            ].map((institution) => {
+              const IconComponent = institution.icon;
+              return (
+                <Link
+                  key={institution.id}
+                  to={`/institution/${institution.id}`}
+                  className="card-course group p-6 md:p-8"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-200">
+                      <IconComponent className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-primary" />
+                    </div>
                   <h3 className="text-h3 text-foreground text-right">{institution.name}</h3>
                   <p className="text-paragraph text-muted-foreground text-right">{institution.subtitle}</p>
                   <div className="badge-academic text-nav text-right">
@@ -124,7 +126,8 @@ const Index = () => {
                   </div>
                 </div>
               </Link>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>
