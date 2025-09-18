@@ -223,43 +223,53 @@ const Index = () => {
             {/* Quick Links */}
             <div className="text-center md:text-right">
               <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט בתר</h3>
-              <div className="space-y-3 md:space-y-4">
-                <Button 
-                  variant="ghost" 
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
-                  onClick={() => handleNavigationClick('/')}
-                >
-                  דף הבית
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
-                  onClick={() => handleNavigationClick('/accessibility')}
-                >
-                  הצהרת נגישות
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
-                  onClick={() => handleNavigationClick('/privacy')}
-                >
-                  מדיניות פרטיות
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
-                  onClick={() => handleNavigationClick('/terms')}
-                >
-                  תקנון ותנאי שימוש
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
-                  onClick={() => handleNavigationClick('/contact')}
-                >
-                  צור קשר
-                </Button>
-              </div>
+              <ul className="space-y-3 md:space-y-4">
+                <li>
+                  <Button 
+                    variant="ghost" 
+                    className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal w-full justify-start"
+                    onClick={() => handleNavigationClick('/')}
+                  >
+                    דף הבית
+                  </Button>
+                </li>
+                <li>
+                  <Button 
+                    variant="ghost" 
+                    className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal w-full justify-start"
+                    onClick={() => handleNavigationClick('/accessibility')}
+                  >
+                    הצהרת נגישות
+                  </Button>
+                </li>
+                <li>
+                  <Button 
+                    variant="ghost" 
+                    className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal w-full justify-start"
+                    onClick={() => handleNavigationClick('/privacy')}
+                  >
+                    מדיניות פרטיות
+                  </Button>
+                </li>
+                <li>
+                  <Button 
+                    variant="ghost" 
+                    className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal w-full justify-start"
+                    onClick={() => handleNavigationClick('/terms')}
+                  >
+                    תקנון ותנאי שימוש
+                  </Button>
+                </li>
+                <li>
+                  <Button 
+                    variant="ghost" 
+                    className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal w-full justify-start"
+                    onClick={() => handleNavigationClick('/contact')}
+                  >
+                    צור קשר
+                  </Button>
+                </li>
+              </ul>
             </div>
 
             {/* Support */}
