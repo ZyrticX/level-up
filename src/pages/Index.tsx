@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle } from 'lucide-react';
+import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 
 const Index = () => {
@@ -38,51 +38,51 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center max-w-6xl mx-auto">
             <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <FileText className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
               <p className="text-sm md:text-base text-foreground font-medium text-center">
-                חודש רב תוכן<br />
-                בגישה לכמות
+                תוכן עשיר בכל<br />
+                נושא הבחירה
               </p>
             </div>
 
             <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <BookOpen className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <Clock className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
               <p className="text-sm md:text-base text-foreground font-medium text-center">
                 זמין 24/7<br />
-                בכל מקום בעולם
+                תמיד
               </p>
             </div>
 
             <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Award className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
               <p className="text-sm md:text-base text-foreground font-medium text-center">
-                למידה במהירות גבוהה<br />
-                בזמן קצר
+                לימוד פרקטי מותאם<br />
+                לכל הסטודנטים
               </p>
             </div>
 
             <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <Download className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
               <p className="text-sm md:text-base text-foreground font-medium text-center">
                 לא צריך אינטרנט<br />
-                כל הזמן
+                זה פשוט
               </p>
             </div>
 
-            <div className="text-center p-4 col-span-2 md:col-span-3 lg:col-span-1">
+            <div className="text-center p-4">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <GraduationCap className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                <Shield className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
               <p className="text-sm md:text-base text-foreground font-medium text-center">
-                קורס אקדמי מוסדר<br />
-                במלוא הידע
+                קורס אקדמי מדויק<br />
+                במלוא האמת
               </p>
             </div>
           </div>
