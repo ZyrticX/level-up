@@ -35,41 +35,54 @@ const Index = () => {
       {/* Features Section */}
       <section className="section-standard" aria-labelledby="features-title">
         <div className="container-standard space-elements">
-          <div className="text-center space-elements">
-            <h2 id="features-title" className="text-h2 text-foreground text-center">למה לבחור ב-LevelUp?</h2>
-            <p className="text-paragraph text-muted-foreground max-w-3xl mx-auto text-center">
-              אנו מציעים חוויית למידה מותאמת אישית עם תוכן איכותי ותמיכה מקצועית
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12">
-            <div className="card-feature text-center p-6 md:p-8">
-              <div className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <BookOpen className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 lg:gap-10 xl:gap-12 justify-items-center">
+            <div className="text-center p-4">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-h3 text-foreground mb-3 md:mb-4 text-right">תוכן איכותי</h3>
-              <p className="text-paragraph text-muted-foreground text-right">
-                חומר לימוד מקיף ומעודכן, מותאם לסילבוס של מוסדות הלימוד המובילים בישראל
+              <p className="text-sm md:text-base text-foreground font-medium text-center">
+                חודש רב תוכן<br />
+                בגישה לכמות
               </p>
             </div>
 
-            <div className="card-feature text-center p-6 md:p-8">
-              <div className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <Users className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+            <div className="text-center p-4">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <BookOpen className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-h3 text-foreground mb-3 md:mb-4 text-right">קהילה תומכת</h3>
-              <p className="text-paragraph text-muted-foreground text-right">
-                הצטרף לקהילה של סטודנטים מובחרים ובעלי ביצועים גבוהים במוסדות השונים
+              <p className="text-sm md:text-base text-foreground font-medium text-center">
+                זמין 24/7<br />
+                בכל מקום בעולם
               </p>
             </div>
 
-            <div className="card-feature text-center p-6 md:p-8 md:col-span-2 lg:col-span-1">
-              <div className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <Award className="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-primary" />
+            <div className="text-center p-4">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Award className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-h3 text-foreground mb-3 md:mb-4 text-right">הצלחה מוכחת</h3>
-              <p className="text-paragraph text-muted-foreground text-right">
-                אלפי סטודנטים כבר השיגו הצלחה בבחינות הסופיות עם העזרה של הפלטפורמה שלנו
+              <p className="text-sm md:text-base text-foreground font-medium text-center">
+                למידה במהירות גבוהה<br />
+                בזמן קצר
+              </p>
+            </div>
+
+            <div className="text-center p-4">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+              </div>
+              <p className="text-sm md:text-base text-foreground font-medium text-center">
+                לא צריך אינטרנט<br />
+                כל הזמן
+              </p>
+            </div>
+
+            <div className="text-center p-4 col-span-2 md:col-span-3 lg:col-span-1">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <GraduationCap className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+              </div>
+              <p className="text-sm md:text-base text-foreground font-medium text-center">
+                קורס אקדמי מוסדר<br />
+                במלוא הידע
               </p>
             </div>
           </div>
