@@ -101,12 +101,12 @@ const Index = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
-              { id: 'technion', name: 'הטכניון', subtitle: 'מכון טכנולוגי לישראל', courses: '45+ קורסים' },
-              { id: 'hebrew-university', name: 'האוניברסיטה העברית', subtitle: 'ירושלים', courses: '38+ קורסים' },
-              { id: 'tel-aviv-university', name: 'אוניברסיטת תל אביב', subtitle: 'המוסד המוביל', courses: '52+ קורסים' },
-              { id: 'ben-gurion-university', name: 'אוניברסיטת בן גוריון', subtitle: 'בנגב', courses: '34+ קורסים' },
-              { id: 'bar-ilan-university', name: 'אוניברסיטת בר אילן', subtitle: 'רמת גן', courses: '28+ קורסים' },
-              { id: 'haifa-university', name: 'אוניברסיטת חיפה', subtitle: 'הצפון', courses: '31+ קורסים' }
+              { id: 'bar-ilan', name: 'אוניברסיטת בר אילן', subtitle: 'רמת גן', courses: '45+ קורסים' },
+              { id: 'ben-gurion', name: 'אוניברסיטת בן גוריון', subtitle: 'בנגב', courses: '38+ קורסים' },
+              { id: 'afeka', name: 'מכללת אפקה', subtitle: 'מכללה טכנולוגית', courses: '52+ קורסים' },
+              { id: 'hadassah', name: 'מכללת חפיש', subtitle: 'מכללה אקדמית', courses: '34+ קורסים' },
+              { id: 'ariel', name: 'אוניברסיטת אריאל שבשומרון', subtitle: 'שומרון', courses: '28+ קורסים' },
+              { id: 'ben-gurion-2', name: 'אוניברסיטת בן גוריון', subtitle: 'באר שבע', courses: '31+ קורסים' }
             ].map((institution) => (
               <Link
                 key={institution.id}
