@@ -22,14 +22,9 @@ const Header = () => {
   const location = useLocation();
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('lu_auth') === '1';
 
-  const navigationItems = [
-    { label: "קורסים", href: "/courses" },
-    { label: "המוסדות שלי", href: "/institutions" },
-    { label: "צור קשר", href: "/contact" },
-  ];
 
   return (
-    <header className="bg-background/95 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
+    <header className="bg-muted/50 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16 sm:h-18 lg:h-20" dir="rtl">
           {/* Logo */}
@@ -44,32 +39,8 @@ const Header = () => {
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8 ml-auto" aria-label="ניווט ראשי">
-            {navigationItems.map((item) => {
-              const active = location.pathname.startsWith(item.href);
-              return (
-                <Link 
-                  key={item.label}
-                  to={item.href}
-                  aria-current={active ? 'page' : undefined}
-                  className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                    active 
-                      ? 'text-primary font-semibold' 
-                      : 'text-foreground/80 hover:text-primary hover:font-medium'
-                  }`}
-                >
-                  <span className="relative z-10">{item.label}</span>
-                  {active && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
           {/* Auth Button */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="flex items-center gap-4">
             {!isLoggedIn ? (
               <Link to="/auth">
                 <Button 
@@ -125,19 +96,6 @@ const Header = () => {
                   <div className="text-xl font-bold text-foreground">LevelUp</div>
                   <div className="text-sm text-muted-foreground mt-1">פלטפורמת למידה מתקדמת</div>
                 </div>
-                
-                <nav className="flex flex-col space-y-2">
-                  {navigationItems.map((item) => (
-                    <Link 
-                      key={item.label}
-                      to={item.href} 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-right p-4 hover:bg-accent/70 rounded-lg transition-all duration-200 font-medium"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </nav>
 
                 <div className="space-y-4">
                   {!isLoggedIn ? (
