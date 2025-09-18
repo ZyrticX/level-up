@@ -223,12 +223,10 @@ const Index = () => {
             {/* Support */}
             <div className="text-center md:text-right">
               <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">צור קשר</h3>
-              <ul className="space-y-3 md:space-y-4">
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מרכז עזרה</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">דרכי תשלום</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">החזרים וביטולים</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות השימוש</a></li>
-              </ul>
+              <div className="space-y-3 md:space-y-4">
+                <div className="text-nav text-foreground">050-322-3885</div>
+                <div className="text-nav text-foreground">בעל שם טוב 35 פתח תקווה</div>
+              </div>
             </div>
           </div>
 
