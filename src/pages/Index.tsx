@@ -2,20 +2,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
-
 const Index = () => {
-  return (
-    <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
+  return <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
 
       {/* Hero Section */}
       <section className="section-hero relative py-16 md:py-20 lg:py-24 overflow-hidden flex items-center" aria-labelledby="hero-title">
         <div className="container-standard text-center relative z-10 w-full">
           <div className="max-w-6xl mx-auto space-elements">
             <div className="animate-fade-in">
-              <h1 
-                id="hero-title" 
-                className="text-h1 text-white mb-6 drop-shadow-lg text-center"
-              >
+              <h1 id="hero-title" className="text-h1 text-white mb-6 drop-shadow-lg text-center">
                 פלטפורמת הלמידה המתקדמת בישראל
               </h1>
               <p className="text-paragraph text-white/95 mb-8 text-center max-w-4xl mx-auto drop-shadow-md">
@@ -100,21 +95,45 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              { id: 'bar-ilan', name: 'אוניברסיטת בר אילן', subtitle: 'רמת גן', courses: '45+ קורסים', icon: Building },
-              { id: 'ben-gurion', name: 'אוניברסיטת בן גוריון', subtitle: 'בנגב', courses: '38+ קורסים', icon: Building },
-              { id: 'afeka', name: 'מכללת אפקה', subtitle: 'מכללה טכנולוגית', courses: '52+ קורסים', icon: Wrench },
-              { id: 'hadassah', name: 'מכללת חפיש', subtitle: 'מכללה אקדמית', courses: '34+ קורסים', icon: GraduationCap },
-              { id: 'ariel', name: 'אוניברסיטת אריאל שבשומרון', subtitle: 'שומרון', courses: '28+ קורסים', icon: Building },
-              { id: 'ben-gurion-2', name: 'אוניברסיטת בן גוריון', subtitle: 'באר שבע', courses: '31+ קורסים', icon: Building }
-            ].map((institution) => {
-              const IconComponent = institution.icon;
-              return (
-                <Link
-                  key={institution.id}
-                  to={`/institution/${institution.id}`}
-                  className="card-course group p-6 md:p-8"
-                >
+            {[{
+            id: 'bar-ilan',
+            name: 'אוניברסיטת בר אילן',
+            subtitle: 'רמת גן',
+            courses: '45+ קורסים',
+            icon: Building
+          }, {
+            id: 'ben-gurion',
+            name: 'אוניברסיטת בן גוריון',
+            subtitle: 'בנגב',
+            courses: '38+ קורסים',
+            icon: Building
+          }, {
+            id: 'afeka',
+            name: 'מכללת אפקה',
+            subtitle: 'מכללה טכנולוגית',
+            courses: '52+ קורסים',
+            icon: Wrench
+          }, {
+            id: 'hadassah',
+            name: 'מכללת חפיש',
+            subtitle: 'מכללה אקדמית',
+            courses: '34+ קורסים',
+            icon: GraduationCap
+          }, {
+            id: 'ariel',
+            name: 'אוניברסיטת אריאל שבשומרון',
+            subtitle: 'שומרון',
+            courses: '28+ קורסים',
+            icon: Building
+          }, {
+            id: 'ben-gurion-2',
+            name: 'אוניברסיטת בן גוריון',
+            subtitle: 'באר שבע',
+            courses: '31+ קורסים',
+            icon: Building
+          }].map(institution => {
+            const IconComponent = institution.icon;
+            return <Link key={institution.id} to={`/institution/${institution.id}`} className="card-course group p-6 md:p-8">
                   <div className="text-center">
                     <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 md:mb-6 group-hover:bg-primary/20 transition-colors duration-200">
                       <IconComponent className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-primary" />
@@ -125,9 +144,8 @@ const Index = () => {
                     {institution.courses}
                   </div>
                 </div>
-              </Link>
-            );
-            })}
+              </Link>;
+          })}
           </div>
         </div>
       </section>
@@ -181,11 +199,7 @@ const Index = () => {
             {/* Logo and Description */}
             <div className="md:col-span-2 text-center md:text-right">
               <div className="flex items-center justify-center md:justify-start space-x-3 mb-4 md:mb-6">
-                <img 
-                  src={levelupLogo} 
-                  alt="LevelUp" 
-                  className="h-16 md:h-20 lg:h-24 w-auto"
-                />
+                <img src={levelupLogo} alt="LevelUp" className="h-16 md:h-20 lg:h-24 w-auto" />
               </div>
               <p className="text-paragraph text-muted-foreground max-w-md mx-auto md:mx-0 text-right">
                 פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 
@@ -195,7 +209,9 @@ const Index = () => {
 
             {/* Quick Links */}
             <div className="text-center md:text-right">
-              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">קישורים מהירים</h3>
+              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">כפתורי ניווט 
+
+            </h3>
               <ul className="space-y-3 md:space-y-4">
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">אודותינו</a></li>
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
@@ -232,8 +248,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </main>
-  );
+    </main>;
 };
-
 export default Index;
