@@ -68,8 +68,8 @@ const Footer = () => {
           <Separator className="mb-8" />
 
           {/* Legal Links and Copyright */}
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex flex-wrap justify-center md:justify-start gap-6">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-wrap justify-center gap-6">
               <a 
                 href="#" 
                 className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
