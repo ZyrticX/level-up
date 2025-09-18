@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new.png';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,6 @@ import {
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('lu_auth') === '1';
 
 
