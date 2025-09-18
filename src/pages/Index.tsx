@@ -222,7 +222,7 @@ const Index = () => {
 
             {/* Support */}
             <div className="text-center md:text-right">
-              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">תמיכה</h3>
+              <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">צור קשר</h3>
               <ul className="space-y-3 md:space-y-4">
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מרכז עזרה</a></li>
                 <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">דרכי תשלום</a></li>
