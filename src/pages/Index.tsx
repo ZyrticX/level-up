@@ -1,8 +1,21 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench, Phone, MapPin } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 const Index = () => {
+  const navigate = useNavigate();
+
+  const handleNavigationClick = (path: string) => {
+    if (path === '/') {
+      navigate('/');
+    } else {
+      // For other pages, we can either navigate to new pages or show modals
+      // For now, we'll just scroll to top as placeholder
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
 
       {/* Hero Section */}
@@ -210,13 +223,43 @@ const Index = () => {
             {/* Quick Links */}
             <div className="text-center md:text-right">
               <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט בתר</h3>
-              <ul className="space-y-3 md:space-y-4">
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">דף הבית</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון ותנאי שימוש</a></li>
-                <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
-              </ul>
+              <div className="space-y-3 md:space-y-4">
+                <Button 
+                  variant="ghost" 
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
+                  onClick={() => handleNavigationClick('/')}
+                >
+                  דף הבית
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
+                  onClick={() => handleNavigationClick('/accessibility')}
+                >
+                  הצהרת נגישות
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
+                  onClick={() => handleNavigationClick('/privacy')}
+                >
+                  מדיניות פרטיות
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
+                  onClick={() => handleNavigationClick('/terms')}
+                >
+                  תקנון ותנאי שימוש
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors p-0 h-auto font-normal justify-start"
+                  onClick={() => handleNavigationClick('/contact')}
+                >
+                  צור קשר
+                </Button>
+              </div>
             </div>
 
             {/* Support */}
