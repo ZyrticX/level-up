@@ -11,7 +11,7 @@ import {
   Calendar, 
   MessageCircle 
 } from 'lucide-react';
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -77,7 +77,6 @@ const CoursePage = () => {
   if (!course) {
     return (
       <div className="min-h-screen bg-background" dir="rtl">
-        <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">הקורס לא נמצא</h1>
           <Link to="/" className="text-primary hover:underline">
@@ -100,8 +99,6 @@ const CoursePage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <Header />
-      
       <main className="container mx-auto px-4 py-8">
         {/* Back navigation */}
         <div className="mb-6">

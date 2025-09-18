@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Clock, Users, Star, Atom, Cpu, Calculator, FlaskConical, GraduationCap } from 'lucide-react';
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -55,8 +55,6 @@ const userData = {
 const MyCoursesPage = () => {
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <Header />
-      
       <main className="section-standard">
         <div className="container-standard space-elements">
           {/* Welcome Section */}

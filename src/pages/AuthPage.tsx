@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Phone, Lock, GraduationCap } from 'lucide-react';
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -212,8 +212,6 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <Header />
-      
       <main className="section-standard">
         <div className="container-standard">
           <div className="max-w-md mx-auto space-elements">

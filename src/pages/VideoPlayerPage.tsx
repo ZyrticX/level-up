@@ -11,7 +11,7 @@ import {
   Clock,
   CheckCircle
 } from 'lucide-react';
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -99,7 +99,6 @@ const VideoPlayerPage = () => {
   if (!course) {
     return (
       <div className="min-h-screen bg-background" dir="rtl">
-        <Header />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">הקורס לא נמצא</h1>
           <Link to="/" className="text-primary hover:underline">
@@ -171,8 +170,6 @@ const VideoPlayerPage = () => {
 
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <Header />
-      
       <main className="container mx-auto px-4 py-6">
         {/* Back navigation */}
         <div className="mb-6">

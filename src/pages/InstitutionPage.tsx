@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { BookOpen, GraduationCap, Cpu, Zap, Calculator, Atom, FlaskConical, Dna, ArrowRight } from 'lucide-react';
-import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
 
 const InstitutionPage = () => {
