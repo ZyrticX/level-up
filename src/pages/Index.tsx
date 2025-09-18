@@ -14,11 +14,11 @@ const Index = () => {
             <div className="animate-fade-in">
               <h1 
                 id="hero-title" 
-                className="text-h1 text-white mb-6 drop-shadow-lg text-right"
+                className="text-h1 text-white mb-6 drop-shadow-lg text-center"
               >
                 פלטפורמת הלמידה המתקדמת בישראל
               </h1>
-              <p className="text-paragraph text-white/95 mb-8 text-right max-w-4xl mx-auto drop-shadow-md">
+              <p className="text-paragraph text-white/95 mb-8 text-center max-w-4xl mx-auto drop-shadow-md">
                 מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
               </p>
             </div>
