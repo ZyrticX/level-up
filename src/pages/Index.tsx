@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench } from 'lucide-react';
+import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench, Phone, MapPin } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 const Index = () => {
   return <main className="min-h-screen bg-background font-sans" dir="rtl" role="main">
@@ -224,8 +224,14 @@ const Index = () => {
             <div className="text-center md:text-right">
               <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">צור קשר</h3>
               <div className="space-y-3 md:space-y-4">
-                <div className="text-nav text-foreground">050-322-3885</div>
-                <div className="text-nav text-foreground">בעל שם טוב 35 פתח תקווה</div>
+                <div className="flex items-center justify-start gap-3 text-nav text-foreground">
+                  <Phone className="w-5 h-5 text-primary" />
+                  <span>050-322-3885</span>
+                </div>
+                <div className="flex items-center justify-start gap-3 text-nav text-foreground">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <span>בעל שם טוב 35 פתח תקווה</span>
+                </div>
               </div>
             </div>
           </div>
