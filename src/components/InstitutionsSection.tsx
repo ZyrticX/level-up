@@ -19,7 +19,7 @@ const InstitutionsSection = () => {
       id: 3,
       name: 'מכללת אפקה',
       icon: Cpu,
-      description: 'מכללה להנדסה וטכנולוגיה',
+      description: 'מכללה להנדסה וטכנולוגיה [מעודכן]',
     },
     {
       id: 4,
