@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Wrench, Phone, MapPin } from 'lucide-react';
+import { GraduationCap, BookOpen, Users, Award, ArrowLeft, Star, CheckCircle, FileText, Clock, Download, Shield, Building, Cpu, Phone, MapPin } from 'lucide-react';
 import Footer from '@/components/Footer';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 const Index = () => {
@@ -113,7 +113,7 @@ const Index = () => {
             name: 'מכללת אפקה',
             subtitle: 'מכללה טכנולוגית',
             courses: '52+ קורסים',
-            icon: Wrench
+            icon: Cpu
           }, {
             id: 'hadassah',
             name: 'מכללת חפיש',
