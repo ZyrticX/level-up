@@ -152,28 +152,7 @@ const Index = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="section-feature section-standard" aria-labelledby="stats-title">
-        <div className="container-standard">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div className="space-elements">
-              <div className="text-h2 font-bold text-primary">15,000+</div>
-              <div className="text-paragraph text-muted-foreground">סטודנטים רשומים</div>
-            </div>
-            <div className="space-elements">
-              <div className="text-h2 font-bold text-primary">250+</div>
-              <div className="text-paragraph text-muted-foreground">קורסים זמינים</div>
-            </div>
-            <div className="space-elements">
-              <div className="text-h2 font-bold text-primary">95%</div>
-              <div className="text-paragraph text-muted-foreground">שיעור הצלחה</div>
-            </div>
-            <div className="space-elements">
-              <div className="text-h2 font-bold text-primary">6</div>
-              <div className="text-paragraph text-muted-foreground">מוסדות לימוד</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* CTA Section */}
       <section className="bg-primary text-white section-standard" aria-labelledby="cta-title">
