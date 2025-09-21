@@ -93,22 +93,22 @@ const AuthPage = () => {
 
   // Signup form state
   const [signupForm, setSignupForm] = useState<SignupFormData>({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    institution: '',
-    department: '',
-    additionalInfo: '',
-    agreedToTerms: false
+    firstName: 'דניאל',
+    lastName: 'כהן',
+    phone: '050-1234567',
+    email: 'daniel.cohen@student.technion.ac.il',
+    password: 'Test123!',
+    confirmPassword: 'Test123!',
+    institution: 'technion',
+    department: 'מדעי המחשב',
+    additionalInfo: 'אני סטודנט שנה ג\' במדעי המחשב. מעוניין ללמוד אלגוריתמים מתקדמים ובינה מלאכותית. יש לי ניסיון בפיתוח ב-Python ו-Java.',
+    agreedToTerms: true
   });
 
   // Login form state
   const [loginForm, setLoginForm] = useState<LoginFormData>({
-    email: '',
-    password: ''
+    email: 'daniel.cohen@student.technion.ac.il',
+    password: 'Test123!'
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
