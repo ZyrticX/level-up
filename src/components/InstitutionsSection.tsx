@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Building, GraduationCap, Wrench, Church } from 'lucide-react';
+import { Building, GraduationCap, Cpu, Church } from 'lucide-react';
 
 const InstitutionsSection = () => {
   const institutions = [
@@ -17,9 +17,9 @@ const InstitutionsSection = () => {
     },
     {
       id: 3,
-      name: 'המכון הטכנולוגי',
-      icon: Wrench,
-      description: 'מכון טכנולוגי מתקדם',
+      name: 'מכללת אפקה',
+      icon: Cpu,
+      description: 'מכללה להנדסה וטכנולוגיה',
     },
     {
       id: 4,
