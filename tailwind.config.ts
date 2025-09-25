@@ -17,6 +17,7 @@ export default {
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
+        hebrew: ['Assistant', 'Alef', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

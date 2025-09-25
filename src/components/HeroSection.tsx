@@ -7,34 +7,23 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 max-w-6xl" dir="rtl">
         <div className="max-w-5xl mx-auto text-center">
           {/* Main Title */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            פלטפורמת הלמידה המתקדמת בישראל
+          <h1 className="font-hebrew text-[46px] md:text-[56px] lg:text-[64px] font-bold text-white leading-tight mb-8">
+            המסלול שלך להצלחה מתחיל כאן
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-2xl md:text-3xl font-medium text-blue-100 mb-12 leading-relaxed max-w-4xl mx-auto">
+          <p className="font-hebrew text-[22px] md:text-[24px] font-normal text-white/90 leading-relaxed max-w-4xl mx-auto mb-8" style={{ marginTop: '32px' }}>
             מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
-          </h2>
+          </p>
 
           {/* Action Button */}
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center" style={{ marginTop: '32px' }}>
             <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-white px-12 py-6 text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              className="font-hebrew bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-5 py-3 text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px]"
             >
               צפו בקורסים
             </Button>
           </div>
-
-          {/* Demo Button */}
-          <Button 
-            size="lg" 
-            variant="ghost"
-            className="text-white hover:text-blue-100 hover:bg-white/10 px-8 py-4 text-base font-medium rounded-lg"
-          >
-            <Play className="w-5 h-5 ml-2" />
-            צפו בדמו
-          </Button>
         </div>
       </div>
     </section>
