@@ -1,50 +1,40 @@
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section className="section-hero py-20 min-h-[75vh] flex items-center">
+    <section className="section-hero py-32 min-h-[80vh] flex items-center">
       <div className="container mx-auto px-4 max-w-6xl" dir="rtl">
-        <div className="max-w-4xl mx-auto text-right">
+        <div className="max-w-5xl mx-auto text-center">
           {/* Main Title */}
-          <h1 className="text-h1 font-bold text-white mb-6 leading-tight">
-            פלטפורמת הלמידה
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+            פלטפורמת הלמידה המתקדמת בישראל
           </h1>
 
           {/* Subtitle */}
-          <h2 className="text-h2 font-semibold text-blue-100 mb-8 leading-tight">
-            המתקדמת בישראל
+          <h2 className="text-2xl md:text-3xl font-medium text-blue-100 mb-12 leading-relaxed max-w-4xl mx-auto">
+            מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
           </h2>
 
-          {/* Description */}
-          <div className="text-paragraph text-blue-50 leading-relaxed mb-12 max-w-3xl">
-            <p className="mb-4">
-              פלטפורמה מתקדמת להכשרה מקצועית ולימודים אקדמיים
-            </p>
-            <p>
-              עם מגוון רחב של קורסים איכותיים ומרצים מובילים בתחום
-            </p>
+          {/* Action Button */}
+          <div className="flex justify-center mb-8">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-white px-12 py-6 text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              צפו בקורסים
+            </Button>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-end">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-button rounded-xl font-bold border-none shadow-lg"
-            >
-              התחל ללמוד עכשיו
-              <ArrowLeft className="w-5 h-5 mr-3" />
-            </Button>
-            
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="bg-white hover:bg-gray-50 text-black border-gray-200 px-8 py-4 text-button rounded-xl font-medium"
-            >
-              צפה בדמו
-              <Play className="w-5 h-5 mr-3" />
-            </Button>
-          </div>
+          {/* Demo Button */}
+          <Button 
+            size="lg" 
+            variant="ghost"
+            className="text-white hover:text-blue-100 hover:bg-white/10 px-8 py-4 text-base font-medium rounded-lg"
+          >
+            <Play className="w-5 h-5 ml-2" />
+            צפו בדמו
+          </Button>
         </div>
       </div>
     </section>
