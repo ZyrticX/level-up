@@ -22,7 +22,7 @@ const Header = () => {
             <img 
               src={levelupLogo} 
               alt="LevelUp – לוגו" 
-              className="w-auto h-12 transition-transform group-hover:scale-105 flex-shrink-0"
+              className="w-auto h-16 transition-transform group-hover:scale-105 flex-shrink-0"
               style={{ 
                 imageRendering: 'crisp-edges'
               }}
