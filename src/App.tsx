@@ -14,6 +14,7 @@ import AdminPage from "./pages/AdminPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminStudentsPage from "./pages/AdminStudentsPage";
 import AdminInstitutionsPage from "./pages/AdminInstitutionsPage";
+import AdminReportsPage from "./pages/AdminReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/admin/courses" element={<ProtectedRoute><AdminLayout><AdminPage /></AdminLayout></ProtectedRoute>} />
             <Route path="/admin/students" element={<ProtectedRoute><AdminLayout><AdminStudentsPage /></AdminLayout></ProtectedRoute>} />
             <Route path="/admin/institutions" element={<ProtectedRoute><AdminLayout><AdminInstitutionsPage /></AdminLayout></ProtectedRoute>} />
+            <Route path="/admin/reports" element={<ProtectedRoute><AdminLayout><AdminReportsPage /></AdminLayout></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>
