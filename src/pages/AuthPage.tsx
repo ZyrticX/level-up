@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Phone, Lock, GraduationCap } from 'lucide-react';
 
@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 // Mock data for institutions and departments
 const institutions = {
@@ -88,8 +89,20 @@ const AuthPage = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/');
+      }
+    };
+    checkUser();
+  }, [navigate]);
 
   // Signup form state
   const [signupForm, setSignupForm] = useState<SignupFormData>({
@@ -167,43 +180,140 @@ const AuthPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateSignup()) {
-      // Mock signup success
-      toast({
-        title: "הרשמה בוצעה בהצלחה!",
-        description: "ברוכים הבאים ל-LevelUp. אתם מועברים לעמוד הקורסים.",
-      });
-      navigate('/my-courses');
-    }
-  };
+    if (!validateSignup()) return;
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateLogin()) {
-      // Mock login - check if user exists
-      if (loginForm.email === 'test@example.com' && loginForm.password === 'password') {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: signupForm.email,
+        password: signupForm.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            first_name: signupForm.firstName,
+            last_name: signupForm.lastName,
+            phone: signupForm.phone,
+            institution: signupForm.institution,
+            department: signupForm.department,
+            additional_info: signupForm.additionalInfo,
+          }
+        }
+      });
+
+      if (error) {
+        let errorMessage = 'אירעה שגיאה בהרשמה';
+        if (error.message.includes('already registered')) {
+          errorMessage = 'המשתמש כבר קיים במערכת';
+        } else if (error.message.includes('invalid email')) {
+          errorMessage = 'כתובת מייל לא תקינה';
+        } else if (error.message.includes('password')) {
+          errorMessage = 'סיסמה חלשה מדי - נסה סיסמה חזקה יותר';
+        }
+        
         toast({
-          title: "התחברות בוצעה בהצלחה!",
-          description: "ברוכים השבים ל-LevelUp.",
-        });
-        navigate('/my-courses');
-      } else {
-        toast({
-          title: "שגיאה בהתחברות",
-          description: "המשתמש לא קיים במערכת",
+          title: "שגיאה בהרשמה",
+          description: errorMessage,
           variant: "destructive",
         });
+        return;
       }
+
+      toast({
+        title: "הרשמה בוצעה בהצלחה!",
+        description: "ברוכים הבאים ל-LevelUp. אתם מועברים לעמוד הראשי.",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "שגיאה בהרשמה",
+        description: "אירעה שגיאה בלתי צפויה",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleForgotPassword = () => {
-    toast({
-      title: "שחזור סיסמה",
-      description: "קישור לשחזור סיסמה נשלח למייל שלכם.",
-    });
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateLogin()) return;
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: loginForm.email,
+        password: loginForm.password,
+      });
+
+      if (error) {
+        let errorMessage = 'שגיאה בהתחברות';
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'כתובת מייל או סיסמה שגויים';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'יש לאשר את כתובת המייל קודם';
+        }
+        
+        toast({
+          title: "שגיאה בהתחברות",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "התחברות בוצעה בהצלחה!",
+        description: "ברוכים השבים ל-LevelUp.",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "שגיאה בהתחברות",
+        description: "אירעה שגיאה בלתי צפויה",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!loginForm.email) {
+      toast({
+        title: "שגיאה",
+        description: "נא להזין כתובת מייל",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(loginForm.email, {
+        redirectTo: `${window.location.origin}/`,
+      });
+
+      if (error) {
+        toast({
+          title: "שגיאה",
+          description: "אירעה שגיאה בשליחת המייל",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "שחזור סיסמה",
+        description: "קישור לשחזור סיסמה נשלח למייל שלכם.",
+      });
+    } catch (error) {
+      toast({
+        title: "שגיאה",
+        description: "אירעה שגיאה בלתי צפויה",
+        variant: "destructive",
+      });
+    }
   };
 
   const availableDepartments = signupForm.institution 
@@ -286,8 +396,8 @@ const AuthPage = () => {
                       {errors.password && <p className="text-destructive text-nav mt-1 text-right">{errors.password}</p>}
                     </div>
 
-                    <button type="submit" className="btn-primary w-full">
-                      התחבר
+                    <button type="submit" className="btn-primary w-full" disabled={isLoading}>
+                      {isLoading ? 'מתחבר...' : 'התחבר'}
                     </button>
 
                     <div className="space-elements">
@@ -495,8 +605,8 @@ const AuthPage = () => {
                   </div>
                   {errors.agreedToTerms && <p className="text-destructive text-sm mt-1">{errors.agreedToTerms}</p>}
 
-                    <button type="submit" className="btn-primary w-full">
-                      הירשם
+                    <button type="submit" className="btn-primary w-full" disabled={isLoading}>
+                      {isLoading ? 'נרשם...' : 'הירשם'}
                     </button>
                 </form>
               </CardContent>

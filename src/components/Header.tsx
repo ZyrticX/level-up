@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import levelupLogo from '@/assets/levelup-logo-new.png';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,9 +10,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 const Header = () => {
-  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('lu_auth') === '1';
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
+
+  const isLoggedIn = !!user;
 
   return (
     <header className="bg-muted/50 backdrop-blur-sm border-b border-border/40 sticky top-0 z-50">
@@ -55,12 +80,7 @@ const Header = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/settings">הגדרות</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      localStorage.removeItem('lu_auth');
-                      window.location.reload();
-                    }}
-                  >
+                  <DropdownMenuItem onSelect={handleSignOut}>
                     התנתק
                   </DropdownMenuItem>
                 </DropdownMenuContent>
