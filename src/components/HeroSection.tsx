@@ -12,7 +12,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="font-hebrew text-[22px] md:text-[24px] font-normal text-white/90 leading-relaxed max-w-4xl mx-auto mb-8" style={{ marginTop: '32px' }}>
+          <p className="font-hebrew text-[22px] md:text-[24px] font-normal text-white/90 leading-relaxed max-w-4xl mb-8" style={{ marginTop: '32px' }}>
             מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
           </p>
         </div>
