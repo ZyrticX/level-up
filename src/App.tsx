@@ -15,6 +15,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Layout from "./components/Layout";
+import AdminLayout from "./components/AdminLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -33,8 +35,8 @@ const App = () => (
             <Route path="/watch/:courseId" element={<Layout><VideoPlayerPage /></Layout>} />
             <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
             <Route path="/my-courses" element={<Layout><MyCoursesPage /></Layout>} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/courses" element={<AdminPage />} />
+            <Route path="/admin" element={<ProtectedRoute><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+            <Route path="/admin/courses" element={<ProtectedRoute><AdminLayout><AdminPage /></AdminLayout></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>

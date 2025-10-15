@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 const Header = () => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+  const { isAdmin } = useAdminAuth();
 
   useEffect(() => {
     // Check current session
@@ -74,9 +76,14 @@ const Header = () => {
                     אפשרויות
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="bg-white">
                   <DropdownMenuLabel>חשבון</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">לוח בקרה</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/settings">הגדרות</Link>
                   </DropdownMenuItem>

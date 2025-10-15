@@ -6,47 +6,186 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Trash2, Edit, Plus, Save, X } from "lucide-react";
+import { Trash2, Edit, Plus, Save, X, Upload } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+type IconCategory = "electrical_engineering" | "digital_systems" | "computer_organization" | "computer_networks" | "electronics" | "semiconductors" | "signal_processing" | "mathematics" | "probability" | "stochastic_models" | "physics" | "mechanics" | "magnetism" | "general";
 
 interface Course {
   id: string;
   title: string;
-  description: string;
-  instructor: string;
-  duration: string;
-  category: string;
-  imageUrl: string;
-  price: string;
-  createdAt: string;
+  description: string | null;
+  instructor: string | null;
+  duration: string | null;
+  icon_category: IconCategory | null;
+  icon_url: string | null;
+  price: number | null;
+  institution: string | null;
+  department: string | null;
+  whatsapp_link: string | null;
+  is_published: boolean | null;
+  students_count: number | null;
+  rating: number | null;
 }
 
+const iconCategories = [
+  { value: "electrical_engineering", label: "הנדסת חשמל" },
+  { value: "digital_systems", label: "מערכות דיגיטליות" },
+  { value: "computer_organization", label: "ארגון מחשבים" },
+  { value: "computer_networks", label: "רשתות מחשבים" },
+  { value: "electronics", label: "אלקטרוניקה" },
+  { value: "semiconductors", label: "מוליכים למחצה" },
+  { value: "signal_processing", label: "עיבוד אותות" },
+  { value: "mathematics", label: "מתמטיקה" },
+  { value: "probability", label: "הסתברות" },
+  { value: "stochastic_models", label: "מודלים סטוכסטיים" },
+  { value: "physics", label: "פיזיקה" },
+  { value: "mechanics", label: "מכניקה" },
+  { value: "magnetism", label: "מגנטיות" },
+  { value: "general", label: "כללי" }
+] as const;
+
 const AdminPage = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
+  const [uploadingIcon, setUploadingIcon] = useState(false);
+  const [formData, setFormData] = useState<{
+    title: string;
+    description: string;
+    instructor: string;
+    duration: string;
+    icon_category: IconCategory;
+    icon_url: string;
+    price: string;
+    institution: string;
+    department: string;
+    whatsapp_link: string;
+    is_published: boolean;
+  }>({
     title: "",
     description: "",
     instructor: "",
     duration: "",
-    category: "",
-    imageUrl: "",
-    price: ""
+    icon_category: "general",
+    icon_url: "",
+    price: "",
+    institution: "",
+    department: "",
+    whatsapp_link: "",
+    is_published: false
   });
 
-  // Load courses from localStorage on component mount
-  useEffect(() => {
-    const savedCourses = localStorage.getItem("admin_courses");
-    if (savedCourses) {
-      setCourses(JSON.parse(savedCourses));
+  // Fetch courses
+  const { data: courses = [], isLoading } = useQuery({
+    queryKey: ['admin-courses'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Course[];
     }
-  }, []);
+  });
 
-  // Save courses to localStorage whenever courses change
-  useEffect(() => {
-    localStorage.setItem("admin_courses", JSON.stringify(courses));
-  }, [courses]);
+  // Create course mutation
+  const createMutation = useMutation({
+    mutationFn: async (courseData: typeof formData) => {
+      const { data, error } = await supabase
+        .from('courses')
+        .insert([{
+          title: courseData.title,
+          description: courseData.description || null,
+          instructor: courseData.instructor || null,
+          duration: courseData.duration || null,
+          icon_category: courseData.icon_category || 'general',
+          icon_url: courseData.icon_url || null,
+          price: courseData.price ? parseFloat(courseData.price) : null,
+          institution: courseData.institution || null,
+          department: courseData.department || null,
+          whatsapp_link: courseData.whatsapp_link || null,
+          is_published: courseData.is_published
+        }])
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success("הקורס נוסף בהצלחה");
+      resetForm();
+      setIsCreating(false);
+    },
+    onError: (error) => {
+      console.error('Error creating course:', error);
+      toast.error("שגיאה ביצירת הקורס");
+    }
+  });
+
+  // Update course mutation
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, courseData }: { id: string; courseData: typeof formData }) => {
+      const { data, error } = await supabase
+        .from('courses')
+        .update({
+          title: courseData.title,
+          description: courseData.description || null,
+          instructor: courseData.instructor || null,
+          duration: courseData.duration || null,
+          icon_category: courseData.icon_category || 'general',
+          icon_url: courseData.icon_url || null,
+          price: courseData.price ? parseFloat(courseData.price) : null,
+          institution: courseData.institution || null,
+          department: courseData.department || null,
+          whatsapp_link: courseData.whatsapp_link || null,
+          is_published: courseData.is_published
+        })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success("הקורס עודכן בהצלחה");
+      resetForm();
+      setEditingId(null);
+    },
+    onError: (error) => {
+      console.error('Error updating course:', error);
+      toast.error("שגיאה בעדכון הקורס");
+    }
+  });
+
+  // Delete course mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('courses')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success("הקורס נמחק בהצלחה");
+    },
+    onError: (error) => {
+      console.error('Error deleting course:', error);
+      toast.error("שגיאה במחיקת הקורס");
+    }
+  });
 
   const resetForm = () => {
     setFormData({
@@ -54,10 +193,44 @@ const AdminPage = () => {
       description: "",
       instructor: "",
       duration: "",
-      category: "",
-      imageUrl: "",
-      price: ""
+      icon_category: "general",
+      icon_url: "",
+      price: "",
+      institution: "",
+      department: "",
+      whatsapp_link: "",
+      is_published: false
     });
+  };
+
+  const handleIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingIcon(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('course-icons')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('course-icons')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, icon_url: publicUrl });
+      toast.success("האייקון הועלה בהצלחה");
+    } catch (error) {
+      console.error('Error uploading icon:', error);
+      toast.error("שגיאה בהעלאת האייקון");
+    } finally {
+      setUploadingIcon(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,46 +242,34 @@ const AdminPage = () => {
     }
 
     if (editingId) {
-      // Update existing course
-      setCourses(prev => prev.map(course => 
-        course.id === editingId 
-          ? { ...course, ...formData }
-          : course
-      ));
-      setEditingId(null);
-      toast.success("הקורס עודכן בהצלחה");
+      updateMutation.mutate({ id: editingId, courseData: formData });
     } else {
-      // Create new course
-      const newCourse: Course = {
-        id: Date.now().toString(),
-        ...formData,
-        createdAt: new Date().toISOString()
-      };
-      setCourses(prev => [...prev, newCourse]);
-      setIsCreating(false);
-      toast.success("הקורס נוסף בהצלחה");
+      createMutation.mutate(formData);
     }
-    
-    resetForm();
   };
 
   const handleEdit = (course: Course) => {
     setFormData({
       title: course.title,
-      description: course.description,
-      instructor: course.instructor,
-      duration: course.duration,
-      category: course.category,
-      imageUrl: course.imageUrl,
-      price: course.price
+      description: course.description || "",
+      instructor: course.instructor || "",
+      duration: course.duration || "",
+      icon_category: course.icon_category || "general",
+      icon_url: course.icon_url || "",
+      price: course.price?.toString() || "",
+      institution: course.institution || "",
+      department: course.department || "",
+      whatsapp_link: course.whatsapp_link || "",
+      is_published: course.is_published || false
     });
     setEditingId(course.id);
     setIsCreating(false);
   };
 
   const handleDelete = (id: string) => {
-    setCourses(prev => prev.filter(course => course.id !== id));
-    toast.success("הקורס נמחק בהצלחה");
+    if (confirm("האם אתה בטוח שברצונך למחוק את הקורס?")) {
+      deleteMutation.mutate(id);
+    }
   };
 
   const handleCancel = () => {
@@ -116,6 +277,17 @@ const AdminPage = () => {
     setEditingId(null);
     resetForm();
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">טוען קורסים...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6" dir="rtl">
@@ -176,6 +348,26 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
+                    <Label htmlFor="institution">מוסד</Label>
+                    <Input
+                      id="institution"
+                      value={formData.institution}
+                      onChange={(e) => setFormData({...formData, institution: e.target.value})}
+                      placeholder="למשל: טכניון"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="department">מחלקה</Label>
+                    <Input
+                      id="department"
+                      value={formData.department}
+                      onChange={(e) => setFormData({...formData, department: e.target.value})}
+                      placeholder="למשל: מדעי המחשב"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
                     <Label htmlFor="duration">משך הקורס</Label>
                     <Input
                       id="duration"
@@ -186,33 +378,72 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="category">קטגוריה</Label>
-                    <Input
-                      id="category"
-                      value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      placeholder="למשל: תכנות, עיצוב"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="price">מחיר</Label>
+                    <Label htmlFor="price">מחיר (₪)</Label>
                     <Input
                       id="price"
+                      type="number"
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
-                      placeholder="למשל: ₪299"
+                      placeholder="299"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="imageUrl">קישור לתמונה</Label>
+                    <Label htmlFor="icon_category">קטגוריית אייקון</Label>
+                    <Select 
+                      value={formData.icon_category} 
+                      onValueChange={(value) => setFormData({...formData, icon_category: value as IconCategory})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="בחר קטגוריה" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        {iconCategories.map(cat => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="icon_upload">העלאת אייקון מותאם</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="icon_upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleIconUpload}
+                        disabled={uploadingIcon}
+                        className="flex-1"
+                      />
+                      {uploadingIcon && <span className="text-sm text-muted-foreground">מעלה...</span>}
+                    </div>
+                    {formData.icon_url && (
+                      <div className="mt-2">
+                        <img src={formData.icon_url} alt="Icon preview" className="w-16 h-16 object-cover rounded" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="whatsapp_link">קישור וואטסאפ</Label>
                     <Input
-                      id="imageUrl"
-                      value={formData.imageUrl}
-                      onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                      placeholder="https://example.com/image.jpg"
+                      id="whatsapp_link"
+                      value={formData.whatsapp_link}
+                      onChange={(e) => setFormData({...formData, whatsapp_link: e.target.value})}
+                      placeholder="https://wa.me/..."
                     />
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <Switch
+                      id="is_published"
+                      checked={formData.is_published}
+                      onCheckedChange={(checked) => setFormData({...formData, is_published: checked})}
+                    />
+                    <Label htmlFor="is_published">פרסם קורס</Label>
                   </div>
                 </div>
                 
@@ -229,7 +460,7 @@ const AdminPage = () => {
                 </div>
                 
                 <div className="flex gap-4">
-                  <Button type="submit">
+                  <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                     <Save className="w-4 h-4 ml-2" />
                     {editingId ? "עדכן קורס" : "שמור קורס"}
                   </Button>
@@ -264,10 +495,10 @@ const AdminPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
                 <Card key={course.id} className="overflow-hidden">
-                  {course.imageUrl && (
+                  {course.icon_url && (
                     <div className="h-48 bg-muted overflow-hidden">
                       <img 
-                        src={course.imageUrl} 
+                        src={course.icon_url} 
                         alt={course.title}
                         className="w-full h-full object-cover"
                       />
@@ -275,26 +506,33 @@ const AdminPage = () => {
                   )}
                   <CardContent className="p-4">
                     <div className="space-y-2">
-                      <h3 className="font-semibold text-lg">{course.title}</h3>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-lg">{course.title}</h3>
+                        {course.is_published ? (
+                          <Badge variant="default">מפורסם</Badge>
+                        ) : (
+                          <Badge variant="secondary">טיוטה</Badge>
+                        )}
+                      </div>
                       <p className="text-muted-foreground text-sm line-clamp-2">
                         {course.description}
                       </p>
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <span>מרצה: {course.instructor}</span>
                       </div>
+                      {course.institution && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <span>מוסד: {course.institution}</span>
+                        </div>
+                      )}
                       {course.duration && (
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <span>משך: {course.duration}</span>
                         </div>
                       )}
-                      {course.category && (
-                        <Badge variant="secondary" className="w-fit">
-                          {course.category}
-                        </Badge>
-                      )}
                       {course.price && (
                         <div className="text-lg font-semibold text-primary">
-                          {course.price}
+                          ₪{course.price}
                         </div>
                       )}
                     </div>
@@ -311,6 +549,7 @@ const AdminPage = () => {
                         variant="destructive" 
                         size="sm" 
                         onClick={() => handleDelete(course.id)}
+                        disabled={deleteMutation.isPending}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
