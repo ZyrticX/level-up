@@ -15,15 +15,6 @@ const HeroSection = () => {
           <p className="font-hebrew text-[22px] md:text-[24px] font-normal text-white/90 leading-relaxed max-w-4xl mx-auto mb-8" style={{ marginTop: '32px' }}>
             מרתונים מוקלטים ועשירים המותאמים במיוחד לבחינות הסופיות של המוסדות האקדמיים המובילים במדינה
           </p>
-
-          {/* Action Button */}
-          <div className="flex justify-center" style={{ marginTop: '32px' }}>
-            <Button 
-              className="font-hebrew bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-5 py-3 text-lg font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 min-h-[48px]"
-            >
-              צפו בקורסים
-            </Button>
-          </div>
         </div>
       </div>
     </section>
