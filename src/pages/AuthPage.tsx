@@ -220,6 +220,28 @@ const AuthPage = () => {
         return;
       }
 
+      // Create profile row for the new user (fallback when DB trigger isn't present)
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: data.user.id,
+            first_name: signupForm.firstName || '',
+            last_name: signupForm.lastName || '',
+            phone: signupForm.phone || null,
+            institution: signupForm.institution || null,
+            department: signupForm.department || null,
+            additional_info: signupForm.additionalInfo || null,
+          });
+        if (profileError) {
+          toast({
+            title: "שגיאה ביצירת פרופיל",
+            description: "ההרשמה הצליחה אך יצירת הפרופיל נכשלה. ננסה שוב מאוחר יותר.",
+            variant: "destructive",
+          });
+        }
+      }
+
       toast({
         title: "הרשמה בוצעה בהצלחה!",
         description: "ברוכים הבאים ל-LevelUp. אתם מועברים לעמוד הראשי.",
