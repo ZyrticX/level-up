@@ -12,6 +12,7 @@ import AuthPage from "./pages/AuthPage";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import AdminPage from "./pages/AdminPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Layout from "./components/Layout";
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/watch/:courseId" element={<Layout><VideoPlayerPage /></Layout>} />
             <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
             <Route path="/my-courses" element={<Layout><MyCoursesPage /></Layout>} />
+            <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
             <Route path="/admin" element={<ProtectedRoute><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute><AdminLayout><AdminPage /></AdminLayout></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
