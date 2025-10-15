@@ -5,7 +5,7 @@ const HeroSection = () => {
   return (
     <section className="section-hero py-32 min-h-[80vh] flex items-center">
       <div className="container mx-auto px-4 max-w-6xl" dir="rtl">
-        <div className="max-w-5xl mx-auto text-center">
+        <div className="max-w-5xl mx-auto text-right">
           {/* Main Title */}
           <h1 className="font-hebrew text-[46px] md:text-[56px] lg:text-[64px] font-bold text-white leading-tight mb-8">
             המסלול שלך להצלחה מתחיל כאן
