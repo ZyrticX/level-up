@@ -14,6 +14,148 @@ export type Database = {
   }
   public: {
     Tables: {
+      course_chapters: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          order_index: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_chapters_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_materials: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          file_type: string | null
+          file_url: string
+          folder: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          file_type?: string | null
+          file_url: string
+          folder?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          file_type?: string | null
+          file_url?: string
+          folder?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_materials_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          created_at: string | null
+          department: string | null
+          description: string | null
+          duration: string | null
+          icon_category:
+            | Database["public"]["Enums"]["course_icon_category"]
+            | null
+          icon_url: string | null
+          id: string
+          institution: string | null
+          instructor: string | null
+          is_published: boolean | null
+          price: number | null
+          rating: number | null
+          students_count: number | null
+          title: string
+          updated_at: string | null
+          whatsapp_link: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          duration?: string | null
+          icon_category?:
+            | Database["public"]["Enums"]["course_icon_category"]
+            | null
+          icon_url?: string | null
+          id?: string
+          institution?: string | null
+          instructor?: string | null
+          is_published?: boolean | null
+          price?: number | null
+          rating?: number | null
+          students_count?: number | null
+          title: string
+          updated_at?: string | null
+          whatsapp_link?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          duration?: string | null
+          icon_category?:
+            | Database["public"]["Enums"]["course_icon_category"]
+            | null
+          icon_url?: string | null
+          id?: string
+          institution?: string | null
+          instructor?: string | null
+          is_published?: boolean | null
+          price?: number | null
+          rating?: number | null
+          students_count?: number | null
+          title?: string
+          updated_at?: string | null
+          whatsapp_link?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           additional_info: string | null
@@ -86,6 +228,21 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      course_icon_category:
+        | "electrical_engineering"
+        | "digital_systems"
+        | "computer_organization"
+        | "computer_networks"
+        | "electronics"
+        | "semiconductors"
+        | "signal_processing"
+        | "mathematics"
+        | "probability"
+        | "stochastic_models"
+        | "physics"
+        | "mechanics"
+        | "magnetism"
+        | "general"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -214,6 +371,22 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      course_icon_category: [
+        "electrical_engineering",
+        "digital_systems",
+        "computer_organization",
+        "computer_networks",
+        "electronics",
+        "semiconductors",
+        "signal_processing",
+        "mathematics",
+        "probability",
+        "stochastic_models",
+        "physics",
+        "mechanics",
+        "magnetism",
+        "general",
+      ],
     },
   },
 } as const

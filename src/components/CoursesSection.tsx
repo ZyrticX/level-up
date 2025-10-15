@@ -1,50 +1,70 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Clock, Star } from 'lucide-react';
+import { Users, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import CourseIcon from './CourseIcon';
+import { CourseIconCategory } from '@/lib/courseIcons';
+
+interface Course {
+  id: string;
+  title: string;
+  description: string | null;
+  instructor: string | null;
+  students_count: number;
+  duration: string | null;
+  rating: number;
+  icon_category: CourseIconCategory;
+  icon_url: string | null;
+}
 
 const CoursesSection = () => {
-  const courses = [
-    {
-      id: 'calculus-1',
-      title: 'חשבון דיפרנציאלי ואינטגרלי א\'',
-      description: 'קורס יסודי בחשבון דיפרנציאלי ואינטגרלי המותאם לסטודנטים במדעי המחשב והנדסה',
-      instructor: 'פרופ\' דן כהן',
-      students: 1250,
-      duration: '42 שעות',
-      rating: 4.8,
-      image: '/placeholder.svg'
-    },
-    {
-      id: 'linear-algebra',
-      title: 'אלגברה לינארית',
-      description: 'מושגי יסוד באלגברה לינארית: מטריצות, וקטורים, מרחבים וקטוריים והעתקות לינאריות',
-      instructor: 'ד"ר שרה לוי',
-      students: 980,
-      duration: '36 שעות',
-      rating: 4.7,
-      image: '/placeholder.svg'
-    },
-    {
-      id: 'data-structures',
-      title: 'מבני נתונים ואלגוריתמים',
-      description: 'קורס מתקדם במבני נתונים ואלגוריתמים יעילים לפתרון בעיות מחשוב מורכבות',
-      instructor: 'פרופ\' אמיר רוזן',
-      students: 750,
-      duration: '48 שעות',
-      rating: 4.9,
-      image: '/placeholder.svg'
-    },
-    {
-      id: 'statistics',
-      title: 'סטטיסטיקה והסתברות',
-      description: 'עקרונות הסטטיסטיקה וההסתברות עם דגש על יישומים במדעי המחשב וניתוח נתונים',
-      instructor: 'ד"ר מיכל אבן',
-      students: 650,
-      duration: '40 שעות',
-      rating: 4.6,
-      image: '/placeholder.svg'
-    }
-  ];
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('is_published', true)
+        .order('students_count', { ascending: false })
+        .limit(4);
+
+      if (error) {
+        console.error('Error fetching courses:', error);
+      } else if (data) {
+        setCourses(data);
+      }
+      setLoading(false);
+    };
+
+    fetchCourses();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center">
+            <p className="text-muted-foreground">טוען קורסים...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (courses.length === 0) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center">
+            <p className="text-muted-foreground">אין קורסים זמינים כרגע</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 bg-background" aria-labelledby="courses-title">
@@ -63,7 +83,11 @@ const CoursesSection = () => {
               className="bg-card border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
             >
               <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <BookOpen className="w-12 h-12 text-primary" />
+                <CourseIcon 
+                  category={course.icon_category}
+                  customIconUrl={course.icon_url}
+                  size={48}
+                />
               </div>
               
               <div className="p-6">
@@ -79,20 +103,24 @@ const CoursesSection = () => {
                   <div className="flex items-center justify-between">
                     <span className="flex items-center">
                       <Users className="w-4 h-4 ml-1" />
-                      {course.students.toLocaleString()} סטודנטים
+                      {course.students_count.toLocaleString()} סטודנטים
                     </span>
                     <span className="flex items-center">
                       <Star className="w-4 h-4 ml-1 text-yellow-500" />
                       {course.rating}
                     </span>
                   </div>
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 ml-1" />
-                    {course.duration}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {course.instructor}
-                  </div>
+                  {course.duration && (
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 ml-1" />
+                      {course.duration}
+                    </div>
+                  )}
+                  {course.instructor && (
+                    <div className="text-xs text-muted-foreground">
+                      {course.instructor}
+                    </div>
+                  )}
                 </div>
                 
                 <Link to={`/course/${course.id}`}>
