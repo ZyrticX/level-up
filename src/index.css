@@ -142,14 +142,11 @@ All colors MUST be HSL. Inspired by top university websites.
 
   /* Premium Typography */
   .font-sans {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    font-feature-settings: 'cv11', 'ss01';
-    font-variant-ligatures: common-ligatures;
+    font-family: 'Assistant', 'Alef', system-ui, -apple-system, sans-serif;
   }
 
   .font-serif {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-feature-settings: 'kern';
+    font-family: 'Assistant', 'Alef', system-ui, sans-serif;
   }
 
   /* Professional Typography System */

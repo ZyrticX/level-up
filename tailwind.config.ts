@@ -15,8 +15,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['Assistant', 'Alef', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Assistant', 'Alef', 'system-ui', 'sans-serif'],
         hebrew: ['Assistant', 'Alef', 'system-ui', 'sans-serif'],
       },
       colors: {
