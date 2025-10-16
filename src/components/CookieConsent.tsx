@@ -102,7 +102,7 @@ const CookieConsent = () => {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-end justify-center p-4" dir="rtl">
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-end justify-center p-4" style={{ paddingBottom: 'calc(1rem + var(--safe-area-bottom, 0px))' }} dir="rtl">
       <Card className="w-full max-w-2xl shadow-lg">
         <CardHeader>
           <div className="flex items-start justify-between">

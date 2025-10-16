@@ -80,7 +80,13 @@ const Layout = ({
       </Helmet>
       
       <div className="min-h-screen bg-background font-sans" dir="rtl">
+        {/* Top safe area spacer */}
+        <div style={{ height: 'var(--safe-area-top, 0px)' }} className="bg-muted/50 backdrop-blur-sm" />
+        
         {children}
+        
+        {/* Bottom safe area spacer */}
+        <div style={{ height: 'var(--safe-area-bottom, 0px)' }} className="bg-background" />
       </div>
     </>
   );
