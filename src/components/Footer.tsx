@@ -25,11 +25,22 @@ const Footer = () => {
           <div className="text-center md:text-right">
             <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט באתר</h3>
             <ul className="space-y-3 md:space-y-4">
-              <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">דף הבית</a></li>
+              <li><a href="/" className="text-nav text-muted-foreground hover:text-primary transition-colors">דף הבית</a></li>
               <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a></li>
-              <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a></li>
+              <li><a href="/privacy" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a></li>
               <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון ותנאי שימוש</a></li>
               <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
+              <li>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('cookieConsent');
+                    window.location.reload();
+                  }}
+                  className="text-nav text-muted-foreground hover:text-primary transition-colors"
+                >
+                  הגדרות עוגיות
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -54,12 +65,12 @@ const Footer = () => {
           <div className="flex flex-col items-center space-y-4">
             <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
               <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון האתר</a>
-              <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
+              <a href="/privacy" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
               <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a>
             </div>
 
             <div className="text-nav text-muted-foreground text-center">
-              © {currentYear} LevelUp. כל הזכויות שמורות.
+              © {currentYear} LevelUp. כל הזכויות שמורות. | מוגן בהתאם לתיקון 13 לחוק הגנת הפרטיות
             </div>
           </div>
         </div>

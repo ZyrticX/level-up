@@ -22,6 +22,8 @@ import Header from "./components/Header";
 import Layout from "./components/Layout";
 import AdminLayout from "./components/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CookieConsent from "./components/CookieConsent";
+import PrivacyPage from "./pages/PrivacyPage";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <CookieConsent />
         <BrowserRouter>
           <Header />
           <Routes>
@@ -41,6 +44,7 @@ const App = () => (
             <Route path="/auth" element={<Layout><AuthPage /></Layout>} />
             <Route path="/my-courses" element={<Layout><MyCoursesPage /></Layout>} />
             <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
+            <Route path="/privacy" element={<Layout><PrivacyPage /></Layout>} />
             <Route path="/admin" element={<ProtectedRoute><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
             <Route path="/admin/courses" element={<ProtectedRoute><AdminLayout><AdminPage /></AdminLayout></ProtectedRoute>} />
             <Route path="/admin/students" element={<ProtectedRoute><AdminLayout><AdminStudentsPage /></AdminLayout></ProtectedRoute>} />
