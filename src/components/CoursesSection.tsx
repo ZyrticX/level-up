@@ -55,15 +55,7 @@ const CoursesSection = () => {
   }
 
   if (courses.length === 0) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="text-center">
-            <p className="text-muted-foreground">אין קורסים זמינים כרגע</p>
-          </div>
-        </div>
-      </section>
-    );
+    return null;
   }
 
   return (

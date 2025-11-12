@@ -7,13 +7,19 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Trash2, Edit, Plus, Save, X, Upload } from "lucide-react";
+import { Trash2, Edit, Plus, Save, X, Upload, Search, Video } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-type IconCategory = "electrical_engineering" | "digital_systems" | "computer_organization" | "computer_networks" | "electronics" | "semiconductors" | "signal_processing" | "mathematics" | "probability" | "stochastic_models" | "physics" | "mechanics" | "magnetism" | "general";
+import { courseIconLabels, CourseIconType } from "@/lib/courseIcons";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Course {
   id: string;
@@ -32,34 +38,18 @@ interface Course {
   rating: number | null;
 }
 
-const iconCategories = [
-  { value: "electrical_engineering", label: "הנדסת חשמל" },
-  { value: "digital_systems", label: "מערכות דיגיטליות" },
-  { value: "computer_organization", label: "ארגון מחשבים" },
-  { value: "computer_networks", label: "רשתות מחשבים" },
-  { value: "electronics", label: "אלקטרוניקה" },
-  { value: "semiconductors", label: "מוליכים למחצה" },
-  { value: "signal_processing", label: "עיבוד אותות" },
-  { value: "mathematics", label: "מתמטיקה" },
-  { value: "probability", label: "הסתברות" },
-  { value: "stochastic_models", label: "מודלים סטוכסטיים" },
-  { value: "physics", label: "פיזיקה" },
-  { value: "mechanics", label: "מכניקה" },
-  { value: "magnetism", label: "מגנטיות" },
-  { value: "general", label: "כללי" }
-] as const;
-
 const AdminPage = () => {
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploadingIcon, setUploadingIcon] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [institutionFilter, setInstitutionFilter] = useState<string>("all");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [formData, setFormData] = useState<{
     title: string;
     description: string;
-    instructor: string;
-    duration: string;
-    icon_category: IconCategory;
+    icon_category: CourseIconType;
     icon_url: string;
     price: string;
     institution: string;
@@ -69,8 +59,6 @@ const AdminPage = () => {
   }>({
     title: "",
     description: "",
-    instructor: "",
-    duration: "",
     icon_category: "general",
     icon_url: "",
     price: "",
@@ -94,6 +82,38 @@ const AdminPage = () => {
     }
   });
 
+  // Filter courses
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesInstitution = institutionFilter === "all" || course.institution === institutionFilter;
+    const matchesDepartment = departmentFilter === "all" || course.department === departmentFilter;
+    
+    return matchesSearch && matchesInstitution && matchesDepartment;
+  });
+
+  // Get unique institutions and departments for filters
+  const uniqueInstitutions = Array.from(new Set(courses.map(c => c.institution).filter(Boolean)));
+  const uniqueDepartments = Array.from(new Set(courses.map(c => c.department).filter(Boolean)));
+
+  // Fetch institutions and departments from database
+  const { data: institutions = [] } = useQuery({
+    queryKey: ['institutions-list'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('institutions')
+        .select('name, departments')
+        .order('name');
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Get all unique departments from institutions
+  const allDepartments = Array.from(new Set(
+    institutions.flatMap(inst => inst.departments || [])
+  ));
+
   // Create course mutation
   const createMutation = useMutation({
     mutationFn: async (courseData: typeof formData) => {
@@ -102,8 +122,6 @@ const AdminPage = () => {
         .insert([{
           title: courseData.title,
           description: courseData.description || null,
-          instructor: courseData.instructor || null,
-          duration: courseData.duration || null,
           icon_category: courseData.icon_category || 'general',
           icon_url: courseData.icon_url || null,
           price: courseData.price ? parseFloat(courseData.price) : null,
@@ -138,8 +156,6 @@ const AdminPage = () => {
         .update({
           title: courseData.title,
           description: courseData.description || null,
-          instructor: courseData.instructor || null,
-          duration: courseData.duration || null,
           icon_category: courseData.icon_category || 'general',
           icon_url: courseData.icon_url || null,
           price: courseData.price ? parseFloat(courseData.price) : null,
@@ -191,8 +207,6 @@ const AdminPage = () => {
     setFormData({
       title: "",
       description: "",
-      instructor: "",
-      duration: "",
       icon_category: "general",
       icon_url: "",
       price: "",
@@ -236,7 +250,7 @@ const AdminPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.description || !formData.instructor) {
+    if (!formData.title || !formData.description) {
       toast.error("נא למלא את כל השדות הנדרשים");
       return;
     }
@@ -252,9 +266,7 @@ const AdminPage = () => {
     setFormData({
       title: course.title,
       description: course.description || "",
-      instructor: course.instructor || "",
-      duration: course.duration || "",
-      icon_category: course.icon_category || "general",
+      icon_category: (course.icon_category as CourseIconType) || "general",
       icon_url: course.icon_url || "",
       price: course.price?.toString() || "",
       institution: course.institution || "",
@@ -292,27 +304,7 @@ const AdminPage = () => {
   return (
     <div className="min-h-screen bg-background p-6" dir="rtl">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">ממשק ניהול קורסים</h1>
-            <p className="text-muted-foreground mt-2">נהל את הקורסים שלך בקלות</p>
-          </div>
-          <Badge variant="secondary" className="text-lg px-4 py-2">
-            {courses.length} קורסים
-          </Badge>
-        </div>
-
-        {/* Add New Course Button */}
-        {!isCreating && !editingId && (
-          <Button 
-            onClick={() => setIsCreating(true)}
-            className="mb-6"
-            size="lg"
-          >
-            <Plus className="w-4 h-4 ml-2" />
-            הוסף קורס חדש
-          </Button>
-        )}
+        <h1 className="text-3xl font-bold text-foreground mb-6">ממשק ניהול קורסים</h1>
 
         {/* Course Form */}
         {(isCreating || editingId) && (
@@ -337,44 +329,49 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="instructor">מרצה *</Label>
-                    <Input
-                      id="instructor"
-                      value={formData.instructor}
-                      onChange={(e) => setFormData({...formData, instructor: e.target.value})}
-                      placeholder="שם המרצה"
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
                     <Label htmlFor="institution">מוסד</Label>
-                    <Input
-                      id="institution"
-                      value={formData.institution}
-                      onChange={(e) => setFormData({...formData, institution: e.target.value})}
-                      placeholder="למשל: טכניון"
-                    />
+                    <Select 
+                      value={formData.institution} 
+                      onValueChange={(value) => {
+                        setFormData({...formData, institution: value, department: ""});
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="בחר מוסד" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {institutions.map((inst) => (
+                          <SelectItem key={inst.name} value={inst.name}>
+                            {inst.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="department">מחלקה</Label>
-                    <Input
-                      id="department"
-                      value={formData.department}
-                      onChange={(e) => setFormData({...formData, department: e.target.value})}
-                      placeholder="למשל: מדעי המחשב"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="duration">משך הקורס</Label>
-                    <Input
-                      id="duration"
-                      value={formData.duration}
-                      onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                      placeholder="למשל: 10 שעות"
-                    />
+                    <Select 
+                      value={formData.department} 
+                      onValueChange={(value) => setFormData({...formData, department: value})}
+                      disabled={!formData.institution}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={formData.institution ? "בחר מחלקה" : "בחר תחילה מוסד"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {formData.institution && institutions.find(i => i.name === formData.institution)?.departments?.map((dept) => (
+                          <SelectItem key={dept} value={dept}>
+                            {dept}
+                          </SelectItem>
+                        ))}
+                        {allDepartments.filter(dept => !formData.institution || !institutions.find(i => i.name === formData.institution)?.departments?.includes(dept)).map((dept) => (
+                          <SelectItem key={dept} value={dept}>
+                            {dept}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   
                   <div className="space-y-2">
@@ -389,18 +386,18 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="icon_category">קטגוריית אייקון</Label>
+                    <Label htmlFor="icon_category">אייקון</Label>
                     <Select 
                       value={formData.icon_category} 
-                      onValueChange={(value) => setFormData({...formData, icon_category: value as IconCategory})}
+                      onValueChange={(value) => setFormData({...formData, icon_category: value as CourseIconType})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="בחר קטגוריה" />
+                        <SelectValue placeholder="בחר אייקון" />
                       </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        {iconCategories.map(cat => (
-                          <SelectItem key={cat.value} value={cat.value}>
-                            {cat.label}
+                      <SelectContent>
+                        {Object.entries(courseIconLabels).map(([key, label]) => (
+                          <SelectItem key={key} value={key}>
+                            {label}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -408,7 +405,7 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="icon_upload">העלאת אייקון מותאם</Label>
+                    <Label htmlFor="icon_upload">העלאת אייקון מותאם (אופציונלי)</Label>
                     <div className="flex gap-2">
                       <Input
                         id="icon_upload"
@@ -437,13 +434,15 @@ const AdminPage = () => {
                     />
                   </div>
                   
-                  <div className="flex items-center space-x-2 space-x-reverse">
-                    <Switch
-                      id="is_published"
-                      checked={formData.is_published}
-                      onCheckedChange={(checked) => setFormData({...formData, is_published: checked})}
-                    />
-                    <Label htmlFor="is_published">פרסם קורס</Label>
+                  <div className="space-y-2">
+                    <Button
+                      type="button"
+                      variant={formData.is_published ? "default" : "outline"}
+                      onClick={() => setFormData({...formData, is_published: !formData.is_published})}
+                      className="w-full"
+                    >
+                      {formData.is_published ? "✓ קורס מפורסם" : "פרסם קורס"}
+                    </Button>
                   </div>
                 </div>
                 
@@ -476,90 +475,140 @@ const AdminPage = () => {
 
         <Separator className="my-8" />
 
-        {/* Courses List */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-semibold">הקורסים שלי</h2>
-          
-          {courses.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-12">
-                <p className="text-muted-foreground text-lg">
-                  עדיין לא נוספו קורסים
-                </p>
-                <p className="text-muted-foreground mt-2">
-                  לחץ על "הוסף קורס חדש" כדי להתחיל
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.map((course) => (
-                <Card key={course.id} className="overflow-hidden">
-                  {course.icon_url && (
-                    <div className="h-48 bg-muted overflow-hidden">
-                      <img 
-                        src={course.icon_url} 
-                        alt={course.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <CardContent className="p-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-lg">{course.title}</h3>
-                        {course.is_published ? (
-                          <Badge variant="default">מפורסם</Badge>
-                        ) : (
-                          <Badge variant="secondary">טיוטה</Badge>
-                        )}
-                      </div>
-                      <p className="text-muted-foreground text-sm line-clamp-2">
-                        {course.description}
-                      </p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span>מרצה: {course.instructor}</span>
-                      </div>
-                      {course.institution && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>מוסד: {course.institution}</span>
-                        </div>
-                      )}
-                      {course.duration && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <span>משך: {course.duration}</span>
-                        </div>
-                      )}
-                      {course.price && (
-                        <div className="text-lg font-semibold text-primary">
-                          ₪{course.price}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-2 mt-4">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => handleEdit(course)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button 
-                        variant="destructive" 
-                        size="sm" 
-                        onClick={() => handleDelete(course.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+        {/* Courses Table */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-2xl font-bold">ניהול קורסים</CardTitle>
+              {!isCreating && !editingId && (
+                <Button 
+                  onClick={() => setIsCreating(true)}
+                  size="lg"
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Plus className="w-5 h-5 ml-2" />
+                  הוספת קורס חדש
+                </Button>
+              )}
             </div>
-          )}
-        </div>
+          </CardHeader>
+          <CardContent>
+            {/* Search and Filters */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              <div className="relative flex-1">
+                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <Input
+                  placeholder="חיפוש קורס..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pr-10 text-right"
+                />
+              </div>
+              
+              <Select value={institutionFilter} onValueChange={setInstitutionFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="סנן לפי מוסד" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל המוסדות</SelectItem>
+                  {uniqueInstitutions.map((inst) => (
+                    <SelectItem key={inst} value={inst || ""}>{inst}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="סנן לפי חוג" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">כל החוגים</SelectItem>
+                  {uniqueDepartments.map((dept) => (
+                    <SelectItem key={dept} value={dept || ""}>{dept}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Table */}
+            {filteredCourses.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">
+                  {courses.length === 0 ? 'עדיין לא נוספו קורסים' : 'לא נמצאו תוצאות'}
+                </p>
+                {courses.length === 0 && (
+                  <p className="text-muted-foreground mt-2">
+                    לחץ על "הוספת קורס חדש" כדי להתחיל
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="text-right font-bold">מוסד</TableHead>
+                      <TableHead className="text-right font-bold">חוג</TableHead>
+                      <TableHead className="text-right font-bold">שם הקורס</TableHead>
+                      <TableHead className="text-right font-bold">מספר סרטונים</TableHead>
+                      <TableHead className="text-right font-bold">סטטוס</TableHead>
+                      <TableHead className="text-center font-bold">פעולות</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredCourses.map((course) => (
+                      <TableRow key={course.id} className="hover:bg-muted/30">
+                        <TableCell className="text-right">
+                          {course.institution || '-'}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {course.department || '-'}
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          {course.title}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center gap-2 justify-end">
+                            <Video className="w-4 h-4 text-primary" />
+                            <span>0</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {course.is_published ? (
+                            <Badge variant="default" className="bg-green-500">מפורסם</Badge>
+                          ) : (
+                            <Badge variant="secondary">טיוטה</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleEdit(course)}
+                              title="עריכה"
+                            >
+                              <Edit className="w-4 h-4 text-primary" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleDelete(course.id)}
+                              disabled={deleteMutation.isPending}
+                              title="מחיקה"
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

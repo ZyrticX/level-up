@@ -9,7 +9,8 @@ import {
   SkipForward, 
   Minimize2,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Circle
 } from 'lucide-react';
 
 import Footer from '@/components/Footer';
@@ -122,7 +123,23 @@ const VideoPlayerPage = () => {
   const handleVideoSelect = (video: Video, topicId: string) => {
     setCurrentVideo(video);
     setCurrentTopicId(topicId);
-    setPlayedVideos(prev => new Set([...prev, video.id]));
+    // Only mark as watched if not already watched
+    if (!playedVideos.has(video.id)) {
+      setPlayedVideos(prev => new Set([...prev, video.id]));
+    }
+  };
+
+  const handleToggleWatched = (videoId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPlayedVideos(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(videoId)) {
+        newSet.delete(videoId);
+      } else {
+        newSet.add(videoId);
+      }
+      return newSet;
+    });
   };
 
   const handleNextVideo = () => {
@@ -161,10 +178,17 @@ const VideoPlayerPage = () => {
   };
 
   const collapseAllTopics = () => {
-    setOpenTopics({});
+    const allClosed: Record<string, boolean> = {};
+    course.topics.forEach(topic => {
+      allClosed[topic.id] = false;
+    });
+    setOpenTopics(allClosed);
   };
 
   const handleVideoEnd = () => {
+    if (currentVideo) {
+      setPlayedVideos(prev => new Set([...prev, currentVideo.id]));
+    }
     handleNextVideo();
   };
 
@@ -183,12 +207,106 @@ const VideoPlayerPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Video Player Section */}
-          <div className="lg:col-span-2 space-y-4">
+          {/* Playlist Section - RIGHT SIDE */}
+          <div className="lg:order-1 space-y-4">
+            <Card>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg font-bold">רשימת נושאים וסרטונים</CardTitle>
+                  <Button
+                    onClick={collapseAllTopics}
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs"
+                  >
+                    <Minimize2 className="w-3 h-3 ml-1" />
+                    כווץ הכל
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto">
+                {course.topics.map((topic) => (
+                  <div key={topic.id} className="border-2 border-primary/20 rounded-xl overflow-hidden">
+                    <Collapsible
+                      open={openTopics[topic.id]}
+                      onOpenChange={() => toggleTopic(topic.id)}
+                    >
+                      <CollapsibleTrigger asChild>
+                        <button className="w-full flex items-center justify-between p-4 bg-primary/5 hover:bg-primary/10 transition-colors text-right">
+                          <div className="flex items-center">
+                            {openTopics[topic.id] ? (
+                              <ChevronDown className="w-5 h-5 ml-2 text-primary" />
+                            ) : (
+                              <ChevronRight className="w-5 h-5 ml-2 text-primary" />
+                            )}
+                            <span className="font-semibold text-foreground">{topic.name}</span>
+                          </div>
+                          <span className="text-sm text-muted-foreground font-medium">
+                            {topic.videos.length} סרטונים
+                          </span>
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <div className="border-t-2 border-primary/20">
+                          {topic.videos.map((video) => (
+                            <button
+                              key={video.id}
+                              onClick={() => handleVideoSelect(video, topic.id)}
+                              className={cn(
+                                "w-full py-2.5 px-4 text-right border-b border-primary/10 last:border-b-0 transition-all hover:bg-primary/10",
+                                currentVideo?.id === video.id
+                                  ? "bg-gradient-to-r from-primary/20 to-primary/10 border-r-4 border-r-primary font-semibold"
+                                  : "hover:bg-primary/5"
+                              )}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-3 flex-1">
+                                  {playedVideos.has(video.id) ? (
+                                    <button
+                                      onClick={(e) => handleToggleWatched(video.id, e)}
+                                      className="flex-shrink-0 hover:opacity-70 transition-opacity"
+                                      title="לחץ להסרת סימון נצפה"
+                                    >
+                                      <CheckCircle className={cn(
+                                        "w-5 h-5",
+                                        currentVideo?.id === video.id ? "text-primary" : "text-green-600"
+                                      )} />
+                                    </button>
+                                  ) : (
+                                    <Circle className={cn(
+                                      "w-5 h-5 flex-shrink-0",
+                                      currentVideo?.id === video.id ? "text-primary fill-primary" : "text-muted-foreground"
+                                    )} />
+                                  )}
+                                  <span className={cn(
+                                    "text-sm text-right leading-tight",
+                                    currentVideo?.id === video.id ? "text-primary font-semibold" : "text-foreground"
+                                  )}>
+                                    {video.name}
+                                  </span>
+                                </div>
+                                <div className="flex items-center text-xs text-muted-foreground flex-shrink-0">
+                                  <Clock className="w-3 h-3 ml-1" />
+                                  {video.duration}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Video Player Section - LEFT SIDE */}
+          <div className="lg:col-span-2 lg:order-2 space-y-4">
             {/* Current Video Title */}
-            <div className="bg-gradient-to-l from-primary to-secondary text-white p-4 rounded-lg">
-              <h1 className="text-xl font-bold">{currentVideo?.name || 'בחר סרטון לצפייה'}</h1>
-              <p className="text-white/80">{course.courseName}</p>
+            <div className="bg-gradient-to-l from-primary to-primary/80 text-white p-5 rounded-2xl shadow-lg">
+              <h1 className="text-2xl font-bold mb-1">{currentVideo?.name || 'בחר סרטון לצפייה'}</h1>
+              <p className="text-white/90 text-base">{course.courseName}</p>
             </div>
 
             {/* Video Player */}
@@ -225,105 +343,24 @@ const VideoPlayerPage = () => {
                 onClick={handlePreviousVideo}
                 disabled={getCurrentVideoIndex() <= 0}
                 variant="outline"
-                className="flex items-center"
+                size="lg"
+                className="flex items-center gap-2 px-6 border-2 border-primary/20 hover:bg-primary/10 hover:border-primary/40 rounded-xl"
               >
-                <SkipBack className="w-4 h-4 ml-2" />
-                הקודם
+                <SkipForward className="w-5 h-5 rotate-180" />
+                <span className="font-semibold">סרטון קודם</span>
               </Button>
-
-              <div className="text-sm text-muted-foreground">
-                {getCurrentVideoIndex() + 1} מתוך {getAllVideos().length} סרטונים
-              </div>
 
               <Button
                 onClick={handleNextVideo}
                 disabled={getCurrentVideoIndex() >= getAllVideos().length - 1}
                 variant="outline"
-                className="flex items-center"
+                size="lg"
+                className="flex items-center gap-2 px-6 border-2 border-primary/20 hover:bg-primary/10 hover:border-primary/40 rounded-xl"
               >
-                הבא
-                <SkipForward className="w-4 h-4 mr-2" />
+                <span className="font-semibold">סרטון הבא</span>
+                <SkipBack className="w-5 h-5 rotate-180" />
               </Button>
             </div>
-          </div>
-
-          {/* Playlist Section */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">רשימת נושאים וסרטונים</CardTitle>
-                  <Button
-                    onClick={collapseAllTopics}
-                    variant="ghost"
-                    size="sm"
-                    className="text-xs"
-                  >
-                    <Minimize2 className="w-3 h-3 ml-1" />
-                    כווץ הכל
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {course.topics.map((topic) => (
-                  <div key={topic.id} className="border rounded-lg overflow-hidden">
-                    <Collapsible
-                      open={openTopics[topic.id]}
-                      onOpenChange={() => toggleTopic(topic.id)}
-                    >
-                      <CollapsibleTrigger asChild>
-                        <button className="w-full flex items-center justify-between p-3 bg-muted hover:bg-muted/80 transition-colors text-right">
-                          <div className="flex items-center">
-                            {openTopics[topic.id] ? (
-                              <ChevronDown className="w-4 h-4 ml-2" />
-                            ) : (
-                              <ChevronRight className="w-4 h-4 ml-2" />
-                            )}
-                            <span className="font-medium">{topic.name}</span>
-                          </div>
-                          <span className="text-sm text-muted-foreground">
-                            {topic.videos.length} סרטונים
-                          </span>
-                        </button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <div className="border-t">
-                          {topic.videos.map((video) => (
-                            <button
-                              key={video.id}
-                              onClick={() => handleVideoSelect(video, topic.id)}
-                              className={cn(
-                                "w-full p-3 text-right border-b last:border-b-0 transition-colors hover:bg-accent/50",
-                                currentVideo?.id === video.id
-                                  ? "bg-primary/10 border-r-4 border-r-primary"
-                                  : "hover:bg-muted/50"
-                              )}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-2 space-x-reverse">
-                                  {playedVideos.has(video.id) ? (
-                                    <CheckCircle className="w-4 h-4 text-green-500" />
-                                  ) : (
-                                    <Play className="w-4 h-4 text-muted-foreground" />
-                                  )}
-                                  <span className="text-sm font-medium text-right">
-                                    {video.name}
-                                  </span>
-                                </div>
-                                <div className="flex items-center text-xs text-muted-foreground">
-                                  <Clock className="w-3 h-3 ml-1" />
-                                  {video.duration}
-                                </div>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
           </div>
         </div>
       </main>

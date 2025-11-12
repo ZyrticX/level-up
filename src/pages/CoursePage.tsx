@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, 
   Download, 
@@ -9,7 +9,10 @@ import {
   Users, 
   Clock, 
   Calendar, 
-  MessageCircle 
+  MessageCircle,
+  ChevronDown,
+  CheckCircle,
+  Package
 } from 'lucide-react';
 
 import Footer from '@/components/Footer';
@@ -34,14 +37,83 @@ const courseData = {
       lastUpdate: '15/01/2024'
     },
     chapters: [
-      'פרק 1 - מבוא לפיזיקה קלאסית',
-      'פרק 2 - קינמטיקה',
-      'פרק 3 - דינמיקה וחוקי ניוטון',
-      'פרק 4 - עבודה ואנרגיה',
-      'פרק 5 - תנע וחוקי שימור',
-      'פרק 6 - תנועה סיבובית',
-      'פרק 7 - גרביטציה',
-      'פרק 8 - תנודות'
+      { 
+        title: 'פרק 1 - מבוא לפיזיקה קלאסית', 
+        duration: '05:32:15',
+        topics: [
+          { name: 'מבוא כללי', duration: '00:45:30' },
+          { name: 'יחידות מידה', duration: '01:12:00' },
+          { name: 'וקטורים', duration: '01:35:45' },
+          { name: 'תרגילים', duration: '01:59:00' }
+        ]
+      },
+      { 
+        title: 'פרק 2 - קינמטיקה', 
+        duration: '06:15:30',
+        topics: [
+          { name: 'תנועה חד ממדית', duration: '01:30:00' },
+          { name: 'תנועה דו ממדית', duration: '02:00:00' },
+          { name: 'תנועה מעגלית', duration: '01:45:30' },
+          { name: 'דוגמאות', duration: '01:00:00' }
+        ]
+      },
+      { 
+        title: 'פרק 3 - דינמיקה וחוקי ניוטון', 
+        duration: '07:45:20',
+        topics: [
+          { name: 'חוק ניוטון הראשון', duration: '01:15:00' },
+          { name: 'חוק ניוטון השני', duration: '02:30:20' },
+          { name: 'חוק ניוטון השלישי', duration: '01:45:00' },
+          { name: 'יישומים', duration: '02:15:00' }
+        ]
+      },
+      { 
+        title: 'פרק 4 - עבודה ואנרגיה', 
+        duration: '05:55:45',
+        topics: [
+          { name: 'מושג העבודה', duration: '01:20:00' },
+          { name: 'אנרגיה קינטית', duration: '01:35:15' },
+          { name: 'אנרגיה פוטנציאלית', duration: '01:40:30' },
+          { name: 'שימור אנרגיה', duration: '01:20:00' }
+        ]
+      },
+      { 
+        title: 'פרק 5 - תנע וחוקי שימור', 
+        duration: '06:30:10',
+        topics: [
+          { name: 'מושג התנע', duration: '01:30:00' },
+          { name: 'שימור תנע', duration: '02:00:10' },
+          { name: 'התנגשויות', duration: '02:00:00' },
+          { name: 'תרגילים', duration: '01:00:00' }
+        ]
+      },
+      { 
+        title: 'פרק 6 - תנועה סיבובית', 
+        duration: '05:20:35',
+        topics: [
+          { name: 'קינמטיקה סיבובית', duration: '01:45:00' },
+          { name: 'דינמיקה סיבובית', duration: '02:15:35' },
+          { name: 'תנע זוויתי', duration: '01:20:00' }
+        ]
+      },
+      { 
+        title: 'פרק 7 - גרביטציה', 
+        duration: '04:45:20',
+        topics: [
+          { name: 'חוק הכבידה', duration: '01:30:00' },
+          { name: 'תנועת כוכבי לכת', duration: '02:00:20' },
+          { name: 'שדה כבידה', duration: '01:15:00' }
+        ]
+      },
+      { 
+        title: 'פרק 8 - תנודות', 
+        duration: '05:10:25',
+        topics: [
+          { name: 'תנועה הרמונית פשוטה', duration: '02:00:00' },
+          { name: 'מטוטלת', duration: '01:30:25' },
+          { name: 'תנודות מרוסנות', duration: '01:40:00' }
+        ]
+      }
     ],
     studyMaterials: {
       summaries: [
@@ -68,9 +140,10 @@ const courseData = {
 
 const CoursePage = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const [discountCode, setDiscountCode] = useState('');
+  const navigate = useNavigate();
   const [isPurchased, setPurchased] = useState(false); // Mock state
   const [openFolder, setOpenFolder] = useState<string | null>(null);
+  const [expandedChapters, setExpandedChapters] = useState<Set<number>>(new Set());
 
   const course = courseData[courseId as keyof typeof courseData];
 
@@ -89,64 +162,125 @@ const CoursePage = () => {
   }
 
   const handlePurchase = () => {
-    // Mock purchase logic
-    setPurchased(true);
+    // Navigate to checkout page
+    navigate(`/checkout/${courseId}`);
   };
 
   const toggleFolder = (folderName: string) => {
     setOpenFolder(openFolder === folderName ? null : folderName);
   };
 
+  const toggleChapter = (index: number) => {
+    const newExpanded = new Set(expandedChapters);
+    if (newExpanded.has(index)) {
+      newExpanded.delete(index);
+    } else {
+      newExpanded.add(index);
+    }
+    setExpandedChapters(newExpanded);
+  };
+
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <main className="container mx-auto px-4 py-8">
-        {/* Back navigation */}
-        <div className="mb-6">
+      <main className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Back navigation - Bold Box */}
+        <div className="mb-8">
           <Link 
-            to={`/institution/${course.institution}`}
-            className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
+            to="/institution/technion"
+            className="inline-flex items-center gap-3 bg-primary/10 hover:bg-primary/20 text-primary font-semibold px-6 py-3 rounded-xl border-2 border-primary/30 transition-all"
           >
-            <ArrowRight className="w-4 h-4 ml-2" />
-            חזרה ל{course.institution}
+            <ArrowRight className="w-5 h-5" />
+            <span>חזרה לעמוד הקורסים</span>
           </Link>
         </div>
 
-        {/* Course Overview Section */}
-        <div className="bg-gradient-to-l from-orange-500 to-orange-600 text-white rounded-xl p-8 mb-8 shadow-lg">
-          <h1 className="text-3xl font-bold mb-6">{course.name}</h1>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="flex items-center">
-                <Clock className="w-5 h-5 ml-2" />
-                <span>משך הקורס: {course.stats.duration}</span>
+        {/* Course Overview Section - Modern Design */}
+        <div className="bg-gradient-to-br from-white via-primary/5 to-primary/10 border-2 border-primary/20 rounded-3xl p-10 mb-8 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="flex items-start gap-6 mb-8">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md">
+              <Package className="w-10 h-10 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2 text-foreground">{course.name}</h1>
+              <p className="text-lg text-muted-foreground">{course.institution} • {course.department}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Column 1 - Right */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-foreground">
+                <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">משך הקורס</div>
+                  <div className="font-semibold">{course.stats.duration}</div>
+                </div>
               </div>
-              <div className="flex items-center">
-                <Video className="w-5 h-5 ml-2" />
-                <span>סרטוני וידאו: {course.stats.videos}</span>
+              
+              <div className="flex items-center gap-3 text-foreground">
+                <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <Video className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">סרטוני וידאו</div>
+                  <div className="font-semibold">{course.stats.videos}</div>
+                </div>
               </div>
-              <div className="flex items-center">
-                <FileText className="w-5 h-5 ml-2" />
-                <span>שאלות חימום: {course.stats.warmupQuestions}</span>
+            </div>
+
+            {/* Column 2 - Center */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-foreground">
+                <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">שאלות חימום</div>
+                  <div className="font-semibold">{course.stats.warmupQuestions}</div>
+                </div>
               </div>
-              <div className="flex items-center">
-                <FileText className="w-5 h-5 ml-2" />
-                <span>שאלות מבחנים: {course.stats.examQuestions}</span>
+              
+              <div className="flex items-center gap-3 text-foreground">
+                <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">שאלות מבחנים</div>
+                  <div className="font-semibold">{course.stats.examQuestions}</div>
+                </div>
               </div>
-              <div className="flex items-center">
-                <Calendar className="w-5 h-5 ml-2" />
-                <span>עדכון אחרון: {course.stats.lastUpdate}</span>
+            </div>
+
+            {/* Column 3 - Left */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-foreground">
+                <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">עדכון אחרון</div>
+                  <div className="font-semibold">{course.stats.lastUpdate}</div>
+                </div>
               </div>
+              
               {isPurchased && (
-                <div className="flex items-center">
-                  <MessageCircle className="w-5 h-5 ml-2" />
-                  <a 
-                    href={course.whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white hover:text-white/80 underline"
-                  >
-                    קבוצת וואטסאפ
-                  </a>
+                <div className="flex items-center gap-3 text-foreground">
+                  <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                    <MessageCircle className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">קהילה</div>
+                    <a 
+                      href={course.whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-green-600 hover:text-green-700 underline"
+                    >
+                      קבוצת וואטסאפ
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
@@ -154,63 +288,78 @@ const CoursePage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Purchase & Chapters */}
+          {/* Left Column - Chapters */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Purchase Section */}
-            {!isPurchased && (
-              <Card className="border-2 border-primary/20">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-primary">
-                    רכישת הקורס
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-3xl font-bold text-foreground">
-                    ₪{course.price}
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="discount-code" className="text-sm font-medium text-muted-foreground">
-                      קוד קופון (אופציונלי)
-                    </label>
-                    <Input
-                      id="discount-code"
-                      type="text"
-                      placeholder="הכנס קוד קופון"
-                      value={discountCode}
-                      onChange={(e) => setDiscountCode(e.target.value)}
-                      className="text-right"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handlePurchase}
-                    className="w-full btn-hero text-lg py-3"
-                  >
-                    רכוש עכשיו
-                  </Button>
-                  {isPurchased && (
-                    <Link to={`/watch/${courseId}`}>
-                      <Button className="w-full mt-2 btn-academic">
-                        צפה בתוכן הקורס
-                      </Button>
-                    </Link>
-                  )}
-                </CardContent>
-              </Card>
-            )}
 
-            {/* Course Chapters */}
-            <Card className="bg-gradient-to-br from-purple-600 to-purple-700 text-white">
+            {/* Course Chapters with Collapse/Expand */}
+            <Card>
               <CardHeader>
-                <CardTitle className="text-2xl font-bold">פרקי הקורס</CardTitle>
+                <CardTitle className="text-2xl font-bold text-primary">פרקי הקורס</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {course.chapters.map((chapter, index) => (
                     <div 
                       key={index}
-                      className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
+                      className="border border-border rounded-xl overflow-hidden hover:border-primary/40 transition-colors"
                     >
-                      {chapter}
+                      {/* Chapter Header */}
+                      <div className="flex items-center gap-3 p-5 bg-muted/30">
+                        <button
+                          onClick={() => toggleChapter(index)}
+                          className="flex items-center gap-4 flex-1 text-right hover:bg-muted/50 transition-colors rounded-lg p-2 -m-2"
+                        >
+                          <ChevronDown 
+                            className={`w-5 h-5 text-primary transition-transform ${
+                              expandedChapters.has(index) ? 'rotate-180' : ''
+                            }`}
+                          />
+                          <div className="flex-1">
+                            <div className="font-semibold text-foreground text-lg">{chapter.title}</div>
+                          </div>
+                        </button>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Clock className="w-4 h-4" />
+                            <span className="text-sm font-medium">{chapter.duration}</span>
+                          </div>
+                          {isPurchased && (
+                            <Link to={`/watch/${courseId}?chapter=${index}`}>
+                              <Button
+                                size="sm"
+                                className="bg-primary hover:bg-primary/90 text-white"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Video className="w-4 h-4 ml-2" />
+                                צפה בפרק
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Chapter Topics (Collapsible) */}
+                      {expandedChapters.has(index) && (
+                        <div className="bg-background border-t border-border">
+                          <div className="p-4 space-y-2">
+                            {chapter.topics.map((topic, topicIndex) => (
+                              <div 
+                                key={topicIndex}
+                                className="flex items-center justify-between py-3 px-4 hover:bg-muted/50 rounded-lg transition-colors"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                  <span className="text-foreground">{topic.name}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                                  <Clock className="w-3 h-3" />
+                                  <span>{topic.duration}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -220,13 +369,42 @@ const CoursePage = () => {
 
           {/* Right Column - Study Materials */}
           <div className="space-y-8">
+            {/* Purchase Button */}
+            {!isPurchased && (
+              <Card>
+                <CardContent className="p-6">
+                  <Button
+                    onClick={handlePurchase}
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-6 text-lg rounded-lg"
+                  >
+                    <CheckCircle className="w-5 h-5 ml-2" />
+                    לחצו לרכישה
+                  </Button>
+                  <div className="text-center mt-4">
+                    <span className="text-2xl font-bold text-foreground">{course.price} ₪</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Study Materials Section */}
             {isPurchased && (
               <Card>
-                <CardHeader>
+                <CardHeader className="space-y-4">
                   <CardTitle className="text-xl font-bold text-primary">
                     חומרי עזר
                   </CardTitle>
+                  {/* Download All Button */}
+                  <Button 
+                    className="w-full bg-gradient-to-l from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold py-3"
+                    onClick={() => {
+                      // TODO: Implement ZIP download
+                      alert('מוריד את כל הקבצים...');
+                    }}
+                  >
+                    <Package className="w-5 h-5 ml-2" />
+                    הורד את כל הקבצים (ZIP)
+                  </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Summaries Folder */}
@@ -247,16 +425,17 @@ const CoursePage = () => {
                       <CollapsibleContent className="border-t">
                         <div className="p-2 space-y-2">
                           {course.studyMaterials.summaries.map((file, index) => (
-                            <div 
+                            <button
                               key={index}
-                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded"
+                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded w-full text-right transition-colors"
+                              onClick={() => alert(`מוריד: ${file}`)}
                             >
-                              <div className="flex items-center">
-                                <FileText className="w-4 h-4 ml-2 text-red-500" />
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-red-500 flex-shrink-0" />
                                 <span className="text-sm">{file}</span>
                               </div>
-                              <Download className="w-4 h-4 text-primary cursor-pointer hover:text-primary/80" />
-                            </div>
+                              <Download className="w-4 h-4 text-primary hover:text-primary/80 flex-shrink-0" />
+                            </button>
                           ))}
                         </div>
                       </CollapsibleContent>
@@ -281,16 +460,17 @@ const CoursePage = () => {
                       <CollapsibleContent className="border-t">
                         <div className="p-2 space-y-2">
                           {course.studyMaterials.generalFiles.map((file, index) => (
-                            <div 
+                            <button
                               key={index}
-                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded"
+                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded w-full text-right transition-colors"
+                              onClick={() => alert(`מוריד: ${file}`)}
                             >
-                              <div className="flex items-center">
-                                <FileText className="w-4 h-4 ml-2 text-blue-500" />
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-red-500 flex-shrink-0" />
                                 <span className="text-sm">{file}</span>
                               </div>
-                              <Download className="w-4 h-4 text-primary cursor-pointer hover:text-primary/80" />
-                            </div>
+                              <Download className="w-4 h-4 text-primary hover:text-primary/80 flex-shrink-0" />
+                            </button>
                           ))}
                         </div>
                       </CollapsibleContent>
@@ -315,16 +495,17 @@ const CoursePage = () => {
                       <CollapsibleContent className="border-t">
                         <div className="p-2 space-y-2">
                           {course.studyMaterials.pastExams.map((file, index) => (
-                            <div 
+                            <button
                               key={index}
-                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded"
+                              className="flex items-center justify-between p-2 hover:bg-muted/50 rounded w-full text-right transition-colors"
+                              onClick={() => alert(`מוריד: ${file}`)}
                             >
-                              <div className="flex items-center">
-                                <FileText className="w-4 h-4 ml-2 text-green-500" />
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-red-500 flex-shrink-0" />
                                 <span className="text-sm">{file}</span>
                               </div>
-                              <Download className="w-4 h-4 text-primary cursor-pointer hover:text-primary/80" />
-                            </div>
+                              <Download className="w-4 h-4 text-primary hover:text-primary/80 flex-shrink-0" />
+                            </button>
                           ))}
                         </div>
                       </CollapsibleContent>

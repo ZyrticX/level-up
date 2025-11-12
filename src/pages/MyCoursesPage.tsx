@@ -15,7 +15,8 @@ const userCourses = [
     institution: 'הטכניון',
     progress: 65,
     icon: Atom,
-    lastWatched: 'אתמול'
+    lastWatched: 'אתמול',
+    isActive: true
   },
   {
     id: 'calculus-1',
@@ -24,7 +25,8 @@ const userCourses = [
     institution: 'האוניברסיטה העברית',
     progress: 40,
     icon: Calculator,
-    lastWatched: 'לפני 3 ימים'
+    lastWatched: 'לפני 3 ימים',
+    isActive: true
   },
   {
     id: 'cs-intro',
@@ -33,16 +35,28 @@ const userCourses = [
     institution: 'הטכניון',
     progress: 85,
     icon: Cpu,
-    lastWatched: 'היום'
+    lastWatched: 'היום',
+    isActive: true
   },
   {
     id: 'chemistry-101',
     name: 'כימיה כללית',
     department: 'כימיה',
     institution: 'אוניברסיטת תל אביב',
-    progress: 20,
+    progress: 0,
     icon: FlaskConical,
-    lastWatched: 'לפני שבוע'
+    lastWatched: 'לא התחלת',
+    isActive: false
+  },
+  {
+    id: 'algebra-1',
+    name: 'אלגברה לינארית',
+    department: 'מתמטיקה',
+    institution: 'אוניברסיטת בר אילן',
+    progress: 0,
+    icon: Calculator,
+    lastWatched: 'לא התחלת',
+    isActive: false
   }
 ];
 
@@ -53,208 +67,139 @@ const userData = {
 };
 
 const MyCoursesPage = () => {
+  const activeCourses = userCourses.filter(course => course.isActive);
+  const inactiveCourses = userCourses.filter(course => !course.isActive);
+
   return (
     <div className="min-h-screen bg-background" dir="rtl">
-      <main className="section-standard">
-        <div className="container-standard space-elements">
-          {/* Welcome Section */}
-          <div className="bg-primary text-white rounded-xl p-8 text-center space-elements">
-            <p className="text-paragraph text-white/90">שלום שוב, כיף לראות אותך!</p>
-            <h1 className="text-h1 text-white text-right">הקורסים שלי</h1>
-            <p className="text-paragraph text-white/80 text-right">המשך ללמוד מהמקום שעצרת</p>
+      <main className="py-12">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {/* Page Title */}
+          <div className="mb-12">
+            <h1 className="text-4xl font-bold text-foreground text-right">הקורסים שלי</h1>
           </div>
 
-          {/* Courses Section */}
-          {userCourses.length > 0 ? (
-            <div className="space-elements">
-              <h2 className="text-h2 text-foreground text-right">
-                הקורסים הפעילים שלך ({userCourses.length})
+          {/* Active Courses Section */}
+          {activeCourses.length > 0 && (
+            <div className="mb-16">
+              <h2 className="text-2xl font-semibold text-foreground text-right mb-6">
+                קורסים פעילים
               </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {userCourses.map((course) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeCourses.map((course) => {
                 const IconComponent = course.icon;
                 return (
                   <Link
                     key={course.id}
-                    to={`/course/${course.id}`}
-                    className="card-course group"
+                    to={`/watch/${course.id}`}
+                    className="bg-gradient-to-br from-white to-primary/5 border-2 border-border hover:border-primary/40 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group"
                   >
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
-                        <IconComponent className="w-8 h-8 text-primary" />
-                      </div>
-                      
-                      <h3 className="text-h3 text-foreground text-right leading-tight">
-                        {course.name}
-                      </h3>
-                      
-                      <div className="space-elements">
-                        <p className="text-paragraph text-muted-foreground text-right">
-                          <span className="font-medium">חוג:</span> {course.department}
-                        </p>
-                        <p className="text-paragraph text-muted-foreground text-right">
-                          <span className="font-medium">מוסד:</span> {course.institution}
-                        </p>
+                    <div className="flex flex-col h-full">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:from-primary/20 group-hover:to-primary/10 transition-all shadow-sm">
+                          <IconComponent className="w-8 h-8 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-foreground text-right leading-tight mb-2">
+                            {course.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground text-right">
+                            {course.institution}
+                          </p>
+                        </div>
                       </div>
 
                       {/* Progress Bar */}
-                      <div className="space-elements">
-                        <div className="flex justify-between text-nav">
-                          <span className="text-muted-foreground">התקדמות</span>
-                          <span className="text-primary font-medium">{course.progress}%</span>
+                      <div className="mt-auto pt-4 border-t border-primary/20">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-muted-foreground">התקדמות</span>
+                          <span className="text-lg font-bold text-primary">{course.progress}%</span>
                         </div>
-                        <div className="w-full bg-muted rounded-full h-2">
+                        <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                           <div 
-                            className="bg-primary h-2 rounded-full transition-all duration-300"
+                            className="bg-gradient-to-r from-primary to-primary/80 h-3 rounded-full transition-all duration-500 ease-out"
                             style={{ width: `${course.progress}%` }}
                           />
                         </div>
-                      </div>
-
-                      {/* Last Watched */}
-                      <div className="text-nav text-muted-foreground text-right">
-                        <Clock className="w-3 h-3 inline ml-1" />
-                        צפייה אחרונה: {course.lastWatched}
-                      </div>
-                      
-                      <div className="pt-4 border-t border-border">
-                        <span className="text-nav font-medium text-primary">לחץ לצפייה בקורס</span>
                       </div>
                     </div>
                   </Link>
                 );
               })}
             </div>
-
-              {/* Quick Action Buttons */}
-              <div className="flex flex-wrap gap-6 justify-center">
-                <Link to="/watch/physics-101">
-                  <button className="btn-primary">
-                    <BookOpen className="w-4 h-4 ml-2" />
-                    המשך הקורס האחרון
-                  </button>
-                </Link>
-                <Link to="/">
-                  <button className="btn-secondary">
-                    <Star className="w-4 h-4 ml-2" />
-                    חפש קורסים נוספים
-                  </button>
-                </Link>
-              </div>
             </div>
-          ) : (
-            /* Empty State */
-            <Card className="text-center py-16 mx-auto max-w-md">
-              <CardContent className="space-elements">
-                <BookOpen className="w-20 h-20 text-muted-foreground mx-auto" />
-                <h3 className="text-h2 text-foreground text-right">עדיין אין לכם קורסים</h3>
-                <p className="text-paragraph text-muted-foreground text-right leading-relaxed">
+          )}
+
+          {/* Inactive Courses Section */}
+          {inactiveCourses.length > 0 && (
+            <div className="mb-16">
+              <h2 className="text-2xl font-semibold text-foreground text-right mb-6">
+                קורסים לא פעילים
+              </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {inactiveCourses.map((course) => {
+                const IconComponent = course.icon;
+                return (
+                  <Link
+                    key={course.id}
+                    to={`/course/${course.id}`}
+                    className="bg-gradient-to-br from-white to-muted/20 border-2 border-border hover:border-primary/40 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group opacity-75 hover:opacity-100"
+                  >
+                    <div className="flex flex-col h-full">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-all">
+                          <IconComponent className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-foreground text-right leading-tight mb-2">
+                            {course.name}
+                          </h3>
+                          <p className="text-sm text-muted-foreground text-right">
+                            {course.institution}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Not Started Badge */}
+                      <div className="mt-auto pt-4 border-t border-border">
+                        <div className="text-center py-2 bg-muted rounded-lg">
+                          <span className="text-sm font-medium text-muted-foreground">לא התחלת</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {userCourses.length === 0 && (
+            <Card className="text-center py-16 mx-auto max-w-md bg-gradient-to-br from-white to-primary/5 border-2 border-primary/20 rounded-2xl">
+              <CardContent className="space-y-6">
+                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <BookOpen className="w-12 h-12 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground">עדיין אין לכם קורסים</h3>
+                <p className="text-base text-muted-foreground leading-relaxed">
                   התחילו את המסע הלימודי שלכם ורכשו את הקורס הראשון.
                   גלו את מגוון הקורסים הרחב שלנו ובחרו את הנושא שמעניין אתכם ביותר.
                 </p>
                 <Link to="/">
-                  <button className="btn-primary">
+                  <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl">
                     עברו לקטלוג הקורסים
-                  </button>
+                  </Button>
                 </Link>
               </CardContent>
             </Card>
           )}
-
-          {/* Quick Stats Section */}
-          {userCourses.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="card-academic text-center">
-                <CardContent className="py-8 space-elements">
-                  <BookOpen className="w-10 h-10 text-primary mx-auto" />
-                  <div className="text-h2 font-bold text-foreground">{userCourses.length}</div>
-                  <div className="text-nav text-muted-foreground">קורסים פעילים</div>
-                </CardContent>
-              </Card>
-              <Card className="card-academic text-center">
-                <CardContent className="py-8 space-elements">
-                  <Clock className="w-10 h-10 text-primary mx-auto" />
-                  <div className="text-h2 font-bold text-foreground">
-                    {Math.round(userCourses.reduce((acc, course) => acc + course.progress, 0) / userCourses.length)}%
-                  </div>
-                  <div className="text-nav text-muted-foreground">התקדמות ממוצעת</div>
-                </CardContent>
-              </Card>
-              <Card className="card-academic text-center">
-                <CardContent className="py-8 space-elements">
-                  <Users className="w-10 h-10 text-primary mx-auto" />
-                  <div className="text-h2 font-bold text-foreground">
-                    {userCourses.filter(course => course.progress > 0).length}
-                  </div>
-                  <div className="text-nav text-muted-foreground">קורסים בלמידה</div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-muted border-t border-border">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-6xl mx-auto">
-            {/* Main Footer Content */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-              {/* Logo and Description */}
-              <div className="md:col-span-2">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary-foreground">LU</span>
-                  </div>
-                  <span className="text-xl font-semibold text-foreground">LevelUp</span>
-                </div>
-                <p className="text-muted-foreground leading-relaxed max-w-md">
-                  פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 
-                  המותאמים במיוחד לבחינות הסופיות של מוסדות הלימוד השונים.
-                </p>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-4">קישורים מהירים</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">אודותינו</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">שאלות נפוצות</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">תמיכה טכנית</a></li>
-                </ul>
-              </div>
-
-              {/* Support */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-4">תמיכה</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">מרכז עזרה</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">דרכי תשלום</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">החזרים וביטולים</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">מדיניות השימוש</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="border-t border-border pt-8">
-              {/* Legal Links and Copyright */}
-              <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                <div className="flex flex-wrap justify-center md:justify-start gap-6">
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">תקנון האתר</a>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a>
-                </div>
-
-                <div className="text-sm text-muted-foreground">
-                  © 2024 LevelUp. כל הזכויות שמורות.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

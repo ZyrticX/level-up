@@ -49,11 +49,18 @@ const SettingsPage = () => {
 
   useEffect(() => {
     const checkAuthAndLoadProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      // Check session first (faster)
+      const { data: { session } } = await supabase.auth.getSession();
+      let user = session?.user;
       
       if (!user) {
-        navigate('/auth');
-        return;
+        // Try getUser as fallback
+        const { data: { user: fetchedUser } } = await supabase.auth.getUser();
+        if (!fetchedUser) {
+          navigate('/auth');
+          return;
+        }
+        user = fetchedUser;
       }
 
       // Load profile data
@@ -63,7 +70,7 @@ const SettingsPage = () => {
         .eq('id', user.id)
         .single();
 
-      if (error) {
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
         console.error('Error loading profile:', error);
         toast({
           title: 'שגיאה',
@@ -79,6 +86,16 @@ const SettingsPage = () => {
           department: profile.department || '',
           additionalInfo: profile.additional_info || '',
         });
+      } else {
+        // No profile exists yet, use user metadata if available
+        form.reset({
+          firstName: user.user_metadata?.first_name || '',
+          lastName: user.user_metadata?.last_name || '',
+          phone: user.user_metadata?.phone || '',
+          institution: '',
+          department: '',
+          additionalInfo: '',
+        });
       }
 
       setLoading(false);
@@ -90,27 +107,53 @@ const SettingsPage = () => {
   const onSubmit = async (values: ProfileFormValues) => {
     setSaving(true);
     
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    let user = session?.user;
     
     if (!user) {
-      navigate('/auth');
-      return;
+      const { data: { user: fetchedUser } } = await supabase.auth.getUser();
+      if (!fetchedUser) {
+        navigate('/auth');
+        return;
+      }
+      user = fetchedUser;
     }
 
-    const { error } = await supabase
+    // Try to update first, if no rows affected, insert
+    const { data: existingProfile } = await supabase
       .from('profiles')
-      .update({
-        first_name: values.firstName,
-        last_name: values.lastName,
-        phone: values.phone || null,
-        institution: values.institution || null,
-        department: values.department || null,
-        additional_info: values.additionalInfo || null,
-      })
-      .eq('id', user.id);
+      .select('id')
+      .eq('id', user.id)
+      .single();
+
+    const profileData = {
+      id: user.id,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      phone: values.phone || null,
+      institution: values.institution || null,
+      department: values.department || null,
+      additional_info: values.additionalInfo || null,
+    };
+
+    let error;
+    if (existingProfile) {
+      // Update existing profile
+      const result = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', user.id);
+      error = result.error;
+    } else {
+      // Insert new profile
+      const result = await supabase
+        .from('profiles')
+        .insert(profileData);
+      error = result.error;
+    }
 
     if (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error saving profile:', error);
       toast({
         title: 'שגיאה',
         description: 'לא הצלחנו לשמור את השינויים',

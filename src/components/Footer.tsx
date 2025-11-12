@@ -1,77 +1,69 @@
-import { Separator } from '@/components/ui/separator';
-import { Phone, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Phone, Mail } from 'lucide-react';
 import levelupLogo from '@/assets/levelup-logo-new-transparent.png';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="bg-muted border-t border-border">
-      <div className="container mx-auto px-4 lg:px-8 py-8 md:py-12 lg:py-16 max-w-7xl" dir="rtl">
+      <div className="container mx-auto px-4 lg:px-8 py-12 max-w-7xl" dir="rtl">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12 mb-8 md:mb-12">
-          {/* Logo and Description */}
-          <div className="md:col-span-2 text-center md:text-right">
-            <div className="flex items-center justify-center md:justify-start space-x-3 mb-4 md:mb-6">
-              <img src={levelupLogo} alt="LevelUp" className="h-16 md:h-20 lg:h-24 w-auto" />
-            </div>
-            <p className="text-paragraph text-muted-foreground max-w-md mx-auto md:mx-0 text-right">
-              פלטפורמת הלמידה המובילה בישראל. מרתונים מוקלטים ועשירים 
-              המותאמים במיוחד לבחינות הסופיות של מוסדות הלימוד השונים.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+          {/* Column 1: About */}
+          <div className="text-center md:text-right">
+            <h3 className="text-lg font-semibold text-foreground mb-4">אודות</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              פלטפורמת הלמידה המובילה בישראל למוסדות אקדמיים.
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Column 2: Terms & Privacy */}
           <div className="text-center md:text-right">
-            <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">ניווט באתר</h3>
-            <ul className="space-y-3 md:space-y-4">
-              <li><a href="/" className="text-nav text-muted-foreground hover:text-primary transition-colors">דף הבית</a></li>
-              <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a></li>
-              <li><a href="/privacy" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a></li>
-              <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון ותנאי שימוש</a></li>
-              <li><a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">צור קשר</a></li>
+            <h3 className="text-lg font-semibold text-foreground mb-4">תנאי שימוש</h3>
+            <ul className="space-y-3">
               <li>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem('cookieConsent');
-                    window.location.reload();
-                  }}
-                  className="text-nav text-muted-foreground hover:text-primary transition-colors"
-                >
-                  הגדרות עוגיות
-                </button>
+                <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  מדיניות פרטיות
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  תקנון האתר
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Column 3: Contact */}
           <div className="text-center md:text-right">
-            <h3 className="text-h3 text-foreground mb-4 md:mb-6 text-right">צור קשר</h3>
-            <div className="space-y-3 md:space-y-4">
-              <div className="flex items-center justify-start gap-3 text-nav text-foreground">
-                <Phone className="w-5 h-5 text-primary" />
-                <span>050-322-3885</span>
+            <h3 className="text-lg font-semibold text-foreground mb-4">צור קשר</h3>
+            <div className="flex flex-col items-center md:items-end gap-3">
+              <div className="flex items-center gap-3 flex-row-reverse">
+                <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+                <span className="text-sm text-foreground">050-322-3885</span>
               </div>
-              <div className="flex items-center justify-start gap-3 text-nav text-foreground">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span>בעל שם טוב 35 פתח תקווה</span>
+              <div className="flex items-center gap-3 flex-row-reverse">
+                <Mail className="w-4 h-4 text-primary flex-shrink-0" />
+                <a href="mailto:levelupacademy.co.il@gmail.com" className="text-sm text-foreground hover:text-primary transition-colors">
+                  levelupacademy.co.il@gmail.com
+                </a>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-border pt-6 md:pt-8 lg:pt-10">
-          {/* Legal Links - Centered */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
-              <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">תקנון האתר</a>
-              <a href="/privacy" className="text-nav text-muted-foreground hover:text-primary transition-colors">מדיניות פרטיות</a>
-              <a href="#" className="text-nav text-muted-foreground hover:text-primary transition-colors">הצהרת נגישות</a>
-            </div>
+        {/* Logo */}
+        <div className="border-t border-border pt-8">
+          <div className="flex justify-center items-center">
+            <img src={levelupLogo} alt="LevelUp" className="h-32 w-auto" />
+          </div>
+        </div>
 
-            <div className="text-nav text-muted-foreground text-center">
-              © {currentYear} LevelUp. כל הזכויות שמורות. | מוגן בהתאם לתיקון 13 לחוק הגנת הפרטיות
-            </div>
+        {/* Copyright */}
+        <div className="border-t border-border pt-8 mt-8">
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              © 2025 Levelup כל הזכויות שמורות
+            </p>
           </div>
         </div>
       </div>

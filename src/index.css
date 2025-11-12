@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -531,5 +531,260 @@ All colors MUST be HSL. Inspired by top university websites.
     .section-standard {
       @apply py-24;
     }
+  }
+
+  /* ====================================
+     GLASSMORPHISM DESIGN SYSTEM
+     Modern glass effect for all components
+     ==================================== */
+
+  /* Glass Card - Main glass effect */
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-lg;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.6) 100%
+    );
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .glass-card:hover {
+    @apply border-white/40;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(255, 255, 255, 0.65) 100%
+    );
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* Glass Button */
+  .glass-button {
+    @apply bg-white/60 backdrop-blur-md border border-white/30 text-foreground;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
+    box-shadow: 
+      0 4px 16px 0 rgba(31, 38, 135, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-button:hover {
+    @apply border-white/50;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.6) 100%
+    );
+    box-shadow: 
+      0 6px 20px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+  }
+
+  /* Glass Input */
+  .glass-input {
+    @apply bg-white/50 backdrop-blur-md border border-white/30;
+    box-shadow: inset 0 2px 8px 0 rgba(31, 38, 135, 0.1);
+  }
+
+  .glass-input:focus {
+    @apply bg-white/60 border-primary/30;
+    box-shadow: 
+      inset 0 2px 8px 0 rgba(31, 38, 135, 0.15),
+      0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Glass Header/Navbar */
+  .glass-header {
+    @apply bg-white/70 backdrop-blur-2xl border-b border-white/20;
+    box-shadow: 
+      0 4px 16px 0 rgba(31, 38, 135, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* Glass Sidebar */
+  .glass-sidebar {
+    @apply bg-white/60 backdrop-blur-2xl border-r border-white/20;
+    box-shadow: 
+      4px 0 16px 0 rgba(31, 38, 135, 0.08),
+      inset -1px 0 0 0 rgba(255, 255, 255, 0.5);
+  }
+
+  /* Glass Modal/Dialog */
+  .glass-modal {
+    @apply bg-white/80 backdrop-blur-2xl border border-white/30 shadow-2xl;
+    box-shadow: 
+      0 20px 60px 0 rgba(31, 38, 135, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
+  }
+
+  /* Glass Badge */
+  .glass-badge {
+    @apply bg-white/60 backdrop-blur-md border border-white/30;
+    box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.1);
+  }
+
+  /* Glass Table */
+  .glass-table {
+    @apply bg-white/60 backdrop-blur-lg border border-white/20;
+  }
+
+  .glass-table thead {
+    @apply bg-white/40 backdrop-blur-sm;
+    box-shadow: inset 0 -1px 0 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-table tbody tr:hover {
+    @apply bg-white/50;
+  }
+
+  /* Glass Dropdown */
+  .glass-dropdown {
+    @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-xl;
+    box-shadow: 
+      0 12px 32px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* Glass Tooltip */
+  .glass-tooltip {
+    @apply bg-white/90 backdrop-blur-lg border border-white/40 shadow-lg;
+    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.2);
+  }
+
+  /* Glass Progress Bar */
+  .glass-progress {
+    @apply bg-white/40 backdrop-blur-sm;
+  }
+
+  .glass-progress-fill {
+    @apply bg-gradient-to-r from-primary/80 to-primary/60 backdrop-blur-sm;
+    box-shadow: 0 2px 8px 0 rgba(59, 130, 246, 0.3);
+  }
+
+  /* Glass Alert/Banner */
+  .glass-alert {
+    @apply bg-white/70 backdrop-blur-lg border border-white/30;
+    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.12);
+  }
+
+  /* Glass Avatar */
+  .glass-avatar {
+    @apply bg-white/60 backdrop-blur-md border-2 border-white/40;
+    box-shadow: 0 4px 12px 0 rgba(31, 38, 135, 0.15);
+  }
+
+  /* Glass Accordion */
+  .glass-accordion {
+    @apply bg-white/60 backdrop-blur-lg border border-white/25;
+  }
+
+  /* Glass Tab */
+  .glass-tab {
+    @apply bg-white/50 backdrop-blur-md border border-white/25;
+  }
+
+  .glass-tab[data-state="active"] {
+    @apply bg-white/70 border-white/40;
+    box-shadow: 0 4px 12px 0 rgba(31, 38, 135, 0.1);
+  }
+
+  /* Glass Container Background */
+  .glass-background {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    backdrop-filter: blur(20px);
+  }
+
+  /* Frosted Glass Effect (stronger blur) */
+  .frosted-glass {
+    @apply bg-white/50 backdrop-blur-3xl border border-white/30;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.4) 100%
+    );
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 0 rgba(31, 38, 135, 0.05);
+  }
+
+  /* Glass with colored tint */
+  .glass-primary {
+    @apply backdrop-blur-xl border border-primary/20;
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.15) 0%,
+      rgba(59, 130, 246, 0.05) 100%
+    );
+    box-shadow: 
+      0 8px 32px 0 rgba(59, 130, 246, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .glass-success {
+    @apply backdrop-blur-xl border border-green-500/20;
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.15) 0%,
+      rgba(34, 197, 94, 0.05) 100%
+    );
+  }
+
+  .glass-warning {
+    @apply backdrop-blur-xl border border-orange-500/20;
+    background: linear-gradient(
+      135deg,
+      rgba(249, 115, 22, 0.15) 0%,
+      rgba(249, 115, 22, 0.05) 100%
+    );
+  }
+
+  .glass-danger {
+    @apply backdrop-blur-xl border border-red-500/20;
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.15) 0%,
+      rgba(239, 68, 68, 0.05) 100%
+    );
+  }
+
+  /* Shimmer effect for glass */
+  .glass-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .glass-shimmer:hover::before {
+    left: 100%;
   }
 }

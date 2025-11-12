@@ -1,73 +1,266 @@
-# Welcome to your Lovable project
+# LevelUp Hebrew - פלטפורמת קורסים אקדמיים 🎓
 
-## Project info
+פלטפורמה מקיפה למכירה, ניהול וצפייה בקורסים אקדמיים עם מערכת תשלומים, ניהול משתמשים, והעלאת תוכן וידאו.
 
-**URL**: https://lovable.dev/projects/60c66343-d4bc-491e-8bbc-dd2d5e8528e7
+## 📋 תוכן עניינים
 
-## How can I edit this code?
+- [תיאור הפרויקט](#תיאור-הפרויקט)
+- [תכונות עיקריות](#תכונות-עיקריות)
+- [טכנולוגיות](#טכנולוגיות)
+- [מסמכי הפרויקט](#מסמכי-הפרויקט)
+- [התקנה מהירה](#התקנה-מהירה)
+- [רישיון](#רישיון)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🎯 תיאור הפרויקט
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/60c66343-d4bc-491e-8bbc-dd2d5e8528e7) and start prompting.
+LevelUp Hebrew היא פלטפורמה מתקדמת המיועדת למוסדות אקדמיים וסטודנטים. המערכת מאפשרת:
 
-Changes made via Lovable will be committed automatically to this repo.
+- 🎥 **צפייה בקורסים** - וידאו באיכות גבוהה עם מעקב התקדמות
+- 💳 **מערכת תשלומים** - רכישה מאובטחת של קורסים עם Stripe
+- 📚 **ניהול תוכן** - העלאה וניהול של סרטונים, חומרי עזר ומסמכים
+- 👥 **מערכת משתמשים** - הרשמה, התחברות, וניהול פרופיל
+- 📊 **ממשק אדמין** - ניהול קורסים, משתמשים, תשלומים ודוחות
+- 🏫 **מוסדות חינוך** - תמיכה במספר מוסדות ומחלקות
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ✨ תכונות עיקריות
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### למשתמשים:
+- ✅ הרשמה והתחברות מאובטחת
+- ✅ עיון וחיפוש קורסים
+- ✅ רכישת קורסים עם קודי קופון
+- ✅ צפייה בסרטונים עם מעקב התקדמות
+- ✅ הורדת חומרי עזר (PDFs, סיכומים, מבחנים)
+- ✅ ניהול פרופיל אישי
+- ✅ דירוג וביקורת קורסים
 
-Follow these steps:
+### למנהלים:
+- ✅ העלאה וניהול סרטונים
+- ✅ יצירה ועריכת קורסים
+- ✅ ניהול פרקים וחומרי עזר
+- ✅ מעקב אחרי תשלומים
+- ✅ ניהול משתמשים והרשאות
+- ✅ דוחות ואנליטיקס
+- ✅ ניהול קודי קופון והנחות
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ טכנולוגיות
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Frontend:
+- **React 18** - ספריית UI
+- **TypeScript** - Type safety
+- **Vite** - Build tool מהיר
+- **Shadcn UI** - קומפוננטות UI מתקדמות
+- **Tailwind CSS** - Styling
+- **React Router** - ניווט
+- **React Query** - ניהול state ו-caching
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Backend:
+- **Supabase** - Backend as a Service
+  - PostgreSQL Database
+  - Authentication
+  - Storage
+  - Row Level Security (RLS)
+  - Edge Functions
+
+### תשלומים:
+- **Stripe** - מערכת תשלומים
+
+### אחרים:
+- **Lucide Icons** - אייקונים
+- **React Hook Form** - ניהול טפסים
+- **Zod** - Validation
+
+---
+
+## 📚 מסמכי הפרויקט
+
+הפרויקט כולל מסמכים מפורטים שיעזרו לך להתחיל:
+
+### 🗺️ [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md)
+**לוח זמנים מפורט לפיתוח הפרויקט**
+- 12 שלבי פיתוח מפורטים
+- הערכות זמן לכל שלב
+- רשימת משימות (checkboxes)
+- עדיפויות MVP
+- טיפים וקישורים שימושיים
+
+📖 **מתי להשתמש:** תכנון הפרויקט, מעקב התקדמות
+
+---
+
+### 🔧 [TECHNICAL_SPEC.md](./TECHNICAL_SPEC.md)
+**מפרט טכני מלא**
+- Database Schema מפורט (כל הטבלאות)
+- Supabase Edge Functions עם קוד מלא
+- Storage Buckets ו-Policies
+- דוגמאות קוד לFrontend
+- Hooks מותאמים
+- Environment Variables
+- Security best practices
+
+📖 **מתי להשתמש:** פיתוח, הבנת המבנה הטכני
+
+---
+
+### 📦 [SETUP_GUIDE.md](./SETUP_GUIDE.md)
+**מדריך התקנה והגדרה צעד אחר צעד**
+- דרישות מקדימות
+- התקנה ראשונית
+- הגדרת Supabase
+- הגדרת Stripe
+- הרצה מקומית
+- Deploy לProduction
+- פתרון בעיות נפוצות
+
+📖 **מתי להשתמש:** התחלת עבודה, התקנה, פתרון בעיות
+
+---
+
+## 🚀 התקנה מהירה
+
+### תנאי מקדים:
+- Node.js 18+
+- npm או bun
+- חשבון Supabase
+- חשבון Stripe (לתשלומים)
+
+### שלבים:
+
+1. **שכפול הפרויקט:**
+```bash
+git clone <your-repo-url>
+cd levelup-hebrew-landing
+```
+
+2. **התקנת חבילות:**
+```bash
+npm install
+```
+
+3. **הגדרת Environment Variables:**
+
+צור קובץ `.env.local`:
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+```
+
+4. **הרצת Migrations:**
+- לך ל-Supabase Dashboard → SQL Editor
+- העתק והרץ את:
+  ```
+  supabase/migrations/20251027000000_complete_schema_for_course_platform.sql
+  ```
+
+5. **הרצת Dev Server:**
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+האפליקציה תהיה זמינה ב: `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+📖 **למדריך מפורט:** ראה [SETUP_GUIDE.md](./SETUP_GUIDE.md)
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📖 איך להתחיל?
 
-## What technologies are used for this project?
+### למפתח חדש בפרויקט:
 
-This project is built with:
+1. **קרא את הקבצים לפי הסדר הזה:**
+   - `README.md` (את זה) ← **אתה כאן! ✅**
+   - [SETUP_GUIDE.md](./SETUP_GUIDE.md) ← **הבא**
+   - [TECHNICAL_SPEC.md](./TECHNICAL_SPEC.md)
+   - [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+2. **עקוב אחרי SETUP_GUIDE.md** להתקנה
 
-## How can I deploy this project?
+3. **בדוק את TECHNICAL_SPEC.md** להבנת המבנה
 
-Simply open [Lovable](https://lovable.dev/projects/60c66343-d4bc-491e-8bbc-dd2d5e8528e7) and click on Share -> Publish.
+4. **השתמש ב-PROJECT_ROADMAP.md** לתכנון העבודה
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🏗️ מבנה הפרויקט
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```
+levelup-hebrew-landing/
+├── 📁 src/
+│   ├── 📁 components/      # קומפוננטות React
+│   ├── 📁 pages/          # דפי האפליקציה
+│   ├── 📁 hooks/          # Custom hooks
+│   ├── 📁 integrations/   # Supabase וכו'
+│   └── 📁 lib/            # פונקציות עזר
+├── 📁 supabase/
+│   ├── 📁 migrations/     # Database migrations
+│   └── 📁 functions/      # Edge Functions
+├── 📁 public/             # קבצים סטטיים
+├── 📄 package.json
+├── 📄 .env.local          # Environment variables
+├── 📄 PROJECT_ROADMAP.md  # לוח זמנים מפורט
+├── 📄 TECHNICAL_SPEC.md   # מפרט טכני
+├── 📄 SETUP_GUIDE.md      # מדריך התקנה
+└── 📄 README.md           # המסמך הזה
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+
+## 🎯 Status הפרויקט
+
+**גרסה נוכחית:** v0.1.0 (Demo)
+
+**מה עובד:**
+- ✅ UI/UX בסיסי
+- ✅ דפי משתמשים (עם mock data)
+- ✅ דפי Admin (עם mock data)
+- ✅ VideoPlayer component
+- ✅ Supabase setup חלקי
+
+**מה בעבודה:** (ראה [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md))
+- 🚧 Database Schema מלא
+- 🚧 Authentication מלא
+- 🚧 אינטגרציית תשלומים
+- 🚧 העלאת סרטונים
+- 🚧 Progress tracking
+
+---
+
+## 🤝 תרומה לפרויקט
+
+1. צור branch חדש: `git checkout -b feature/amazing-feature`
+2. Commit את השינויים: `git commit -m 'Add amazing feature'`
+3. Push ל-branch: `git push origin feature/amazing-feature`
+4. פתח Pull Request
+
+---
+
+## 📞 צור קשר ותמיכה
+
+- 📧 **Email:** support@leveluphebrew.com
+- 🐛 **Bugs:** פתח issue ב-GitHub
+- 💡 **Feature Requests:** פתח issue עם התגית `enhancement`
+
+---
+
+## 📝 רישיון
+
+Copyright © 2025 LevelUp Hebrew. All rights reserved.
+
+---
+
+## 🙏 תודות
+
+- [Supabase](https://supabase.com/) - Backend platform מעולה
+- [Shadcn UI](https://ui.shadcn.com/) - קומפוננטות UI יפהפיות
+- [Stripe](https://stripe.com/) - מערכת תשלומים אמינה
+- [Lovable](https://lovable.dev/) - הפרוייקט הראשוני נוצר עם Lovable
+
+---
+
+**מוכנים להתחיל? קראו את [SETUP_GUIDE.md](./SETUP_GUIDE.md) 🚀**

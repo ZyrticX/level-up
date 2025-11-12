@@ -3,7 +3,10 @@ import {
   LayoutDashboard, 
   BookOpen, 
   Users, 
+  UserCheck,
   GraduationCap, 
+  Video,
+  Activity,
   BarChart, 
   Settings,
   Menu,
@@ -19,8 +22,11 @@ const AdminSidebar = () => {
   const menuItems = [
     { label: 'דשבורד', href: '/admin', icon: LayoutDashboard },
     { label: 'ניהול קורסים', href: '/admin/courses', icon: BookOpen },
-    { label: 'ניהול סטודנטים', href: '/admin/students', icon: Users },
+    { label: 'ניהול משתמשים', href: '/admin/students', icon: UserCheck },
+    { label: 'ניהול קבוצות', href: '/admin/groups', icon: Users },
     { label: 'מוסדות לימוד', href: '/admin/institutions', icon: GraduationCap },
+    { label: 'ניהול תוכן וסרטונים', href: '/admin/content', icon: Video },
+    { label: 'מעקב משתמשים', href: '/admin/tracking', icon: Activity },
     { label: 'דוחות וסטטיסטיקות', href: '/admin/reports', icon: BarChart },
     { label: 'הגדרות מערכת', href: '/admin/settings', icon: Settings },
   ];

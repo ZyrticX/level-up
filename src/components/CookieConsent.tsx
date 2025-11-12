@@ -102,110 +102,145 @@ const CookieConsent = () => {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-end justify-center p-4" style={{ paddingBottom: 'calc(1rem + var(--safe-area-bottom, 0px))' }} dir="rtl">
-      <Card className="w-full max-w-2xl shadow-lg">
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-xl">הגנת הפרטיות שלך חשובה לנו</CardTitle>
-              <CardDescription className="mt-2">
-                אנו משתמשים בעוגיות כדי לשפר את חוויית הגלישה שלך, לנתח תנועה באתר ולהציג תוכן מותאם אישית.
-              </CardDescription>
-            </div>
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex items-end justify-center p-4 pointer-events-none" dir="rtl">
+      <Card className="w-full max-w-2xl shadow-2xl border-2 pointer-events-auto animate-in slide-in-from-bottom-5 duration-300">
+        {showSettings ? (
+          <div className="relative">
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleRejectAll}
-              className="shrink-0"
+              onClick={() => setShowSettings(false)}
+              className="absolute top-2 left-2 z-10"
             >
               <X className="h-4 w-4" />
             </Button>
-          </div>
-        </CardHeader>
+            <CardHeader className="pr-10">
+              <CardTitle className="text-lg">התאם אישית את העוגיות</CardTitle>
+              <CardDescription className="text-sm">
+                בחר אילו עוגיות תרצה לאפשר
+              </CardDescription>
+            </CardHeader>
 
-        {!showSettings ? (
-          <CardFooter className="flex flex-col gap-3 sm:flex-row">
-            <Button onClick={handleAcceptAll} className="w-full sm:w-auto">
-              קבל הכל
-            </Button>
-            <Button onClick={handleRejectAll} variant="outline" className="w-full sm:w-auto">
-              דחה הכל
-            </Button>
-            <Button onClick={handleCustomize} variant="secondary" className="w-full sm:w-auto">
-              <Settings className="ml-2 h-4 w-4" />
-              התאם אישית
-            </Button>
-          </CardFooter>
-        ) : (
-          <>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <Checkbox id="essential" checked disabled />
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3">
+                <Checkbox id="essential" checked disabled className="mt-1" />
                 <div className="flex-1">
-                  <Label htmlFor="essential" className="font-semibold">
+                  <Label htmlFor="essential" className="text-sm font-medium">
                     עוגיות חיוניות (נדרש)
                   </Label>
-                  <p className="text-sm text-muted-foreground">
-                    עוגיות אלה הכרחיות לתפעול האתר ואינן ניתנות לביטול.
+                  <p className="text-xs text-muted-foreground mt-1">
+                    הכרחיות לתפעול האתר
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 space-x-reverse">
+              <div className="flex items-start gap-3">
                 <Checkbox
                   id="analytics"
                   checked={consent.analytics}
                   onCheckedChange={(checked) =>
                     setConsent({ ...consent, analytics: checked as boolean })
                   }
+                  className="mt-1"
                 />
                 <div className="flex-1">
-                  <Label htmlFor="analytics" className="font-semibold">
+                  <Label htmlFor="analytics" className="text-sm font-medium">
                     עוגיות סטטיסטיות
                   </Label>
-                  <p className="text-sm text-muted-foreground">
-                    עוגיות אלה עוזרות לנו להבין כיצד אתה משתמש באתר ולשפר את השירות.
+                  <p className="text-xs text-muted-foreground mt-1">
+                    עוזרות לנו לשפר את השירות
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 space-x-reverse">
+              <div className="flex items-start gap-3">
                 <Checkbox
                   id="marketing"
                   checked={consent.marketing}
                   onCheckedChange={(checked) =>
                     setConsent({ ...consent, marketing: checked as boolean })
                   }
+                  className="mt-1"
                 />
                 <div className="flex-1">
-                  <Label htmlFor="marketing" className="font-semibold">
+                  <Label htmlFor="marketing" className="text-sm font-medium">
                     עוגיות שיווקיות
                   </Label>
-                  <p className="text-sm text-muted-foreground">
-                    עוגיות אלה משמשות להצגת פרסומות ותוכן רלוונטי עבורך.
+                  <p className="text-xs text-muted-foreground mt-1">
+                    תוכן מותאם אישית
                   </p>
                 </div>
               </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col gap-3 sm:flex-row">
-              <Button onClick={handleSaveCustom} className="w-full sm:w-auto">
+            <CardFooter className="flex flex-col gap-2 sm:flex-row">
+              <Button onClick={handleSaveCustom} className="w-full sm:flex-1" size="sm">
                 שמור העדפות
               </Button>
-              <Button onClick={handleRejectAll} variant="outline" className="w-full sm:w-auto">
+              <Button onClick={handleRejectAll} variant="outline" className="w-full sm:w-auto" size="sm">
                 דחה הכל
               </Button>
             </CardFooter>
+          </div>
+        ) : (
+          <>
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <CardTitle className="text-base font-semibold mb-1">
+                    🍪 אנו משתמשים בעוגיות
+                  </CardTitle>
+                  <CardDescription className="text-sm">
+                    כדי לשפר את חוויית הגלישה שלך ולהציג תוכן מותאם אישית
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleRejectAll}
+                  className="shrink-0 h-8 w-8"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+
+            <CardFooter className="flex flex-wrap gap-2 pt-0">
+              <Button 
+                onClick={handleAcceptAll} 
+                className="flex-1 min-w-[120px]" 
+                size="sm"
+              >
+                קבל הכל
+              </Button>
+              <Button 
+                onClick={handleRejectAll} 
+                variant="outline" 
+                className="flex-1 min-w-[120px]" 
+                size="sm"
+              >
+                דחה הכל
+              </Button>
+              <Button 
+                onClick={handleCustomize} 
+                variant="secondary" 
+                className="flex-1 min-w-[120px]" 
+                size="sm"
+              >
+                <Settings className="ml-1.5 h-3.5 w-3.5" />
+                התאם אישית
+              </Button>
+            </CardFooter>
+
+            <div className="px-6 pb-3 text-xs text-muted-foreground text-center">
+              על ידי המשך, אתה מסכים ל
+              <a href="/privacy" className="underline mr-1 hover:text-foreground">
+                מדיניות הפרטיות
+              </a>
+              שלנו
+            </div>
           </>
         )}
-
-        <div className="px-6 pb-4 text-xs text-muted-foreground">
-          למידע נוסף, עיין ב
-          <a href="/privacy" className="underline mr-1">
-            מדיניות הפרטיות
-          </a>
-          שלנו.
-        </div>
       </Card>
     </div>
   );
