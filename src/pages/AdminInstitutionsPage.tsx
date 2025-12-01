@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Trash2, Edit, Plus, Save, X, Search, GraduationCap } from "lucide-react";
+import { Trash2, Edit, Plus, Save, X, Search, GraduationCap, Building2, ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -17,18 +18,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+
+interface Department {
+  id: string;
+  name: string;
+  description: string | null;
+  is_active: boolean;
+}
 
 interface Institution {
   id: string;
   name: string;
-  departments: string[];
+  description: string | null;
+  website: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  logo_url: string | null;
+  is_active: boolean;
   created_at: string;
+  departments: Department[];
 }
 
 const AdminInstitutionsPage = () => {
@@ -36,25 +48,41 @@ const AdminInstitutionsPage = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showDepartmentDialog, setShowDepartmentDialog] = useState(false);
-  const [selectedInstitution, setSelectedInstitution] = useState<Institution | null>(null);
-  const [newDepartment, setNewDepartment] = useState("");
+  const [expandedInstitution, setExpandedInstitution] = useState<string | null>(null);
+  const [newDepartmentName, setNewDepartmentName] = useState("");
+  const [addingDepartmentTo, setAddingDepartmentTo] = useState<string | null>(null);
+  
   const [formData, setFormData] = useState({
     name: "",
-    departments: [] as string[],
+    description: "",
+    website: "",
+    contact_email: "",
+    contact_phone: "",
   });
 
-  // Fetch institutions
+  // Fetch institutions with departments
   const { data: institutions = [], isLoading } = useQuery({
-    queryKey: ['institutions'],
+    queryKey: ['institutions-with-departments'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: institutionsData, error: instError } = await supabase
         .from('institutions')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('name');
       
-      if (error) throw error;
-      return data as Institution[];
+      if (instError) throw instError;
+
+      const { data: departmentsData, error: deptError } = await supabase
+        .from('departments')
+        .select('*')
+        .order('name');
+      
+      if (deptError) throw deptError;
+
+      // Combine departments with institutions
+      return (institutionsData || []).map(inst => ({
+        ...inst,
+        departments: (departmentsData || []).filter(dept => dept.institution_id === inst.id)
+      })) as Institution[];
     }
   });
 
@@ -84,14 +112,22 @@ const AdminInstitutionsPage = () => {
     mutationFn: async (institutionData: typeof formData) => {
       const { data, error } = await supabase
         .from('institutions')
-        .insert([institutionData])
-        .select();
+        .insert([{
+          name: institutionData.name,
+          description: institutionData.description || null,
+          website: institutionData.website || null,
+          contact_email: institutionData.contact_email || null,
+          contact_phone: institutionData.contact_phone || null,
+          is_active: true,
+        }])
+        .select()
+        .single();
       
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['institutions'] });
+      queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
       toast.success('המוסד נוסף בהצלחה!');
       resetForm();
     },
@@ -105,13 +141,19 @@ const AdminInstitutionsPage = () => {
     mutationFn: async ({ id, data }: { id: string; data: typeof formData }) => {
       const { error } = await supabase
         .from('institutions')
-        .update(data)
+        .update({
+          name: data.name,
+          description: data.description || null,
+          website: data.website || null,
+          contact_email: data.contact_email || null,
+          contact_phone: data.contact_phone || null,
+        })
         .eq('id', id);
       
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['institutions'] });
+      queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
       toast.success('המוסד עודכן בהצלחה!');
       resetForm();
     },
@@ -131,7 +173,7 @@ const AdminInstitutionsPage = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['institutions'] });
+      queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
       toast.success('המוסד נמחק בהצלחה!');
     },
     onError: (error) => {
@@ -139,14 +181,62 @@ const AdminInstitutionsPage = () => {
     }
   });
 
+  // Add department mutation
+  const addDepartmentMutation = useMutation({
+    mutationFn: async ({ institutionId, name }: { institutionId: string; name: string }) => {
+      const { error } = await supabase
+        .from('departments')
+        .insert([{
+          institution_id: institutionId,
+          name: name,
+          is_active: true,
+        }]);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
+      toast.success('החוג נוסף בהצלחה!');
+      setNewDepartmentName("");
+      setAddingDepartmentTo(null);
+    },
+    onError: (error) => {
+      toast.error(`שגיאה: ${error.message}`);
+    }
+  });
+
+  // Delete department mutation
+  const deleteDepartmentMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('departments')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
+      toast.success('החוג נמחק בהצלחה!');
+    },
+    onError: (error) => {
+      toast.error(`שגיאה: ${error.message}`);
+    }
+  });
+
   const resetForm = () => {
-    setFormData({ name: "", departments: [] });
+    setFormData({ name: "", description: "", website: "", contact_email: "", contact_phone: "" });
     setIsCreating(false);
     setEditingId(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      toast.error('נא להזין שם מוסד');
+      return;
+    }
     
     if (editingId) {
       updateMutation.mutate({ id: editingId, data: formData });
@@ -158,29 +248,31 @@ const AdminInstitutionsPage = () => {
   const handleEdit = (institution: Institution) => {
     setFormData({
       name: institution.name,
-      departments: institution.departments || [],
+      description: institution.description || "",
+      website: institution.website || "",
+      contact_email: institution.contact_email || "",
+      contact_phone: institution.contact_phone || "",
     });
     setEditingId(institution.id);
     setIsCreating(true);
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('האם אתה בטוח שברצונך למחוק מוסד זה?')) {
+    if (confirm('האם אתה בטוח שברצונך למחוק מוסד זה? כל החוגים המשויכים יימחקו גם.')) {
       deleteMutation.mutate(id);
     }
   };
 
-  const handleAddDepartment = () => {
-    if (newDepartment.trim()) {
-      const updatedDepartments = [...formData.departments, newDepartment.trim()];
-      setFormData({ ...formData, departments: updatedDepartments });
-      setNewDepartment("");
+  const handleAddDepartment = (institutionId: string) => {
+    if (newDepartmentName.trim()) {
+      addDepartmentMutation.mutate({ institutionId, name: newDepartmentName.trim() });
     }
   };
 
-  const handleRemoveDepartment = (index: number) => {
-    const updatedDepartments = formData.departments.filter((_, i) => i !== index);
-    setFormData({ ...formData, departments: updatedDepartments });
+  const handleDeleteDepartment = (deptId: string) => {
+    if (confirm('האם אתה בטוח שברצונך למחוק חוג זה?')) {
+      deleteDepartmentMutation.mutate(deptId);
+    }
   };
 
   // Filter institutions
@@ -214,63 +306,65 @@ const AdminInstitutionsPage = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">שם המוסד *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="למשל: הטכניון - מכון טכנולוגי לישראל"
-                    required
-                    className="text-right"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">שם המוסד *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="למשל: הטכניון - מכון טכנולוגי לישראל"
+                      required
+                      className="text-right"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="website">אתר אינטרנט</Label>
+                    <Input
+                      id="website"
+                      value={formData.website}
+                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                      placeholder="https://www.example.ac.il"
+                      className="text-right"
+                      dir="ltr"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="contact_email">אימייל ליצירת קשר</Label>
+                    <Input
+                      id="contact_email"
+                      type="email"
+                      value={formData.contact_email}
+                      onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
+                      placeholder="contact@example.ac.il"
+                      className="text-right"
+                      dir="ltr"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="contact_phone">טלפון ליצירת קשר</Label>
+                    <Input
+                      id="contact_phone"
+                      value={formData.contact_phone}
+                      onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                      placeholder="03-1234567"
+                      className="text-right"
+                    />
+                  </div>
                 </div>
 
-                {/* Departments Section */}
-                <div className="space-y-3">
-                  <Label>חוגים/מחלקות</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newDepartment}
-                      onChange={(e) => setNewDepartment(e.target.value)}
-                      placeholder="הוסף חוג חדש..."
-                      className="text-right"
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleAddDepartment();
-                        }
-                      }}
-                    />
-                    <Button 
-                      type="button" 
-                      onClick={handleAddDepartment}
-                      variant="outline"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  {formData.departments.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {formData.departments.map((dept, index) => (
-                        <Badge 
-                          key={index} 
-                          variant="secondary"
-                          className="px-3 py-1 text-sm"
-                        >
-                          {dept}
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveDepartment(index)}
-                            className="mr-2 hover:text-destructive"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                <div className="space-y-2">
+                  <Label htmlFor="description">תיאור</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="תיאור קצר על המוסד..."
+                    className="text-right min-h-[80px]"
+                  />
                 </div>
 
                 <div className="flex gap-3 pt-4">
@@ -297,7 +391,7 @@ const AdminInstitutionsPage = () => {
           </Card>
         )}
 
-        {/* Institutions Table */}
+        {/* Institutions List */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -326,10 +420,10 @@ const AdminInstitutionsPage = () => {
               />
             </div>
 
-            {/* Table */}
+            {/* Institutions */}
             {filteredInstitutions.length === 0 ? (
               <div className="text-center py-12">
-                <GraduationCap className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                <Building2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground text-lg">
                   {institutions.length === 0 ? 'עדיין לא נוספו מוסדות' : 'לא נמצאו תוצאות'}
                 </p>
@@ -340,39 +434,32 @@ const AdminInstitutionsPage = () => {
                 )}
               </div>
             ) : (
-              <div className="border rounded-lg overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="text-right font-bold">שם המוסד</TableHead>
-                      <TableHead className="text-right font-bold">מספר חוגים</TableHead>
-                      <TableHead className="text-right font-bold">מספר קורסים</TableHead>
-                      <TableHead className="text-center font-bold">פעולות</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredInstitutions.map((institution) => (
-                      <TableRow key={institution.id} className="hover:bg-muted/30">
-                        <TableCell className="text-right font-medium">
-                          <div className="flex items-center gap-2 justify-end">
-                            <span>{institution.name}</span>
-                            <GraduationCap className="w-4 h-4 text-primary" />
+              <div className="space-y-4">
+                {filteredInstitutions.map((institution) => (
+                  <Collapsible
+                    key={institution.id}
+                    open={expandedInstitution === institution.id}
+                    onOpenChange={() => setExpandedInstitution(
+                      expandedInstitution === institution.id ? null : institution.id
+                    )}
+                  >
+                    <div className="border rounded-lg overflow-hidden">
+                      <CollapsibleTrigger asChild>
+                        <div className="flex items-center justify-between p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <GraduationCap className="w-6 h-6 text-primary" />
+                            <div>
+                              <h3 className="font-semibold text-lg">{institution.name}</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {institution.departments.length} חוגים | {coursesCount[institution.name] || 0} קורסים
+                              </p>
+                            </div>
                           </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Badge variant="outline">
-                            {institution.departments?.length || 0} חוגים
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {coursesCount[institution.name] || 0}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex items-center justify-center gap-2">
+                          <div className="flex items-center gap-2">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              onClick={() => handleEdit(institution)}
+                              onClick={(e) => { e.stopPropagation(); handleEdit(institution); }}
                               title="עריכה"
                             >
                               <Edit className="w-4 h-4 text-primary" />
@@ -380,18 +467,82 @@ const AdminInstitutionsPage = () => {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              onClick={() => handleDelete(institution.id)}
+                              onClick={(e) => { e.stopPropagation(); handleDelete(institution.id); }}
                               disabled={deleteMutation.isPending}
                               title="מחיקה"
                             >
                               <Trash2 className="w-4 h-4 text-destructive" />
                             </Button>
+                            {expandedInstitution === institution.id ? (
+                              <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                            ) : (
+                              <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                            )}
                           </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                        </div>
+                      </CollapsibleTrigger>
+                      
+                      <CollapsibleContent>
+                        <div className="p-4 border-t bg-background">
+                          <h4 className="font-semibold mb-3">חוגים/מחלקות:</h4>
+                          
+                          {/* Add Department */}
+                          <div className="flex gap-2 mb-4">
+                            <Input
+                              value={addingDepartmentTo === institution.id ? newDepartmentName : ""}
+                              onChange={(e) => {
+                                setAddingDepartmentTo(institution.id);
+                                setNewDepartmentName(e.target.value);
+                              }}
+                              placeholder="הוסף חוג חדש..."
+                              className="text-right flex-1"
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddDepartment(institution.id);
+                                }
+                              }}
+                            />
+                            <Button 
+                              onClick={() => handleAddDepartment(institution.id)}
+                              disabled={addDepartmentMutation.isPending || !newDepartmentName.trim()}
+                              variant="outline"
+                            >
+                              <Plus className="w-4 h-4 ml-1" />
+                              הוסף
+                            </Button>
+                          </div>
+
+                          {/* Departments List */}
+                          {institution.departments.length === 0 ? (
+                            <p className="text-sm text-muted-foreground">
+                              אין חוגים עדיין. הוסף חוג חדש למעלה.
+                            </p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {institution.departments.map((dept) => (
+                                <Badge 
+                                  key={dept.id} 
+                                  variant="secondary"
+                                  className="px-3 py-1.5 text-sm flex items-center gap-2"
+                                >
+                                  {dept.name}
+                                  <button
+                                    onClick={() => handleDeleteDepartment(dept.id)}
+                                    className="hover:text-destructive transition-colors"
+                                    disabled={deleteDepartmentMutation.isPending}
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </Collapsible>
+                ))}
               </div>
             )}
           </CardContent>

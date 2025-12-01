@@ -43,28 +43,16 @@ interface Student {
   last_sign_in_at: string | null;
 }
 
-const INSTITUTIONS = [
-  'אוניברסיטת תל אביב',
-  'האוניברסיטה העברית',
-  'טכניון',
-  'אוניברסיטת בר אילן',
-  'אוניברסיטת בן גוריון',
-  'מכללת אפקה',
-  'מכללת חדסה',
-  'אחר',
-];
+interface Institution {
+  id: string;
+  name: string;
+}
 
-const DEPARTMENTS = [
-  'מדעי המחשב',
-  'הנדסת חשמל',
-  'הנדסת תוכנה',
-  'מתמטיקה',
-  'פיזיקה',
-  'כימיה',
-  'ביולוגיה',
-  'כלכלה',
-  'אחר',
-];
+interface Department {
+  id: string;
+  name: string;
+  institution_id: string;
+}
 
 const AdminStudentsPage = () => {
   const queryClient = useQueryClient();
@@ -100,6 +88,43 @@ const AdminStudentsPage = () => {
     }
   });
 
+  // Fetch institutions from database
+  const { data: institutionsData = [] } = useQuery({
+    queryKey: ['institutions-for-students'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('institutions')
+        .select('id, name')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data as Institution[];
+    }
+  });
+
+  // Fetch departments from database
+  const { data: departmentsData = [] } = useQuery({
+    queryKey: ['departments-for-students'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('departments')
+        .select('id, name, institution_id')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data as Department[];
+    }
+  });
+
+  // Get departments for selected institution
+  const getDepartmentsForInstitution = (institutionName: string) => {
+    const institution = institutionsData.find(i => i.name === institutionName);
+    if (!institution) return [];
+    return departmentsData.filter(d => d.institution_id === institution.id);
+  };
+
   // Create student mutation
   const createMutation = useMutation({
     mutationFn: async (studentData: typeof formData) => {
@@ -111,9 +136,9 @@ const AdminStudentsPage = () => {
           data: {
             first_name: studentData.first_name,
             last_name: studentData.last_name,
-            phone: studentData.phone,
-            institution: studentData.institution !== 'אחר' ? studentData.institution : null,
-            department: studentData.department !== 'אחר' ? studentData.department : null,
+            phone: studentData.phone || null,
+            institution: studentData.institution || null,
+            department: studentData.department || null,
           },
           emailRedirectTo: `${window.location.origin}/`,
         }
@@ -377,22 +402,22 @@ const AdminStudentsPage = () => {
                     <Label htmlFor="institution">מוסד לימודים</Label>
                     <Select 
                       value={formData.institution} 
-                      onValueChange={(value) => setFormData({ ...formData, institution: value })}
+                      onValueChange={(value) => setFormData({ ...formData, institution: value, department: "" })}
                     >
                       <SelectTrigger id="institution" className="text-right">
                         <SelectValue placeholder="בחר מוסד" />
                       </SelectTrigger>
                       <SelectContent>
-                        {INSTITUTIONS.map((inst) => (
-                          <SelectItem key={inst} value={inst} className="text-right">
-                            {inst}
+                        {institutionsData.map((inst) => (
+                          <SelectItem key={inst.id} value={inst.name} className="text-right">
+                            {inst.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
 
-                  {formData.institution && formData.institution !== 'אחר' && (
+                  {formData.institution && getDepartmentsForInstitution(formData.institution).length > 0 && (
                     <div className="space-y-2">
                       <Label htmlFor="department">חוג לימודים</Label>
                       <Select 
@@ -403,9 +428,9 @@ const AdminStudentsPage = () => {
                           <SelectValue placeholder="בחר חוג" />
                         </SelectTrigger>
                         <SelectContent>
-                          {DEPARTMENTS.map((dept) => (
-                            <SelectItem key={dept} value={dept} className="text-right">
-                              {dept}
+                          {getDepartmentsForInstitution(formData.institution).map((dept) => (
+                            <SelectItem key={dept.id} value={dept.name} className="text-right">
+                              {dept.name}
                             </SelectItem>
                           ))}
                         </SelectContent>

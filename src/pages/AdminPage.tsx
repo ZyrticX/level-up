@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Trash2, Edit, Plus, Save, X, Upload, Search, Video } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { courseIconLabels, CourseIconType } from "@/lib/courseIcons";
+import { courseIconLabels, CourseIconCategory } from "@/lib/courseIcons";
 import {
   Table,
   TableBody,
@@ -27,7 +27,7 @@ interface Course {
   description: string | null;
   instructor: string | null;
   duration: string | null;
-  icon_category: IconCategory | null;
+  icon_category: CourseIconCategory | null;
   icon_url: string | null;
   price: number | null;
   institution: string | null;
@@ -49,7 +49,7 @@ const AdminPage = () => {
   const [formData, setFormData] = useState<{
     title: string;
     description: string;
-    icon_category: CourseIconType;
+    icon_category: CourseIconCategory;
     icon_url: string;
     price: string;
     institution: string;
@@ -95,24 +95,45 @@ const AdminPage = () => {
   const uniqueInstitutions = Array.from(new Set(courses.map(c => c.institution).filter(Boolean)));
   const uniqueDepartments = Array.from(new Set(courses.map(c => c.department).filter(Boolean)));
 
-  // Fetch institutions and departments from database
+  // Fetch institutions from database
   const { data: institutions = [] } = useQuery({
     queryKey: ['institutions-list'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('institutions')
-        .select('name, departments')
+        .select('id, name')
+        .eq('is_active', true)
         .order('name');
       
       if (error) throw error;
-      return data;
+      return data as { id: string; name: string }[];
     }
   });
 
-  // Get all unique departments from institutions
-  const allDepartments = Array.from(new Set(
-    institutions.flatMap(inst => inst.departments || [])
-  ));
+  // Fetch departments from database
+  const { data: allDepartmentsData = [] } = useQuery({
+    queryKey: ['departments-list'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('departments')
+        .select('id, name, institution_id')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data as { id: string; name: string; institution_id: string }[];
+    }
+  });
+
+  // Get departments for selected institution
+  const getDepartmentsForInstitution = (institutionName: string) => {
+    const institution = institutions.find(i => i.name === institutionName);
+    if (!institution) return [];
+    return allDepartmentsData.filter(d => d.institution_id === institution.id);
+  };
+
+  // Get all unique department names
+  const allDepartments = Array.from(new Set(allDepartmentsData.map(d => d.name)));
 
   // Create course mutation
   const createMutation = useMutation({
@@ -266,7 +287,7 @@ const AdminPage = () => {
     setFormData({
       title: course.title,
       description: course.description || "",
-      icon_category: (course.icon_category as CourseIconType) || "general",
+      icon_category: (course.icon_category as CourseIconCategory) || "general",
       icon_url: course.icon_url || "",
       price: course.price?.toString() || "",
       institution: course.institution || "",
@@ -360,14 +381,9 @@ const AdminPage = () => {
                         <SelectValue placeholder={formData.institution ? "בחר מחלקה" : "בחר תחילה מוסד"} />
                       </SelectTrigger>
                       <SelectContent>
-                        {formData.institution && institutions.find(i => i.name === formData.institution)?.departments?.map((dept) => (
-                          <SelectItem key={dept} value={dept}>
-                            {dept}
-                          </SelectItem>
-                        ))}
-                        {allDepartments.filter(dept => !formData.institution || !institutions.find(i => i.name === formData.institution)?.departments?.includes(dept)).map((dept) => (
-                          <SelectItem key={dept} value={dept}>
-                            {dept}
+                        {formData.institution && getDepartmentsForInstitution(formData.institution).map((dept) => (
+                          <SelectItem key={dept.id} value={dept.name}>
+                            {dept.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -389,7 +405,7 @@ const AdminPage = () => {
                     <Label htmlFor="icon_category">אייקון</Label>
                     <Select 
                       value={formData.icon_category} 
-                      onValueChange={(value) => setFormData({...formData, icon_category: value as CourseIconType})}
+                      onValueChange={(value) => setFormData({...formData, icon_category: value as CourseIconCategory})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="בחר אייקון" />

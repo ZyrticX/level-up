@@ -22,6 +22,7 @@ import AdminCourseBuilderPage from "./pages/AdminCourseBuilderPage";
 import AdminTrackingPage from "./pages/AdminTrackingPage";
 import AdminReportsPage from "./pages/AdminReportsPage";
 import AdminSettingsPage from "./pages/AdminSettingsPage";
+import AdminSubjectsPage from "./pages/AdminSubjectsPage";
 import SettingsPage from "./pages/SettingsPage";
 import ContactPage from "./pages/ContactPage";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -33,6 +34,7 @@ import Layout from "./components/Layout";
 import AdminLayout from "./components/AdminLayout";
 import CookieConsent from "./components/CookieConsent";
 import PrivacyPage from "./pages/PrivacyPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +58,7 @@ const App = () => (
             <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
             <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
             <Route path="/privacy" element={<Layout><PrivacyPage /></Layout>} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/test" element={<TestPage />} />
             <Route path="/course-purchased/:courseId" element={<Layout><CoursePagePurchased /></Layout>} />
             <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
@@ -70,6 +73,7 @@ const App = () => (
             <Route path="/admin/tracking" element={<AdminLayout><AdminTrackingPage /></AdminLayout>} />
             <Route path="/admin/reports" element={<AdminLayout><AdminReportsPage /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><AdminSettingsPage /></AdminLayout>} />
+            <Route path="/admin/subjects" element={<AdminLayout><AdminSubjectsPage /></AdminLayout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>

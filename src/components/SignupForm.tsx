@@ -13,34 +13,22 @@ import {
 } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useQuery } from '@tanstack/react-query';
 
 interface SignupFormProps {
   onSuccess: () => void;
 }
 
-// Dummy data למוסדות וחוגים
-const INSTITUTIONS = [
-  'אוניברסיטת תל אביב',
-  'האוניברסיטה העברית',
-  'טכניון',
-  'אוניברסיטת בר אילן',
-  'אוניברסיטת בן גוריון',
-  'מכללת אפקה',
-  'מכללת חדסה',
-  'אחר',
-];
+interface Department {
+  id: string;
+  name: string;
+  institution_id: string;
+}
 
-const DEPARTMENTS = [
-  'מדעי המחשב',
-  'הנדסת חשמל',
-  'הנדסת תוכנה',
-  'מתמטיקה',
-  'פיזיקה',
-  'כימיה',
-  'ביולוגיה',
-  'כלכלה',
-  'אחר',
-];
+interface Institution {
+  id: string;
+  name: string;
+}
 
 const SignupForm = ({ onSuccess }: SignupFormProps) => {
   const [formData, setFormData] = useState({
@@ -49,8 +37,8 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
     email: '',
     password: '',
     phone: '',
-    institution: '',
-    department: '',
+    institutionId: '',
+    departmentId: '',
     additionalInfo: '',
   });
   
@@ -59,13 +47,47 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  // Fetch institutions from database
+  const { data: institutions = [], isLoading: loadingInstitutions } = useQuery({
+    queryKey: ['institutions-for-signup'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('institutions')
+        .select('id, name')
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data as Institution[];
+    }
+  });
+
+  // Fetch departments for selected institution
+  const { data: departments = [], isLoading: loadingDepartments } = useQuery({
+    queryKey: ['departments-for-signup', formData.institutionId],
+    queryFn: async () => {
+      if (!formData.institutionId) return [];
+      
+      const { data, error } = await supabase
+        .from('departments')
+        .select('id, name, institution_id')
+        .eq('institution_id', formData.institutionId)
+        .eq('is_active', true)
+        .order('name');
+      
+      if (error) throw error;
+      return data as Department[];
+    },
+    enabled: !!formData.institutionId
+  });
+
   const handleChange = (field: string, value: string) => {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // אם בחרו "אחר" במוסד - מנקים את החוג
-      if (field === 'institution' && value === 'אחר') {
-        newData.department = '';
+      // אם משנים מוסד - מנקים את החוג
+      if (field === 'institutionId') {
+        newData.departmentId = '';
       }
       
       return newData;
@@ -86,6 +108,10 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
     setLoading(true);
 
     try {
+      // Get institution and department names for storage
+      const selectedInstitution = institutions.find(i => i.id === formData.institutionId);
+      const selectedDepartment = departments.find(d => d.id === formData.departmentId);
+
       const { error, data } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -94,8 +120,10 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
             first_name: formData.firstName,
             last_name: formData.lastName,
             phone: formData.phone,
-            institution: formData.institution !== 'אחר' ? formData.institution : null,
-            department: formData.institution !== 'אחר' && formData.department !== 'אחר' ? formData.department : null,
+            institution_id: formData.institutionId || null,
+            institution: selectedInstitution?.name || null,
+            department_id: formData.departmentId || null,
+            department: selectedDepartment?.name || null,
             additional_info: formData.additionalInfo,
             marketing_consent: marketingAccepted,
           },
@@ -122,7 +150,7 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
     }
   };
 
-  const showDepartment = formData.institution && formData.institution !== 'אחר';
+  const showDepartment = formData.institutionId && departments.length > 0;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" dir="rtl">
@@ -189,31 +217,42 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
 
         <div className="space-y-2">
           <Label htmlFor="institution" className="text-sm font-semibold">מוסד לימודים</Label>
-          <Select value={formData.institution} onValueChange={(value) => handleChange('institution', value)}>
+          <Select 
+            value={formData.institutionId} 
+            onValueChange={(value) => handleChange('institutionId', value)}
+            disabled={loadingInstitutions}
+          >
             <SelectTrigger id="institution" className="h-11 text-right border-2 border-primary/20 focus:border-primary rounded-xl" dir="rtl">
-              <SelectValue placeholder="בחר מוסד" />
+              <SelectValue placeholder={loadingInstitutions ? "טוען מוסדות..." : "בחר מוסד"} />
             </SelectTrigger>
             <SelectContent dir="rtl">
-              {INSTITUTIONS.map((inst) => (
-                <SelectItem key={inst} value={inst} className="text-right">
-                  {inst}
+              {institutions.map((inst) => (
+                <SelectItem key={inst.id} value={inst.id} className="text-right">
+                  {inst.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {institutions.length === 0 && !loadingInstitutions && (
+            <p className="text-xs text-muted-foreground">אין מוסדות זמינים כרגע</p>
+          )}
         </div>
 
         {showDepartment && (
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="department" className="text-sm font-semibold">חוג לימודים</Label>
-            <Select value={formData.department} onValueChange={(value) => handleChange('department', value)}>
+            <Select 
+              value={formData.departmentId} 
+              onValueChange={(value) => handleChange('departmentId', value)}
+              disabled={loadingDepartments}
+            >
               <SelectTrigger id="department" className="h-11 text-right border-2 border-primary/20 focus:border-primary rounded-xl" dir="rtl">
-                <SelectValue placeholder="בחר חוג" />
+                <SelectValue placeholder={loadingDepartments ? "טוען חוגים..." : "בחר חוג"} />
               </SelectTrigger>
               <SelectContent dir="rtl">
-                {DEPARTMENTS.map((dept) => (
-                  <SelectItem key={dept} value={dept} className="text-right">
-                    {dept}
+                {departments.map((dept) => (
+                  <SelectItem key={dept.id} value={dept.id} className="text-right">
+                    {dept.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -286,4 +325,3 @@ const SignupForm = ({ onSuccess }: SignupFormProps) => {
 };
 
 export default SignupForm;
-

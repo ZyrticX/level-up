@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -13,6 +14,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +36,16 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
       onSuccess();
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'אימייל או סיסמה שגויים';
+      let errorMessage = 'אימייל או סיסמה שגויים';
+      if (error instanceof Error) {
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'אימייל או סיסמה שגויים';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'האימייל לא אומת. בדוק את תיבת הדואר שלך';
+        } else {
+          errorMessage = error.message;
+        }
+      }
       toast({
         title: 'שגיאה בכניסה',
         description: errorMessage,
@@ -44,6 +55,10 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
       setLoading(false);
     }
   };
+
+  if (showForgotPassword) {
+    return <ForgotPasswordForm onBack={() => setShowForgotPassword(false)} />;
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" dir="rtl">
@@ -82,12 +97,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
             type="button"
             variant="link"
             className="text-primary text-sm px-0 hover:underline"
-            onClick={() => {
-              toast({
-                title: 'שחזור סיסמה',
-                description: 'תכונה זו תהיה זמינה בקרוב',
-              });
-            }}
+            onClick={() => setShowForgotPassword(true)}
           >
             שכחתי סיסמה
           </Button>
@@ -106,4 +116,3 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 };
 
 export default LoginForm;
-

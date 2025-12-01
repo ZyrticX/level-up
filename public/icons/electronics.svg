@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- נוצר באמצעות Microsoft Visio, ‏SVG Export electronics.svg Page-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="1.53723in" height="1.5236in"
+		viewBox="0 0 110.68 109.699" xml:space="preserve" color-interpolation-filters="sRGB" class="st6">
+	<v:documentProperties v:langID="1037" v:metric="true" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="msvNoAutoConnect" v:val="VT0(1):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {stroke:#333333;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.25}
+		.st2 {fill:#333333;stroke:#333333;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.25}
+		.st3 {fill:#333333;stroke:#333333;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.25;visibility:hidden}
+		.st4 {stroke:#333333;stroke-linecap:butt;stroke-width:0.566929}
+		.st5 {fill:#00aaea;stroke:#333333;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.25}
+		.st6 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="ResistorCount" v:prompt="" v:val="VT0(2):26"/>
+		</v:userDefs>
+		<title>דף-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="חשמלי" v:index="0"/>
+		<v:layer v:name="מחבר" v:index="1"/>
+		<g id="group1-1" transform="translate(18.625,-18.625)" v:mID="1" v:groupContext="group">
+			<title>גיליון.1</title>
+			<g id="group2-2" transform="translate(-72.6522,79.8407) rotate(-90)" v:mID="2" v:groupContext="group" v:layerMember="0">
+				<v:custProps>
+					<v:cp v:nameU="Type" v:lbl="סוג" v:type="1" v:format="דלדול;שיפור" v:sortKey="3" v:langID="1037"
+							v:val="VT4(שיפור)"/>
+					<v:cp v:nameU="Gate" v:lbl="מספר שערים" v:type="1" v:format="1;2" v:sortKey="4" v:langID="1037" v:val="VT4(1)"/>
+					<v:cp v:nameU="Substrate" v:lbl="חיבור מצע" v:type="1" v:format="ללא;פנימי;חיצוני" v:sortKey="5"
+							v:langID="1037" v:val="VT4(חיצוני)"/>
+					<v:cp v:nameU="Channel" v:lbl="ערוץ" v:type="1" v:format="סוג P;סוג N" v:sortKey="2" v:langID="1037"
+							v:val="VT4(סוג P)"/>
+					<v:cp v:nameU="Envelope" v:lbl="מעטפה" v:type="1" v:format="בלתי נראה;גלוי" v:sortKey="1" v:langID="1037"
+							v:val="VT4(בלתי נראה)"/>
+					<v:cp v:nameU="Type" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+							v:langID="0" v:cal="0" v:val="VT4(דלדול)"/>
+					<v:cp v:nameU="Substrate" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+							v:ask="false" v:langID="0" v:cal="0" v:val="VT4(פנימי)"/>
+				</v:custProps>
+				<v:userDefs>
+					<v:ud v:nameU="Type" v:val="VT0(1):26"/>
+					<v:ud v:nameU="Gate" v:val="VT0(0):26"/>
+					<v:ud v:nameU="Substrate" v:val="VT0(2):26"/>
+					<v:ud v:nameU="Envelope" v:val="VT0(0):26"/>
+					<v:ud v:nameU="Channel" v:val="VT0(0):26"/>
+					<v:ud v:nameU="visDescription" v:val="VT4(טרנזיסטור אפקט שדה מוליך למחצה, עשוי תחמוצת-מתכת ובעל ערוץ P.)"/>
+					<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+					<v:ud v:nameU="Type" v:prompt="" v:val="VT0(0):26"/>
+					<v:ud v:nameU="Substrate" v:prompt="" v:val="VT0(1):26"/>
+				</v:userDefs>
+				<title>MOSFET</title>
+				<g id="shape3-3" v:mID="3" v:groupContext="shape" v:layerMember="0" transform="translate(4.25197,-4.25197)">
+					<title>גיליון.3</title>
+					<v:userDefs>
+						<v:ud v:nameU="SubType" v:val="VT0(0):26"/>
+						<v:ud v:nameU="Gate" v:val="VT0(0):26"/>
+						<v:ud v:nameU="Substrate" v:val="VT0(0):26"/>
+						<v:ud v:nameU="Envelope" v:val="VT0(0):26"/>
+					</v:userDefs>
+					<path d="M6.38 105.45 L12.76 105.45 L12.76 97.74" class="st1"/>
+					<path d="M12.76 104.12 L12.76 97.74" class="st1"/>
+					<path d="M6.38 79.94 L6.38 96.15 L19.13 96.15" class="st1"/>
+					<path d="M19.13 97.74 L19.13 105.45 L29.76 105.45" class="st1"/>
+					<path d="M6.38 97.74 L6.38 105.45 L-4.25 105.45" class="st1"/>
+					<path d="M21.05 97.74 L4.46 97.74" class="st1"/>
+				</g>
+				<g id="shape4-11" v:mID="4" v:groupContext="shape" v:layerMember="0" transform="translate(15.3071,-9.52441)">
+					<title>גיליון.4</title>
+					<path d="M0 106.3 L1.7 109.7 L3.4 106.3 L0 106.3 Z" class="st2"/>
+				</g>
+			</g>
+			<g id="group5-13" transform="translate(28.5429,-4.53543)" v:mID="5" v:groupContext="group" v:layerMember="0">
+				<v:custProps>
+					<v:cp v:nameU="Type" v:lbl="סוג" v:type="1" v:format="PNP;NPN" v:sortKey="2" v:langID="1037" v:val="VT4(PNP)"/>
+					<v:cp v:nameU="Envelope" v:lbl="מעטפה" v:type="1" v:format="בלתי נראה;גלוי" v:sortKey="1" v:langID="1037"
+							v:val="VT4(בלתי נראה)"/>
+					<v:cp v:nameU="Type" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+							v:langID="0" v:cal="0" v:val="VT4(NPN)"/>
+				</v:custProps>
+				<v:userDefs>
+					<v:ud v:nameU="Envelope" v:val="VT0(0):26"/>
+					<v:ud v:nameU="SubType" v:val="VT0(0):26"/>
+					<v:ud v:nameU="visDescription" v:val="VT4(PNP או NPN דו-קוטבי.)"/>
+					<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+					<v:ud v:nameU="SubType" v:prompt="" v:val="VT0(1):26"/>
+				</v:userDefs>
+				<title>דו-קוטבי</title>
+				<g id="shape6-14" v:mID="6" v:groupContext="shape" v:layerMember="0">
+					<title>גיליון.6</title>
+					<path d="M0 92.69 L12.76 92.69" class="st1"/>
+					<path d="M12.76 101.2 L12.76 84.19" class="st1"/>
+					<path d="M12.76 88.44 L25.51 83.26 L25.51 75.68" class="st1"/>
+					<path d="M12.76 96.94 L25.51 102.26 L25.51 109.7" class="st1"/>
+				</g>
+				<g id="shape7-20" v:mID="7" v:groupContext="shape" v:layerMember="0"
+						transform="translate(66.8865,2.36902) rotate(22.5) scale(-1,1)">
+					<title>גיליון.7</title>
+					<v:userDefs>
+						<v:ud v:nameU="SubType" v:val="VT0(0):26"/>
+						<v:ud v:nameU="SubType" v:prompt="" v:val="VT0(1):26"/>
+					</v:userDefs>
+					<path d="M0 108.12 L3.16 109.7 L3.16 106.54 L0 108.12 Z" class="st2"/>
+				</g>
+				<g id="shape8-22" v:mID="8" v:groupContext="shape" v:layerMember="0" transform="translate(30.6142,-8.50394)">
+					<title>גיליון.8</title>
+					<rect x="0" y="92.6911" width="12" height="17.0079" class="st3"/>
+				</g>
+			</g>
+			<g id="shape9-24" v:mID="9" v:groupContext="shape" v:layerMember="1" transform="translate(21.4563,-32.7327)">
+				<title>מחבר דינאמי.72</title>
+				<path d="M7.09 112.68 L7.09 120.89" class="st1"/>
+			</g>
+			<g id="group10-27" transform="translate(-48.5207,68.3132) rotate(-90)" v:mID="10" v:groupContext="group"
+					v:layerMember="0">
+				<v:custProps>
+					<v:cp v:nameU="Label" v:lbl="תווית" v:type="0" v:format="@" v:sortKey="" v:invis="false" v:ask="false"
+							v:langID="1037" v:val="VT4()"/>
+					<v:cp v:nameU="Slider_Position" v:lbl="מיקום מחוון (0-‏1)" v:type="2" v:langID="1037" v:val="VT0(0.5):26"/>
+				</v:custProps>
+				<v:userDefs>
+					<v:ud v:nameU="Form" v:val="VT0(1):5"/>
+					<v:ud v:nameU="SubType" v:val="VT0(0):26"/>
+					<v:ud v:nameU="visDescription" v:val="VT4(מייצג נגד קבוע או משתנה.)"/>
+					<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT4()"/>
+					<v:ud v:nameU="SolSH" v:prompt="" v:val="VT4({2EE3C7D2-E26E-4B72-9E9C-5170DDBF261A})"/>
+					<v:ud v:nameU="Form" v:prompt="" v:val="VT0(0):5"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT4(R1)"/>
+				</v:userDefs>
+				<title>נגד</title>
+				<g id="shape11-28" v:mID="11" v:groupContext="shape" v:layerMember="0" transform="translate(-1.0741,0.993395)">
+					<title>גיליון.11</title>
+				</g>
+				<g id="shape12-30" v:mID="12" v:groupContext="shape" v:layerMember="0">
+					<title>גיליון.12</title>
+					<path d="" class="st4"/>
+					<path d="M14.17 102.58 L11.5 102.58 L10.82 103.89 L9.46 101.19 L7.82 103.89 L6.46 101.19 L4.82 103.89 L3.46 101.19
+								 L2.78 102.58 L0 102.58" class="st4"/>
+				</g>
+			</g>
+			<g id="shape13-34" v:mID="13" v:groupContext="shape" transform="translate(1.57374E-14,-38.1732)">
+				<title>גיליון.13</title>
+				<ellipse cx="2.18069" cy="107.518" rx="2.18069" ry="2.18069" class="st5"/>
+			</g>
+			<g id="shape14-36" v:mID="14" v:groupContext="shape" transform="translate(32.7949,155.524) rotate(180)">
+				<title>גיליון.14</title>
+				<path d="M0 109.7 L8.5 109.7" class="st1"/>
+			</g>
+			<g id="shape15-39" v:mID="15" v:groupContext="shape" transform="translate(58.5778,163.839) rotate(180)">
+				<title>גיליון.15</title>
+				<path d="M0 109.7 L8.5 109.7" class="st1"/>
+			</g>
+			<g id="shape16-42" v:mID="16" v:groupContext="shape" transform="translate(54.0547,-38.5512)">
+				<title>גיליון.16</title>
+				<path d="M0 109.7 L14.17 109.7" class="st1"/>
+			</g>
+			<g id="shape17-45" v:mID="17" v:groupContext="shape" v:layerMember="1" transform="translate(61.1421,-47.0551)">
+				<title>מחבר דינאמי.91</title>
+				<path d="M-7.09 115.37 L-7.09 118.2" class="st1"/>
+			</g>
+			<g id="shape18-48" v:mID="18" v:groupContext="shape" transform="translate(58.3067,214.863) rotate(180)">
+				<title>גיליון.18</title>
+				<path d="M0 109.7 L8.5 109.7" class="st1"/>
+			</g>
+			<g id="shape19-51" v:mID="19" v:groupContext="shape" transform="translate(56.7949,217.225) rotate(180)">
+				<title>גיליון.19</title>
+				<path d="M0 109.7 L5.57 109.7" class="st1"/>
+			</g>
+			<g id="shape20-54" v:mID="20" v:groupContext="shape" transform="translate(55.472,219.398) rotate(180)">
+				<title>גיליון.20</title>
+				<path d="M0 109.7 L3.21 109.7" class="st1"/>
+			</g>
+			<g id="shape21-57" v:mID="21" v:groupContext="shape" transform="translate(68.126,-36.2835)">
+				<title>גיליון.21</title>
+				<ellipse cx="2.18069" cy="107.518" rx="2.18069" ry="2.18069" class="st5"/>
+			</g>
+		</g>
+	</g>
+</svg>

@@ -1,70 +1,65 @@
-import { 
-  Zap, 
-  Binary, 
-  Cpu, 
-  Wifi, 
-  CircuitBoard,
-  Microchip,
-  Radio,
-  Calculator,
-  Dices,
-  TrendingUp,
-  Atom,
-  Magnet,
-  Package
-} from 'lucide-react';
-
-export type CourseIconType = 
-  | 'electrical-engineering'
-  | 'digital-systems'
-  | 'computer-organization'
-  | 'computer-networks'
+// Course icon categories matching the database enum (using underscores)
+export type CourseIconCategory = 
+  | 'electrical_engineering'
+  | 'digital_systems'
+  | 'computer_organization'
+  | 'computer_networks'
   | 'electronics'
   | 'semiconductors'
-  | 'signal-processing'
+  | 'signal_processing'
   | 'mathematics'
   | 'probability'
-  | 'stochastic-models'
+  | 'stochastic_models'
+  | 'physics'
   | 'mechanics'
-  | 'electricity-magnetism'
+  | 'magnetism'
   | 'general';
 
-export const courseIcons = {
-  'electrical-engineering': Zap,
-  'digital-systems': Binary,
-  'computer-organization': Cpu,
-  'computer-networks': Wifi,
-  'electronics': CircuitBoard,
-  'semiconductors': Microchip,
-  'signal-processing': Radio,
-  'mathematics': Calculator,
-  'probability': Dices,
-  'stochastic-models': TrendingUp,
-  'mechanics': Atom,
-  'electricity-magnetism': Magnet,
-  'general': Package,
+// Mapping from category to custom SVG icon path
+export const courseIconPaths: Record<CourseIconCategory, string> = {
+  'electrical_engineering': '/icons/electronic-circuit.svg',
+  'digital_systems': '/icons/digital-systems.svg',
+  'computer_organization': '/icons/processor.svg',
+  'computer_networks': '/icons/computer-network.svg',
+  'electronics': '/icons/electronics.svg',
+  'semiconductors': '/icons/semiconductors.svg',
+  'signal_processing': '/icons/signal-proccesing.svg',
+  'mathematics': '/icons/math.svg',
+  'probability': '/icons/probability.svg',
+  'stochastic_models': '/icons/Stochastic-proccess.svg',
+  'physics': '/icons/mechanics.svg',
+  'mechanics': '/icons/mechanics.svg',
+  'magnetism': '/icons/electricity-magnetism.svg',
+  'general': '/icons/general.svg',
 };
 
-export const courseIconLabels: Record<CourseIconType, string> = {
-  'electrical-engineering': 'הנדסת חשמל',
-  'digital-systems': 'מערכות ספרתיות',
-  'computer-organization': 'ארגון המחשב / מבנה מעבד',
-  'computer-networks': 'רשתות מחשבים',
+// Hebrew labels for each category
+export const courseIconLabels: Record<CourseIconCategory, string> = {
+  'electrical_engineering': 'הנדסת חשמל',
+  'digital_systems': 'מערכות ספרתיות',
+  'computer_organization': 'ארגון המחשב / מבנה מעבד',
+  'computer_networks': 'רשתות מחשבים',
   'electronics': 'אלקטרוניקה',
   'semiconductors': 'מוליכים למחצה',
-  'signal-processing': 'עיבוד אותות',
+  'signal_processing': 'עיבוד אותות',
   'mathematics': 'מתמטיקה',
   'probability': 'הסתברות',
-  'stochastic-models': 'מודלים סטוכסטיים',
+  'stochastic_models': 'מודלים סטוכסטיים',
+  'physics': 'פיזיקה',
   'mechanics': 'מכניקה',
-  'electricity-magnetism': 'חשמל ומגנטיות',
+  'magnetism': 'חשמל ומגנטיות',
   'general': 'כללי',
 };
 
-export const getCourseIcon = (iconType: CourseIconType) => {
-  return courseIcons[iconType] || courseIcons.general;
+// Get the icon path for a category
+export const getCourseIconPath = (category: CourseIconCategory): string => {
+  return courseIconPaths[category] || courseIconPaths.general;
 };
 
-export const getCourseIconLabel = (iconType: CourseIconType) => {
-  return courseIconLabels[iconType] || courseIconLabels.general;
+// Get the Hebrew label for a category
+export const getCourseIconLabel = (category: CourseIconCategory): string => {
+  return courseIconLabels[category] || courseIconLabels.general;
 };
+
+// Legacy export for backwards compatibility (deprecated - use CourseIconCategory)
+export type CourseIconType = CourseIconCategory;

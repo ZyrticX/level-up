@@ -1,4 +1,4 @@
-import { CourseIconCategory, getCourseIcon } from '@/lib/courseIcons';
+import { CourseIconCategory, getCourseIconPath } from '@/lib/courseIcons';
 
 interface CourseIconProps {
   category?: CourseIconCategory;
@@ -7,27 +7,21 @@ interface CourseIconProps {
   className?: string;
 }
 
-const CourseIcon = ({ category = 'general', customIconUrl, size = 48, className = '' }: CourseIconProps) => {
-  // If custom icon URL is provided, use it
-  if (customIconUrl) {
-    return (
-      <img 
-        src={customIconUrl} 
-        alt="Course icon" 
-        className={`object-contain ${className}`}
-        style={{ width: size, height: size }}
-      />
-    );
-  }
-
-  // Otherwise use the category icon
-  const { icon: Icon } = getCourseIcon(category);
+const CourseIcon = ({ 
+  category = 'general', 
+  customIconUrl, 
+  size = 48, 
+  className = '' 
+}: CourseIconProps) => {
+  // If custom icon URL is provided, use it; otherwise use the category icon path
+  const iconUrl = customIconUrl || getCourseIconPath(category);
   
   return (
-    <Icon 
-      size={size} 
-      className={`text-primary ${className}`}
-      strokeWidth={1.5}
+    <img 
+      src={iconUrl} 
+      alt="Course icon" 
+      className={`object-contain ${className}`}
+      style={{ width: size, height: size }}
     />
   );
 };
