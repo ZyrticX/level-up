@@ -119,15 +119,15 @@ const Index = () => {
                 <Link
                   key={institution.id}
                   to={`/institution/${institution.id}`}
-                  className="bg-card border border-border rounded-lg p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+                  className="bg-card border border-border rounded-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
                 >
                   <div className="text-center">
-                    <div className="w-24 h-24 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors duration-200">
-                      <Building className="w-12 h-12 text-primary" />
+                    <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 group-hover:scale-105 transition-all duration-300">
+                      <Building className="w-12 h-12 text-white drop-shadow-md" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2 text-center">{institution.name}</h3>
                     <p className="text-base text-muted-foreground mb-4">{institution.subtitle}</p>
-                    <div className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="inline-block bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-md">
                       {institution.courses}
                     </div>
                   </div>
