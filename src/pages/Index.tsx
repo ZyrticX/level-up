@@ -89,49 +89,37 @@ const Index = () => {
               name: 'אוניברסיטת בר אילן',
               subtitle: 'רמת גן',
               courses: '45+ קורסים',
-              icon: BookOpen,
-              gradient: 'from-blue-400 via-blue-500 to-indigo-600',
-              shadow: 'shadow-blue-500/40'
+              icon: BookOpen
             }, {
               id: 'ben-gurion',
               name: 'אוניברסיטת בן גוריון',
               subtitle: 'בנגב',
               courses: '38+ קורסים',
-              icon: Landmark,
-              gradient: 'from-amber-400 via-orange-500 to-red-500',
-              shadow: 'shadow-orange-500/40'
+              icon: Landmark
             }, {
               id: 'afeka',
               name: 'מכללת אפקה',
               subtitle: 'מכללה טכנולוגית',
               courses: '52+ קורסים',
-              icon: Cpu,
-              gradient: 'from-emerald-400 via-teal-500 to-cyan-600',
-              shadow: 'shadow-teal-500/40'
+              icon: Cpu
             }, {
               id: 'hadassah',
               name: 'מכללת חדסה',
               subtitle: 'מכללה אקדמית',
               courses: '34+ קורסים',
-              icon: Heart,
-              gradient: 'from-pink-400 via-rose-500 to-red-500',
-              shadow: 'shadow-rose-500/40'
+              icon: Heart
             }, {
               id: 'ariel',
               name: 'אוניברסיטת אריאל שבשומרון',
               subtitle: 'שומרון',
               courses: '28+ קורסים',
-              icon: Mountain,
-              gradient: 'from-green-400 via-emerald-500 to-teal-600',
-              shadow: 'shadow-emerald-500/40'
+              icon: Mountain
             }, {
               id: 'technion',
               name: 'הטכניון',
               subtitle: 'חיפה',
               courses: '31+ קורסים',
-              icon: Atom,
-              gradient: 'from-violet-400 via-purple-500 to-indigo-600',
-              shadow: 'shadow-purple-500/40'
+              icon: Atom
             }].map(institution => {
               const IconComponent = institution.icon;
               return (
@@ -141,15 +129,15 @@ const Index = () => {
                   className="bg-card border border-border rounded-2xl p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
                 >
                   {/* Decorative gradient blur */}
-                  <div className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${institution.gradient} rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`}></div>
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
                   
                   <div className="text-center relative z-10">
-                    <div className={`w-24 h-24 bg-gradient-to-br ${institution.gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl ${institution.shadow} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                    <div className="w-24 h-24 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/40 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                       <IconComponent className="w-12 h-12 text-white drop-shadow-lg" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2 text-center">{institution.name}</h3>
                     <p className="text-base text-muted-foreground mb-4">{institution.subtitle}</p>
-                    <div className={`inline-block bg-gradient-to-r ${institution.gradient} text-white px-5 py-2 rounded-full text-sm font-semibold shadow-lg ${institution.shadow}`}>
+                    <div className="inline-block bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-lg shadow-blue-500/40">
                       {institution.courses}
                     </div>
                   </div>
