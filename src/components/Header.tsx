@@ -15,7 +15,7 @@ import { User } from '@supabase/supabase-js';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
-import { BookOpen, Mail, Settings, FileText, LogOut, User as UserIcon, ChevronDown } from 'lucide-react';
+import { BookOpen, Mail, Settings, FileText, LogOut, User as UserIcon, ChevronDown, LayoutDashboard } from 'lucide-react';
 
 const Header = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -134,6 +134,19 @@ const Header = () => {
                       <BookOpen className="w-4 h-5 text-primary" />
                     </Button>
                   </Link>
+                  {isAdmin && (
+                    <Link to="/admin">
+                      <Button 
+                        variant="default"
+                        size="sm"
+                        className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-medium px-3 py-2 sm:px-4 gap-2 shadow-md hover:shadow-lg transition-all duration-200"
+                        title="ממשק ניהול"
+                      >
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span className="hidden sm:inline">ממשק ניהול</span>
+                      </Button>
+                    </Link>
+                  )}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
@@ -152,9 +165,9 @@ const Header = () => {
                       <DropdownMenuSeparator />
                       {isAdmin && (
                         <DropdownMenuItem asChild>
-                          <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
-                            <Settings className="w-4 h-4" />
-                            <span>לוח בקרה</span>
+                          <Link to="/admin" className="flex items-center gap-2 cursor-pointer text-primary font-medium">
+                            <LayoutDashboard className="w-4 h-4" />
+                            <span>ממשק ניהול</span>
                           </Link>
                         </DropdownMenuItem>
                       )}
