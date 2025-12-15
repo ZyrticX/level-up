@@ -527,8 +527,8 @@ const AdminPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">כל המוסדות</SelectItem>
-                  {uniqueInstitutions.map((inst) => (
-                    <SelectItem key={inst} value={inst || ""}>{inst}</SelectItem>
+                  {uniqueInstitutions.filter(inst => inst && inst.trim() !== '').map((inst) => (
+                    <SelectItem key={inst} value={inst}>{inst}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -539,8 +539,8 @@ const AdminPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">כל החוגים</SelectItem>
-                  {uniqueDepartments.map((dept) => (
-                    <SelectItem key={dept} value={dept || ""}>{dept}</SelectItem>
+                  {uniqueDepartments.filter(dept => dept && dept.trim() !== '').map((dept) => (
+                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

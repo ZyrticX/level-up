@@ -134,7 +134,7 @@ const AdminHetznerVideosPage: React.FC = () => {
   const { data: chapters = [] } = useQuery({
     queryKey: ['admin-chapters', selectedCourse],
     queryFn: async () => {
-      if (!selectedCourse) return [];
+      if (!selectedCourse || selectedCourse === 'all') return [];
       const { data, error } = await supabase
         .from('course_chapters')
         .select('id, title, course_id')
@@ -143,7 +143,7 @@ const AdminHetznerVideosPage: React.FC = () => {
       if (error) throw error;
       return data as Chapter[];
     },
-    enabled: !!selectedCourse,
+    enabled: !!selectedCourse && selectedCourse !== 'all',
   });
 
   // Fetch videos from Supabase
@@ -166,7 +166,7 @@ const AdminHetznerVideosPage: React.FC = () => {
         `)
         .order('created_at', { ascending: false });
 
-      if (selectedCourse) {
+      if (selectedCourse && selectedCourse !== 'all') {
         query = query.eq('course_id', selectedCourse);
       }
 
@@ -260,7 +260,7 @@ const AdminHetznerVideosPage: React.FC = () => {
 
   // Upload all files
   const handleUpload = async () => {
-    if (!selectedCourse) {
+    if (!selectedCourse || selectedCourse === 'all') {
       toast.error('נא לבחור קורס');
       return;
     }
@@ -302,7 +302,7 @@ const AdminHetznerVideosPage: React.FC = () => {
           .insert({
             title: fileName.replace(/\.[^/.]+$/, ''),
             course_id: selectedCourse,
-            chapter_id: selectedChapter || null,
+            chapter_id: selectedChapter && selectedChapter !== 'none' ? selectedChapter : null,
             duration: 0,
             video_url: '',
             is_published: false,
@@ -317,7 +317,7 @@ const AdminHetznerVideosPage: React.FC = () => {
         formData.append('video', uploadFile.file);
         formData.append('courseId', selectedCourse);
         formData.append('videoId', videoRecord.id);
-        if (selectedChapter) {
+        if (selectedChapter && selectedChapter !== 'none') {
           formData.append('chapterId', selectedChapter);
         }
         // Include folder structure in path
@@ -596,13 +596,13 @@ const AdminHetznerVideosPage: React.FC = () => {
                 <Select 
                   value={selectedChapter} 
                   onValueChange={setSelectedChapter}
-                  disabled={!selectedCourse}
+                  disabled={!selectedCourse || selectedCourse === 'all'}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="בחר פרק" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">ללא פרק</SelectItem>
+                    <SelectItem value="none">ללא פרק</SelectItem>
                     {chapters.map(chapter => (
                       <SelectItem key={chapter.id} value={chapter.id}>
                         {chapter.title}
@@ -760,7 +760,7 @@ const AdminHetznerVideosPage: React.FC = () => {
             {/* Upload Button */}
             <Button
               onClick={handleUpload}
-              disabled={isUploading || uploadFiles.length === 0 || !selectedCourse}
+              disabled={isUploading || uploadFiles.length === 0 || !selectedCourse || selectedCourse === 'all'}
               className="w-full"
               size="lg"
             >
@@ -783,7 +783,7 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <SelectValue placeholder="סנן לפי קורס" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">כל הקורסים</SelectItem>
+                  <SelectItem value="all">כל הקורסים</SelectItem>
                   {courses.map(course => (
                     <SelectItem key={course.id} value={course.id}>
                       {course.title}
