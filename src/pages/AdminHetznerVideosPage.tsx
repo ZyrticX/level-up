@@ -208,9 +208,13 @@ const AdminHetznerVideosPage: React.FC = () => {
   // Handle folder selection
   const handleFolderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) {
+      toast.info('לא נבחרו קבצים');
+      return;
+    }
 
     const videoFiles: UploadFile[] = [];
+    let skippedCount = 0;
     
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -224,19 +228,36 @@ const AdminHetznerVideosPage: React.FC = () => {
           status: 'pending',
           progress: 0,
         });
+      } else {
+        skippedCount++;
       }
     }
 
+    if (videoFiles.length === 0) {
+      toast.error('לא נמצאו קבצי וידאו בתיקייה');
+      return;
+    }
+
     setUploadFiles(videoFiles);
-    toast.success(`נמצאו ${videoFiles.length} סרטונים בתיקייה`);
+    const message = skippedCount > 0 
+      ? `נמצאו ${videoFiles.length} סרטונים (${skippedCount} קבצים אחרים דולגו)`
+      : `נמצאו ${videoFiles.length} סרטונים בתיקייה`;
+    toast.success(message);
+    
+    // Reset input to allow selecting the same folder again
+    e.target.value = '';
   };
 
   // Handle individual file selection
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) {
+      toast.info('לא נבחרו קבצים');
+      return;
+    }
 
     const videoFiles: UploadFile[] = [];
+    let skippedCount = 0;
     
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -247,10 +268,24 @@ const AdminHetznerVideosPage: React.FC = () => {
           status: 'pending',
           progress: 0,
         });
+      } else {
+        skippedCount++;
       }
     }
 
+    if (videoFiles.length === 0) {
+      toast.error('לא נבחרו קבצי וידאו. אנא בחר קבצים בפורמט וידאו (mp4, mov, avi וכו\')');
+      return;
+    }
+
     setUploadFiles(videoFiles);
+    const message = skippedCount > 0 
+      ? `נבחרו ${videoFiles.length} סרטונים (${skippedCount} קבצים אחרים דולגו)`
+      : `נבחרו ${videoFiles.length} סרטונים`;
+    toast.success(message);
+    
+    // Reset input to allow selecting the same files again
+    e.target.value = '';
   };
 
   // Remove file from upload list
@@ -573,13 +608,26 @@ const AdminHetznerVideosPage: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* No courses warning */}
+            {courses.length === 0 && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+                <div>
+                  <p className="font-medium text-yellow-800">אין קורסים במערכת</p>
+                  <p className="text-sm text-yellow-700">
+                    כדי להעלות סרטונים, קודם צריך ליצור קורס בעמוד "ניהול קורסים"
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Course/Chapter Selection */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">קורס *</label>
-                <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                <Select value={selectedCourse} onValueChange={setSelectedCourse} disabled={courses.length === 0}>
                   <SelectTrigger>
-                    <SelectValue placeholder="בחר קורס" />
+                    <SelectValue placeholder={courses.length === 0 ? "אין קורסים - צור קורס קודם" : "בחר קורס"} />
                   </SelectTrigger>
                   <SelectContent>
                     {courses.map(course => (
@@ -643,11 +691,14 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading}
+                    disabled={isUploading || courses.length === 0 || !selectedCourse || selectedCourse === 'all'}
                   >
                     <Upload className="w-4 h-4 ml-2" />
                     בחר קבצים
                   </Button>
+                  {(!selectedCourse || selectedCourse === 'all') && courses.length > 0 && (
+                    <p className="text-sm text-muted-foreground mt-2">יש לבחור קורס קודם</p>
+                  )}
                 </div>
               </TabsContent>
 
@@ -670,11 +721,14 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => folderInputRef.current?.click()}
-                    disabled={isUploading}
+                    disabled={isUploading || courses.length === 0 || !selectedCourse || selectedCourse === 'all'}
                   >
                     <FolderOpen className="w-4 h-4 ml-2" />
                     בחר תיקייה
                   </Button>
+                  {(!selectedCourse || selectedCourse === 'all') && courses.length > 0 && (
+                    <p className="text-sm text-muted-foreground mt-2">יש לבחור קורס קודם</p>
+                  )}
                 </div>
               </TabsContent>
             </Tabs>
