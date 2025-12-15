@@ -15,10 +15,14 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Image - Left Side */}
-          <div className="hidden lg:flex justify-center items-center">
-            <div className="w-full max-w-md aspect-video bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center border-2 border-white/20 p-12">
-              <Laptop className="w-full h-full text-white/60" strokeWidth={1} />
+          <div className="hidden lg:flex justify-center items-center relative z-10">
+            <div className="w-full max-w-[600px] relative">
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full transform scale-90"></div>
+              <img 
+                src="/hero-illustration.png" 
+                alt="Modern study environment" 
+                className="w-full h-auto object-contain relative z-10 drop-shadow-2xl animate-float"
+              />
             </div>
           </div>
         </div>
