@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Users, Clock, Star } from 'lucide-react';
+import { Users, Clock, Star, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +16,7 @@ interface Course {
   rating: number;
   icon_category: CourseIconCategory;
   icon_url: string | null;
+  videos: { count: number }[];
 }
 
 const CoursesSection = () => {
@@ -26,7 +27,7 @@ const CoursesSection = () => {
     const fetchCourses = async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('*')
+        .select('*, videos(count)')
         .eq('is_published', true)
         .order('students_count', { ascending: false })
         .limit(4);
@@ -94,20 +95,26 @@ const CoursesSection = () => {
                 <div className="space-y-2 mb-4 text-sm text-muted-foreground">
                   <div className="flex items-center justify-between">
                     <span className="flex items-center">
-                      <Users className="w-4 h-4 ml-1" />
-                      {course.students_count.toLocaleString()} סטודנטים
+                      <Video className="w-4 h-4 ml-1 text-primary" />
+                      {course.videos?.[0]?.count || 0} סרטונים
                     </span>
                     <span className="flex items-center">
                       <Star className="w-4 h-4 ml-1 text-yellow-500" />
                       {course.rating}
                     </span>
                   </div>
-                  {course.duration && (
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 ml-1" />
-                      {course.duration}
-                    </div>
-                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center">
+                      <Users className="w-4 h-4 ml-1" />
+                      {course.students_count.toLocaleString()} סטודנטים
+                    </span>
+                    {course.duration && (
+                      <span className="flex items-center">
+                        <Clock className="w-4 h-4 ml-1" />
+                        {course.duration}
+                      </span>
+                    )}
+                  </div>
                   {course.instructor && (
                     <div className="text-xs text-muted-foreground">
                       {course.instructor}

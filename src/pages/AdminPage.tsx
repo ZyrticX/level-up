@@ -65,7 +65,7 @@ const AdminPage = () => {
     institution: "",
     department: "",
     whatsapp_link: "",
-    is_published: false
+    is_published: true // Default to published
   });
 
   // Fetch courses
@@ -234,7 +234,7 @@ const AdminPage = () => {
       institution: "",
       department: "",
       whatsapp_link: "",
-      is_published: false
+      is_published: true // Default to published
     });
   };
 

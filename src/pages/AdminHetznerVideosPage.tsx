@@ -345,7 +345,7 @@ const AdminHetznerVideosPage: React.FC = () => {
             chapter_id: selectedChapter && selectedChapter !== 'none' ? selectedChapter : null,
             duration: 0,
             video_url: '',
-            is_published: false,
+            is_published: true, // Auto-publish when admin uploads
           })
           .select()
           .single();
