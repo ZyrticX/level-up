@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { GraduationCap, BookOpen, Clock, Users, ArrowLeft, Building, Cpu, Download, Shield } from 'lucide-react';
+import { GraduationCap, BookOpen, Clock, Users, ArrowLeft, Building, Cpu, Download, Shield, Sparkles, Layers } from 'lucide-react';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import CoursesSection from '@/components/CoursesSection';
@@ -23,7 +23,7 @@ const Index = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 justify-items-center">
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
-                <img src="/icons/marketing/content.png" alt="Rich Content" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                <Layers className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
               </div>
               <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 תוכן עשיר בכל<br />
@@ -33,7 +33,7 @@ const Index = () => {
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
-                <img src="/icons/marketing/247.png" alt="24/7 Availability" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                <Clock className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
               </div>
               <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 זמין 24/7<br />
@@ -43,7 +43,7 @@ const Index = () => {
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
-                <img src="/icons/marketing/practical.png" alt="Practical Learning" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
               </div>
               <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 לימוד פרקטי מותאם<br />
