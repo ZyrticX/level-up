@@ -14,56 +14,60 @@ const Index = () => {
       <HeroSection />
 
       {/* Marketing Icons Section */}
-      <section className="py-12 sm:py-16 bg-background" aria-labelledby="features-title">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-[#0f3460] to-[#0a1628] relative overflow-hidden" aria-labelledby="features-title">
+        {/* Decorative glows */}
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 justify-items-center">
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
                 <img src="/icons/marketing/content.png" alt="Rich Content" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
               </div>
-              <p className="text-xs sm:text-sm md:text-base text-foreground font-medium">
+              <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 תוכן עשיר בכל<br />
-                נושא הבחירה
+                <span className="text-cyan-300">נושא הבחירה</span>
               </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
                 <img src="/icons/marketing/247.png" alt="24/7 Availability" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
               </div>
-              <p className="text-xs sm:text-sm md:text-base text-foreground font-medium">
+              <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 זמין 24/7<br />
-                תמיד
+                <span className="text-cyan-300">תמיד</span>
               </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
                 <img src="/icons/marketing/practical.png" alt="Practical Learning" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
               </div>
-              <p className="text-xs sm:text-sm md:text-base text-foreground font-medium">
+              <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 לימוד פרקטי מותאם<br />
-                לכל הסטודנטים
+                <span className="text-cyan-300">לכל הסטודנטים</span>
               </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110">
-                <Download className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                <Download className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
               </div>
-              <p className="text-xs sm:text-sm md:text-base text-foreground font-medium">
+              <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 לא צריך אינטרנט<br />
-                זה פשוט
+                <span className="text-cyan-300">זה פשוט</span>
               </p>
             </div>
 
             <div className="text-center p-4 sm:p-6 group cursor-pointer col-span-2 sm:col-span-1">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110">
-                <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-cyan-500/20 group-hover:border-cyan-400/40 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
               </div>
-              <p className="text-xs sm:text-sm md:text-base text-foreground font-medium">
+              <p className="text-xs sm:text-sm md:text-base text-cyan-100 font-medium">
                 קורס אקדמי מדויק<br />
-                במלוא האמת
+                <span className="text-cyan-300">במלוא האמת</span>
               </p>
             </div>
           </div>
