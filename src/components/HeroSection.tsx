@@ -4,7 +4,7 @@ const HeroSection = () => {
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/hero-levelup.png')" }}
+        style={{ backgroundImage: "url('/hero-levelup.png.jpg')" }}
       >
         {/* Gradient Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/40 to-transparent"></div>
