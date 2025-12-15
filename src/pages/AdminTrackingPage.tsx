@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   Eye, 
   Search, 
@@ -20,7 +22,10 @@ import {
   AlertCircle,
   Shield,
   Download,
-  Edit
+  Edit,
+  Loader2,
+  Tablet,
+  Users
 } from "lucide-react";
 import {
   Table,
@@ -45,13 +50,16 @@ import {
 } from "@/components/ui/select";
 
 interface DeviceInfo {
-  ip_address: string;
-  count: number;
-  last_seen: string;
-  os: string;
-  device_type: string;
-  browser: string;
-  mac_address: string | null;
+  id: string;
+  device_fingerprint: string;
+  ip_address: string | null;
+  device_type: string | null;
+  os: string | null;
+  browser: string | null;
+  is_trusted: boolean;
+  login_count: number;
+  first_seen_at: string;
+  last_seen_at: string;
 }
 
 interface UserTracking {
@@ -61,187 +69,135 @@ interface UserTracking {
   email: string;
   phone: string | null;
   device_switches: number;
-  devices: DeviceInfo[];
-  is_blocked: boolean;
   max_switches_allowed: number;
+  is_blocked: boolean;
+  blocked_at: string | null;
+  devices: DeviceInfo[] | null;
+  total_devices: number;
+  total_logins: number;
 }
 
 const AdminTrackingPage = () => {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [switchesFilter, setSwitchesFilter] = useState<string>("all");
   const [selectedUser, setSelectedUser] = useState<UserTracking | null>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [editingSwitches, setEditingSwitches] = useState<{userId: string; value: number} | null>(null);
 
-  // Mock tracking data
-  // Note: device_switches only counts from 3rd device onwards (first 2 devices don't count)
-  const usersTracking: UserTracking[] = [
-    {
-      id: '1',
-      first_name: 'יוסי',
-      last_name: 'כהן',
-      email: 'yossi@example.com',
-      phone: '050-1234567',
-      device_switches: 1, // Has 3 devices total, so 1 switch (3rd device)
-      is_blocked: false,
-      max_switches_allowed: 10,
-      devices: [
-        {
-          ip_address: '192.168.1.100',
-          count: 45,
-          last_seen: '2024-01-20 14:30',
-          os: 'Windows 11',
-          device_type: 'Desktop',
-          browser: 'Chrome 120',
-          mac_address: '00:1B:44:11:3A:B7'
-        },
-        {
-          ip_address: '192.168.1.105',
-          count: 23,
-          last_seen: '2024-01-19 10:15',
-          os: 'Android 14',
-          device_type: 'Mobile',
-          browser: 'Chrome Mobile 120',
-          mac_address: 'A4:5E:60:E2:1F:92'
-        },
-        {
-          ip_address: '10.0.0.15',
-          count: 12,
-          last_seen: '2024-01-18 18:45',
-          os: 'iOS 17.2',
-          device_type: 'Tablet',
-          browser: 'Safari 17',
-          mac_address: null
-        }
-      ]
+  // Fetch tracking data from Supabase
+  const { data: trackingData, isLoading, error, refetch } = useQuery({
+    queryKey: ['admin-user-tracking'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_user_tracking_data');
+      
+      if (error) {
+        console.error('Error fetching tracking data:', error);
+        throw error;
+      }
+      
+      if (!data?.success) {
+        throw new Error(data?.error || 'Failed to fetch tracking data');
+      }
+      
+      return (data.data || []) as UserTracking[];
     },
-    {
-      id: '2',
-      first_name: 'שרה',
-      last_name: 'לוי',
-      email: 'sara@example.com',
-      phone: '052-9876543',
-      device_switches: 0, // Only 1 device, no switches
-      is_blocked: false,
-      max_switches_allowed: 10,
-      devices: [
-        {
-          ip_address: '192.168.2.50',
-          count: 78,
-          last_seen: '2024-01-20 16:20',
-          os: 'MacOS Sonoma',
-          device_type: 'Laptop',
-          browser: 'Safari 17',
-          mac_address: 'F0:18:98:12:34:AB'
-        }
-      ]
+  });
+
+  const usersTracking = trackingData || [];
+
+  // Mutation to reset switches
+  const resetSwitchesMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { data, error } = await supabase.rpc('admin_reset_device_switches', {
+        p_user_id: userId
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Failed to reset switches');
+      return data;
     },
-    {
-      id: '3',
-      first_name: 'דוד',
-      last_name: 'מזרחי',
-      email: 'david@example.com',
-      phone: null,
-      device_switches: 3, // Has 5 devices total, so 3 switches (3rd, 4th, 5th)
-      is_blocked: false,
-      max_switches_allowed: 10,
-      devices: [
-        {
-          ip_address: '172.16.0.100',
-          count: 34,
-          last_seen: '2024-01-20 12:00',
-          os: 'Windows 10',
-          device_type: 'Desktop',
-          browser: 'Edge 120',
-          mac_address: 'B8:27:EB:AA:BB:CC'
-        },
-        {
-          ip_address: '172.16.0.105',
-          count: 29,
-          last_seen: '2024-01-19 22:30',
-          os: 'Android 13',
-          device_type: 'Mobile',
-          browser: 'Firefox Mobile 121',
-          mac_address: 'C8:3A:35:11:22:33'
-        },
-        {
-          ip_address: '10.10.10.20',
-          count: 15,
-          last_seen: '2024-01-18 09:00',
-          os: 'Linux Ubuntu',
-          device_type: 'Desktop',
-          browser: 'Firefox 121',
-          mac_address: 'DC:A6:32:AA:BB:DD'
-        },
-        {
-          ip_address: '192.168.100.10',
-          count: 8,
-          last_seen: '2024-01-17 20:15',
-          os: 'iOS 16.5',
-          device_type: 'Mobile',
-          browser: 'Safari 16',
-          mac_address: null
-        },
-        {
-          ip_address: '192.168.100.11',
-          count: 3,
-          last_seen: '2024-01-15 15:00',
-          os: 'ChromeOS',
-          device_type: 'Laptop',
-          browser: 'Chrome 120',
-          mac_address: null
-        }
-      ]
+    onSuccess: () => {
+      toast.success('מספר ההחלפות אופס בהצלחה!');
+      queryClient.invalidateQueries({ queryKey: ['admin-user-tracking'] });
+      setShowDetailsDialog(false);
     },
-    {
-      id: '4',
-      first_name: 'מיכל',
-      last_name: 'אברהם',
-      email: 'michal@example.com',
-      phone: '054-1111111',
-      device_switches: 9, // Close to blocking - 11 devices total
-      is_blocked: false,
-      max_switches_allowed: 10,
-      devices: Array.from({ length: 11 }, (_, i) => ({
-        ip_address: `10.0.${i}.100`,
-        count: 5 - i,
-        last_seen: `2024-01-${20 - i} 10:00`,
-        os: i % 2 === 0 ? 'Windows 11' : 'Android 14',
-        device_type: i % 2 === 0 ? 'Desktop' : 'Mobile',
-        browser: 'Chrome 120',
-        mac_address: i < 5 ? `AA:BB:CC:DD:EE:${i.toString(16).padStart(2, '0')}` : null
-      }))
-    },
-    {
-      id: '5',
-      first_name: 'אריאל',
-      last_name: 'שרון',
-      email: 'ariel@example.com',
-      phone: '053-9999999',
-      device_switches: 12, // BLOCKED - 14 devices total
-      is_blocked: true,
-      max_switches_allowed: 10,
-      devices: Array.from({ length: 14 }, (_, i) => ({
-        ip_address: `192.168.${Math.floor(i / 10)}.${(i % 10) * 10}`,
-        count: 3,
-        last_seen: `2024-01-${20 - Math.floor(i / 2)} 15:00`,
-        os: ['Windows 11', 'MacOS', 'Android 14', 'iOS 17'][i % 4],
-        device_type: ['Desktop', 'Laptop', 'Mobile', 'Tablet'][i % 4],
-        browser: ['Chrome 120', 'Safari 17', 'Firefox 121'][i % 3],
-        mac_address: i < 7 ? `FF:EE:DD:CC:BB:${i.toString(16).padStart(2, '0')}` : null
-      }))
+    onError: (error: Error) => {
+      toast.error(`שגיאה: ${error.message}`);
     }
-  ];
+  });
+
+  // Mutation to unblock user
+  const unblockUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { data, error } = await supabase.rpc('admin_unblock_user', {
+        p_user_id: userId
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Failed to unblock user');
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('המשתמש שוחרר מחסימה!');
+      queryClient.invalidateQueries({ queryKey: ['admin-user-tracking'] });
+      setShowDetailsDialog(false);
+    },
+    onError: (error: Error) => {
+      toast.error(`שגיאה: ${error.message}`);
+    }
+  });
+
+  // Mutation to update max switches
+  const updateMaxSwitchesMutation = useMutation({
+    mutationFn: async ({ userId, maxSwitches }: { userId: string; maxSwitches: number }) => {
+      const { data, error } = await supabase.rpc('admin_update_max_switches', {
+        p_user_id: userId,
+        p_max_switches: maxSwitches
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Failed to update max switches');
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('מספר ההחלפות המקסימלי עודכן!');
+      queryClient.invalidateQueries({ queryKey: ['admin-user-tracking'] });
+    },
+    onError: (error: Error) => {
+      toast.error(`שגיאה: ${error.message}`);
+    }
+  });
+
+  // Mutation to update device switches count
+  const updateSwitchesMutation = useMutation({
+    mutationFn: async ({ userId, switches }: { userId: string; switches: number }) => {
+      const { data, error } = await supabase.rpc('admin_update_device_switches', {
+        p_user_id: userId,
+        p_switches: switches
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Failed to update switches');
+      return data;
+    },
+    onSuccess: () => {
+      toast.success('מספר ההחלפות עודכן!');
+      queryClient.invalidateQueries({ queryKey: ['admin-user-tracking'] });
+      setEditingSwitches(null);
+    },
+    onError: (error: Error) => {
+      toast.error(`שגיאה: ${error.message}`);
+    }
+  });
 
   const handleShowDetails = (user: UserTracking) => {
     setSelectedUser(user);
     setShowDetailsDialog(true);
   };
 
-  const getDeviceIcon = (deviceType: string) => {
-    switch (deviceType.toLowerCase()) {
+  const getDeviceIcon = (deviceType: string | null) => {
+    switch (deviceType?.toLowerCase()) {
       case 'mobile':
         return <Smartphone className="w-4 h-4" />;
+      case 'tablet':
+        return <Tablet className="w-4 h-4" />;
       case 'desktop':
       case 'laptop':
         return <Monitor className="w-4 h-4" />;
@@ -254,7 +210,7 @@ const AdminTrackingPage = () => {
     if (isBlocked) return { 
       color: 'bg-red-600', 
       label: 'חסום',
-      warning: '⚠️ משתמש חסום - נשלח מייל אוטומטי'
+      warning: '⚠️ משתמש חסום'
     };
     
     if (switches >= maxAllowed - 1) return { 
@@ -277,32 +233,33 @@ const AdminTrackingPage = () => {
 
   const handleResetSwitches = (userId: string) => {
     if (confirm('האם אתה בטוח שברצונך לאפס את מספר ההחלפות?')) {
-      // In production, this would call Supabase
-      toast.success('מספר ההחלפות אופס בהצלחה!');
-      setShowDetailsDialog(false);
+      resetSwitchesMutation.mutate(userId);
     }
   };
 
   const handleUnblockUser = (userId: string) => {
     if (confirm('האם אתה בטוח שברצונך לבטל את חסימת המשתמש?')) {
-      // In production, this would call Supabase
-      toast.success('המשתמש שוחרר מחסימה!');
-      setShowDetailsDialog(false);
+      unblockUserMutation.mutate(userId);
     }
   };
 
   const handleChangeMaxSwitches = (userId: string, newMax: number) => {
-    // In production, this would call Supabase
-    toast.success(`מספר ההחלפות המקסימלי עודכן ל-${newMax}`);
+    if (newMax > 0 && newMax <= 50) {
+      updateMaxSwitchesMutation.mutate({ userId, maxSwitches: newMax });
+    }
+  };
+
+  const handleUpdateSwitches = (userId: string, newValue: number) => {
+    updateSwitchesMutation.mutate({ userId, switches: newValue });
   };
 
   // Filter users
   const filteredUsers = usersTracking.filter((user) => {
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
-      user.first_name.toLowerCase().includes(searchLower) ||
-      user.last_name.toLowerCase().includes(searchLower) ||
-      user.email.toLowerCase().includes(searchLower) ||
+      user.first_name?.toLowerCase().includes(searchLower) ||
+      user.last_name?.toLowerCase().includes(searchLower) ||
+      user.email?.toLowerCase().includes(searchLower) ||
       user.phone?.toLowerCase().includes(searchLower);
     
     let matchesSwitches = true;
@@ -321,6 +278,11 @@ const AdminTrackingPage = () => {
     return matchesSearch && matchesSwitches;
   });
 
+  // Calculate stats
+  const totalLogins = usersTracking.reduce((sum, u) => sum + (u.total_logins || 0), 0);
+  const totalDevices = usersTracking.reduce((sum, u) => sum + (u.total_devices || 0), 0);
+  const blockedUsers = usersTracking.filter(u => u.is_blocked).length;
+
   // Export to CSV
   const handleExportCSV = () => {
     const headers = ['שם פרטי', 'שם משפחה', 'מייל', 'טלפון', 'מספר החלפות', 'מקסימום מותר', 'סטטוס'];
@@ -334,13 +296,11 @@ const AdminTrackingPage = () => {
       user.is_blocked ? 'חסום' : 'פעיל'
     ]);
 
-    // Create CSV content with BOM for Hebrew support
     const csvContent = '\uFEFF' + [
       headers.join(','),
       ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
 
-    // Create blob and download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -353,38 +313,74 @@ const AdminTrackingPage = () => {
     toast.success('הקובץ יוצא בהצלחה!');
   };
 
-  const handleUpdateSwitches = (userId: string, newValue: number) => {
-    // In production, this would call Supabase
-    toast.success(`מספר ההחלפות עודכן ל-${newValue}`);
-    setEditingSwitches(null);
-    // Refresh the dialog if it's open
-    if (selectedUser && selectedUser.id === userId) {
-      setSelectedUser({
-        ...selectedUser,
-        device_switches: newValue
-      });
-    }
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleString('he-IL');
   };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background p-6" dir="rtl">
+        <div className="max-w-7xl mx-auto">
+          <Card className="bg-red-50 border-red-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4 text-red-700">
+                <AlertCircle className="w-8 h-8" />
+                <div>
+                  <h3 className="font-bold text-lg">שגיאה בטעינת הנתונים</h3>
+                  <p>{error instanceof Error ? error.message : 'שגיאה לא ידועה'}</p>
+                  <Button onClick={() => refetch()} className="mt-4" variant="outline">
+                    <RefreshCw className="w-4 h-4 ml-2" />
+                    נסה שוב
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6" dir="rtl">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-foreground mb-6">מעקב משתמשים</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-foreground">מעקב משתמשים</h1>
+          <Button onClick={() => refetch()} variant="outline" disabled={isLoading}>
+            <RefreshCw className={`w-4 h-4 ml-2 ${isLoading ? 'animate-spin' : ''}`} />
+            רענן
+          </Button>
+        </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 border-blue-200">
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">סה"כ משתמשים</p>
+                  <p className="text-2xl font-bold text-foreground">
+                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : usersTracking.length}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-green-100/50 border-green-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
                   <Activity className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">סה"כ התחברויות</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {usersTracking.reduce((sum, u) => 
-                      sum + u.devices.reduce((s, d) => s + d.count, 0), 0
-                    )}
+                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : totalLogins}
                   </p>
                 </div>
               </div>
@@ -400,7 +396,7 @@ const AdminTrackingPage = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">מכשירים פעילים</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {usersTracking.reduce((sum, u) => sum + u.devices.length, 0)}
+                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : totalDevices}
                   </p>
                 </div>
               </div>
@@ -416,7 +412,7 @@ const AdminTrackingPage = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">משתמשים חסומים</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {usersTracking.filter(u => u.is_blocked).length}
+                    {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : blockedUsers}
                   </p>
                 </div>
               </div>
@@ -462,6 +458,7 @@ const AdminTrackingPage = () => {
                 onClick={handleExportCSV}
                 variant="outline"
                 className="md:w-auto"
+                disabled={filteredUsers.length === 0}
               >
                 <Download className="w-4 h-4 ml-2" />
                 ייצא ל-CSV
@@ -469,10 +466,20 @@ const AdminTrackingPage = () => {
             </div>
 
             {/* Table */}
-            {filteredUsers.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-12">
+                <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+                <p className="text-muted-foreground">טוען נתונים...</p>
+              </div>
+            ) : filteredUsers.length === 0 ? (
               <div className="text-center py-12">
                 <Activity className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground text-lg">לא נמצאו תוצאות</p>
+                <p className="text-muted-foreground text-lg">
+                  {usersTracking.length === 0 
+                    ? 'אין עדיין נתוני מעקב. הנתונים יתחילו להצטבר כשמשתמשים יתחברו למערכת.'
+                    : 'לא נמצאו תוצאות התואמות לחיפוש'
+                  }
+                </p>
               </div>
             ) : (
               <div className="border rounded-lg overflow-hidden">
@@ -483,6 +490,7 @@ const AdminTrackingPage = () => {
                       <TableHead className="text-right font-bold">שם משפחה</TableHead>
                       <TableHead className="text-right font-bold">מייל</TableHead>
                       <TableHead className="text-right font-bold">טלפון</TableHead>
+                      <TableHead className="text-right font-bold">מכשירים</TableHead>
                       <TableHead className="text-right font-bold">מספר החלפות</TableHead>
                       <TableHead className="text-center font-bold">פעולות</TableHead>
                     </TableRow>
@@ -492,10 +500,13 @@ const AdminTrackingPage = () => {
                       const severity = getDeviceSeverity(user.device_switches, user.max_switches_allowed, user.is_blocked);
                       return (
                         <TableRow key={user.id} className={`hover:bg-muted/30 ${user.is_blocked ? 'bg-red-50' : ''}`}>
-                          <TableCell className="text-right">{user.first_name}</TableCell>
-                          <TableCell className="text-right">{user.last_name}</TableCell>
+                          <TableCell className="text-right">{user.first_name || '-'}</TableCell>
+                          <TableCell className="text-right">{user.last_name || '-'}</TableCell>
                           <TableCell className="text-right">{user.email}</TableCell>
                           <TableCell className="text-right">{user.phone || '-'}</TableCell>
+                          <TableCell className="text-right">
+                            <Badge variant="secondary">{user.total_devices || 0}</Badge>
+                          </TableCell>
                           <TableCell className="text-right">
                             <div className="space-y-1">
                               <Badge 
@@ -550,8 +561,8 @@ const AdminTrackingPage = () => {
                         <div>
                           <h3 className="font-bold text-red-900 text-lg mb-1">משתמש חסום</h3>
                           <p className="text-red-700">
-                            המשתמש חרג מ-{selectedUser.max_switches_allowed} החלפות מכשירים ונחסם אוטומטית. 
-                            נשלח מייל אוטומטי עם הודעה על החסימה.
+                            המשתמש חרג מ-{selectedUser.max_switches_allowed} החלפות מכשירים ונחסם. 
+                            {selectedUser.blocked_at && ` נחסם ב-${formatDate(selectedUser.blocked_at)}`}
                           </p>
                         </div>
                       </div>
@@ -590,7 +601,7 @@ const AdminTrackingPage = () => {
                       <div>
                         <p className="text-sm text-muted-foreground">מספר מכשירים (סה"כ)</p>
                         <p className="font-semibold">
-                          {selectedUser.devices.length} מכשירים
+                          {selectedUser.total_devices || 0} מכשירים
                           <span className="text-xs text-muted-foreground mr-2">
                             (2 ראשונים לא נספרים)
                           </span>
@@ -615,13 +626,10 @@ const AdminTrackingPage = () => {
                               <span className="text-muted-foreground">/ {selectedUser.max_switches_allowed}</span>
                               <Button
                                 size="sm"
-                                onClick={() => {
-                                  if (editingSwitches) {
-                                    handleUpdateSwitches(editingSwitches.userId, editingSwitches.value);
-                                  }
-                                }}
+                                onClick={() => handleUpdateSwitches(selectedUser.id, editingSwitches.value)}
+                                disabled={updateSwitchesMutation.isPending}
                               >
-                                שמור
+                                {updateSwitchesMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'שמור'}
                               </Button>
                               <Button
                                 size="sm"
@@ -669,8 +677,13 @@ const AdminTrackingPage = () => {
                         <Button
                           onClick={() => handleUnblockUser(selectedUser.id)}
                           className="bg-green-600 hover:bg-green-700 text-white"
+                          disabled={unblockUserMutation.isPending}
                         >
-                          <Unlock className="w-4 h-4 ml-2" />
+                          {unblockUserMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                          ) : (
+                            <Unlock className="w-4 h-4 ml-2" />
+                          )}
                           בטל חסימה
                         </Button>
                       )}
@@ -679,8 +692,13 @@ const AdminTrackingPage = () => {
                         onClick={() => handleResetSwitches(selectedUser.id)}
                         variant="outline"
                         className="border-blue-400 hover:bg-blue-100"
+                        disabled={resetSwitchesMutation.isPending}
                       >
-                        <RefreshCw className="w-4 h-4 ml-2" />
+                        {resetSwitchesMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                        ) : (
+                          <RefreshCw className="w-4 h-4 ml-2" />
+                        )}
                         אפס החלפות
                       </Button>
 
@@ -696,9 +714,9 @@ const AdminTrackingPage = () => {
                             min={1}
                             max={50}
                             className="text-right"
-                            onChange={(e) => {
+                            onBlur={(e) => {
                               const newValue = parseInt(e.target.value);
-                              if (newValue > 0 && newValue <= 50) {
+                              if (newValue !== selectedUser.max_switches_allowed && newValue > 0 && newValue <= 50) {
                                 handleChangeMaxSwitches(selectedUser.id, newValue);
                               }
                             }}
@@ -716,7 +734,7 @@ const AdminTrackingPage = () => {
                       <ul className="text-sm text-muted-foreground space-y-1">
                         <li>• 2 מכשירים ראשונים - ללא ספירה</li>
                         <li>• מכשיר שלישי ומעלה - ספירת החלפות</li>
-                        <li>• {selectedUser.max_switches_allowed} החלפות - חסימה אוטומטית + מייל</li>
+                        <li>• {selectedUser.max_switches_allowed} החלפות - חסימה אוטומטית</li>
                         <li>• אדמין יכול לאפס או לשנות מספר החלפות</li>
                       </ul>
                     </div>
@@ -725,80 +743,88 @@ const AdminTrackingPage = () => {
 
                 {/* Devices List */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">מכשירים מזוהים</h3>
-                  <div className="space-y-4">
-                    {selectedUser.devices.map((device, index) => (
-                      <Card key={index} className="border-2">
-                        <CardContent className="pt-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-3">
-                              <div className="flex items-center gap-3">
-                                <MapPin className="w-5 h-5 text-primary" />
-                                <div>
-                                  <p className="text-xs text-muted-foreground">כתובת IP</p>
-                                  <p className="font-mono font-semibold">{device.ip_address}</p>
-                                </div>
-                              </div>
-                              
-                              <div className="flex items-center gap-3">
-                                {getDeviceIcon(device.device_type)}
-                                <div>
-                                  <p className="text-xs text-muted-foreground">סוג מכשיר</p>
-                                  <p className="font-semibold">{device.device_type}</p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <Monitor className="w-5 h-5 text-primary" />
-                                <div>
-                                  <p className="text-xs text-muted-foreground">מערכת הפעלה</p>
-                                  <p className="font-semibold">{device.os}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="space-y-3">
-                              <div className="flex items-center gap-3">
-                                <Chrome className="w-5 h-5 text-primary" />
-                                <div>
-                                  <p className="text-xs text-muted-foreground">דפדפן</p>
-                                  <p className="font-semibold">{device.browser}</p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <Activity className="w-5 h-5 text-primary" />
-                                <div>
-                                  <p className="text-xs text-muted-foreground">כמות התחברויות</p>
-                                  <p className="font-semibold">{device.count}</p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <Calendar className="w-5 h-5 text-primary" />
-                                <div>
-                                  <p className="text-xs text-muted-foreground">נראה לאחרונה</p>
-                                  <p className="font-semibold">{device.last_seen}</p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {device.mac_address && (
-                              <div className="md:col-span-2 pt-3 border-t">
+                  <h3 className="text-lg font-semibold mb-4">מכשירים מזוהים ({selectedUser.devices?.length || 0})</h3>
+                  {selectedUser.devices && selectedUser.devices.length > 0 ? (
+                    <div className="space-y-4">
+                      {selectedUser.devices.map((device, index) => (
+                        <Card key={device.id || index} className="border-2">
+                          <CardContent className="pt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-3">
                                 <div className="flex items-center gap-3">
-                                  <Globe className="w-5 h-5 text-primary" />
+                                  <MapPin className="w-5 h-5 text-primary" />
                                   <div>
-                                    <p className="text-xs text-muted-foreground">כתובת MAC</p>
-                                    <p className="font-mono font-semibold">{device.mac_address}</p>
+                                    <p className="text-xs text-muted-foreground">כתובת IP</p>
+                                    <p className="font-mono font-semibold">{device.ip_address || 'לא ידוע'}</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-3">
+                                  {getDeviceIcon(device.device_type)}
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">סוג מכשיר</p>
+                                    <p className="font-semibold">{device.device_type || 'לא ידוע'}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                  <Monitor className="w-5 h-5 text-primary" />
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">מערכת הפעלה</p>
+                                    <p className="font-semibold">{device.os || 'לא ידוע'}</p>
                                   </div>
                                 </div>
                               </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <Chrome className="w-5 h-5 text-primary" />
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">דפדפן</p>
+                                    <p className="font-semibold">{device.browser || 'לא ידוע'}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                  <Activity className="w-5 h-5 text-primary" />
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">כמות התחברויות</p>
+                                    <p className="font-semibold">{device.login_count}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                  <Calendar className="w-5 h-5 text-primary" />
+                                  <div>
+                                    <p className="text-xs text-muted-foreground">נראה לאחרונה</p>
+                                    <p className="font-semibold">{formatDate(device.last_seen_at)}</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="md:col-span-2 pt-3 border-t flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant={device.is_trusted ? "default" : "secondary"}>
+                                    {device.is_trusted ? '✓ מכשיר מהימן' : 'מכשיר חדש'}
+                                  </Badge>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  נרשם לראשונה: {formatDate(device.first_seen_at)}
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <Card className="border-2">
+                      <CardContent className="pt-6 text-center text-muted-foreground">
+                        <Monitor className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                        <p>אין מכשירים רשומים למשתמש זה</p>
+                      </CardContent>
+                    </Card>
+                  )}
                 </div>
               </div>
             )}
@@ -810,4 +836,3 @@ const AdminTrackingPage = () => {
 };
 
 export default AdminTrackingPage;
-
