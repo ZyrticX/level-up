@@ -787,4 +787,200 @@ All colors MUST be HSL. Inspired by top university websites.
   .glass-shimmer:hover::before {
     left: 100%;
   }
+
+  /* ====================================
+     DARK CYAN THEME - Level Up Academy
+     Modern dark theme with cyan accents
+     ==================================== */
+
+  /* Dark Hero Section */
+  .dark-hero {
+    @apply relative overflow-hidden;
+    background: linear-gradient(135deg, 
+      #0a1628 0%,
+      #0d2847 50%,
+      #0f3460 100%
+    );
+  }
+
+  .dark-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34, 211, 238, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Dark Section Background */
+  .dark-section {
+    background: linear-gradient(180deg, 
+      #0f3460 0%,
+      #0a1628 100%
+    );
+    @apply relative;
+  }
+
+  .dark-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 16rem;
+    height: 16rem;
+    background: rgba(34, 211, 238, 0.1);
+    border-radius: 100%;
+    filter: blur(60px);
+  }
+
+  .dark-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 25%;
+    width: 16rem;
+    height: 16rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 100%;
+    filter: blur(60px);
+  }
+
+  /* Dark Card */
+  .dark-card {
+    @apply bg-white/5 backdrop-blur-sm border border-cyan-400/20 rounded-2xl;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark-card:hover {
+    @apply bg-white/10 border-cyan-400/40;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(34, 211, 238, 0.1);
+    transform: translateY(-4px);
+  }
+
+  /* Cyan Icon Box */
+  .cyan-icon-box {
+    @apply bg-cyan-500/10 border border-cyan-400/20 rounded-2xl flex items-center justify-center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cyan-icon-box:hover {
+    @apply bg-cyan-500/20 border-cyan-400/40;
+    box-shadow: 0 8px 24px rgba(34, 211, 238, 0.3);
+    transform: scale(1.1);
+  }
+
+  /* Gradient Text Cyan */
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, 
+      #22d3ee 0%,
+      #06b6d4 50%,
+      #0891b2 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Cyan Glow Button */
+  .btn-cyan-glow {
+    @apply px-8 py-4 font-semibold rounded-xl transition-all duration-300;
+    background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+    box-shadow: 0 8px 24px rgba(34, 211, 238, 0.3);
+  }
+
+  .btn-cyan-glow:hover {
+    box-shadow: 0 12px 32px rgba(34, 211, 238, 0.5);
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Ghost Button (Dark Theme) */
+  .btn-ghost-dark {
+    @apply px-8 py-4 font-semibold rounded-xl transition-all duration-300;
+    @apply bg-white/5 backdrop-blur-sm text-cyan-100 border border-cyan-400/30;
+  }
+
+  .btn-ghost-dark:hover {
+    @apply bg-white/10 border-cyan-400/50;
+  }
+
+  /* Dark Nav/Header */
+  .dark-header {
+    @apply bg-[#0a1628]/90 backdrop-blur-2xl border-b border-cyan-400/10;
+  }
+
+  /* Animated Gradient Border */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(#0a1628, #0a1628) padding-box,
+                linear-gradient(135deg, #22d3ee, #3b82f6, #8b5cf6) border-box;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+  }
+
+  .gradient-border-animated {
+    position: relative;
+    background: linear-gradient(#0a1628, #0a1628) padding-box,
+                linear-gradient(var(--border-angle, 0deg), #22d3ee, #3b82f6, #8b5cf6, #22d3ee) border-box;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    animation: border-rotate 4s linear infinite;
+  }
+
+  @keyframes border-rotate {
+    to {
+      --border-angle: 360deg;
+    }
+  }
+
+  @property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  /* Floating Animation */
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+  }
+
+  /* Pulse Glow */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.6); }
+  }
+
+  /* Stagger Animation Helper */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+
+  /* Fade In Up Animation */
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { GraduationCap, BookOpen, Clock, Users, ArrowLeft, Building, Cpu, Download, Shield, Sparkles, Layers, Library, Target, Zap } from 'lucide-react';
+import { GraduationCap, BookOpen, Clock, Users, ArrowLeft, Building, Cpu, Download, Shield, Sparkles, Layers, Library, Target, Zap, Atom, Heart, Mountain, Landmark, FlaskConical, Microscope } from 'lucide-react';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/HeroSection';
 import CoursesSection from '@/components/CoursesSection';
@@ -88,46 +88,68 @@ const Index = () => {
               id: 'bar-ilan',
               name: 'אוניברסיטת בר אילן',
               subtitle: 'רמת גן',
-              courses: '45+ קורסים'
+              courses: '45+ קורסים',
+              icon: BookOpen,
+              gradient: 'from-blue-400 via-blue-500 to-indigo-600',
+              shadow: 'shadow-blue-500/40'
             }, {
               id: 'ben-gurion',
               name: 'אוניברסיטת בן גוריון',
               subtitle: 'בנגב',
-              courses: '38+ קורסים'
+              courses: '38+ קורסים',
+              icon: Landmark,
+              gradient: 'from-amber-400 via-orange-500 to-red-500',
+              shadow: 'shadow-orange-500/40'
             }, {
               id: 'afeka',
               name: 'מכללת אפקה',
               subtitle: 'מכללה טכנולוגית',
-              courses: '52+ קורסים'
+              courses: '52+ קורסים',
+              icon: Cpu,
+              gradient: 'from-emerald-400 via-teal-500 to-cyan-600',
+              shadow: 'shadow-teal-500/40'
             }, {
               id: 'hadassah',
               name: 'מכללת חדסה',
               subtitle: 'מכללה אקדמית',
-              courses: '34+ קורסים'
+              courses: '34+ קורסים',
+              icon: Heart,
+              gradient: 'from-pink-400 via-rose-500 to-red-500',
+              shadow: 'shadow-rose-500/40'
             }, {
               id: 'ariel',
               name: 'אוניברסיטת אריאל שבשומרון',
               subtitle: 'שומרון',
-              courses: '28+ קורסים'
+              courses: '28+ קורסים',
+              icon: Mountain,
+              gradient: 'from-green-400 via-emerald-500 to-teal-600',
+              shadow: 'shadow-emerald-500/40'
             }, {
               id: 'technion',
               name: 'הטכניון',
               subtitle: 'חיפה',
-              courses: '31+ קורסים'
+              courses: '31+ קורסים',
+              icon: Atom,
+              gradient: 'from-violet-400 via-purple-500 to-indigo-600',
+              shadow: 'shadow-purple-500/40'
             }].map(institution => {
+              const IconComponent = institution.icon;
               return (
                 <Link
                   key={institution.id}
                   to={`/institution/${institution.id}`}
-                  className="bg-card border border-border rounded-lg p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
+                  className="bg-card border border-border rounded-2xl p-8 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
                 >
-                  <div className="text-center">
-                    <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-500/50 group-hover:scale-105 transition-all duration-300">
-                      <Building className="w-12 h-12 text-white drop-shadow-md" />
+                  {/* Decorative gradient blur */}
+                  <div className={`absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br ${institution.gradient} rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`}></div>
+                  
+                  <div className="text-center relative z-10">
+                    <div className={`w-24 h-24 bg-gradient-to-br ${institution.gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl ${institution.shadow} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                      <IconComponent className="w-12 h-12 text-white drop-shadow-lg" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2 text-center">{institution.name}</h3>
                     <p className="text-base text-muted-foreground mb-4">{institution.subtitle}</p>
-                    <div className="inline-block bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-md">
+                    <div className={`inline-block bg-gradient-to-r ${institution.gradient} text-white px-5 py-2 rounded-full text-sm font-semibold shadow-lg ${institution.shadow}`}>
                       {institution.courses}
                     </div>
                   </div>
