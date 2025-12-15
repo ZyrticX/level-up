@@ -23,6 +23,7 @@ import AdminTrackingPage from "./pages/AdminTrackingPage";
 import AdminReportsPage from "./pages/AdminReportsPage";
 import AdminSettingsPage from "./pages/AdminSettingsPage";
 import AdminSubjectsPage from "./pages/AdminSubjectsPage";
+import AdminHetznerVideosPage from "./pages/AdminHetznerVideosPage";
 import SettingsPage from "./pages/SettingsPage";
 import ContactPage from "./pages/ContactPage";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -74,6 +75,7 @@ const App = () => (
             <Route path="/admin/reports" element={<AdminLayout><AdminReportsPage /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><AdminSettingsPage /></AdminLayout>} />
             <Route path="/admin/subjects" element={<AdminLayout><AdminSubjectsPage /></AdminLayout>} />
+            <Route path="/admin/hetzner-videos" element={<AdminLayout><AdminHetznerVideosPage /></AdminLayout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<Layout><NotFound /></Layout>} />
           </Routes>

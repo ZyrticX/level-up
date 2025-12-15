@@ -11,7 +11,8 @@ import {
   Settings,
   Menu,
   X,
-  Palette
+  Palette,
+  Server
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -27,6 +28,7 @@ const AdminSidebar = () => {
     { label: 'ניהול קבוצות', href: '/admin/groups', icon: Users },
     { label: 'מוסדות לימוד', href: '/admin/institutions', icon: GraduationCap },
     { label: 'ניהול תוכן וסרטונים', href: '/admin/content', icon: Video },
+    { label: 'שרת Hetzner', href: '/admin/hetzner-videos', icon: Server },
     { label: 'אייקונים לנושאים', href: '/admin/subjects', icon: Palette },
     { label: 'מעקב משתמשים', href: '/admin/tracking', icon: Activity },
     { label: 'דוחות וסטטיסטיקות', href: '/admin/reports', icon: BarChart },

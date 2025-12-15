@@ -607,11 +607,14 @@ export type Database = {
           duration: number
           id: string
           is_published: boolean | null
+          is_preview: boolean | null
           order_index: number
           thumbnail_url: string | null
           title: string
           updated_at: string | null
           video_url: string
+          hetzner_path: string | null
+          hls_path: string | null
         }
         Insert: {
           chapter_id?: string | null
@@ -621,11 +624,14 @@ export type Database = {
           duration?: number
           id?: string
           is_published?: boolean | null
+          is_preview?: boolean | null
           order_index?: number
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
           video_url: string
+          hetzner_path?: string | null
+          hls_path?: string | null
         }
         Update: {
           chapter_id?: string | null
@@ -635,11 +641,14 @@ export type Database = {
           duration?: number
           id?: string
           is_published?: boolean | null
+          is_preview?: boolean | null
           order_index?: number
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
           video_url?: string
+          hetzner_path?: string | null
+          hls_path?: string | null
         }
         Relationships: [
           {
