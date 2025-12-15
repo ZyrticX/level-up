@@ -510,7 +510,8 @@ const AdminHetznerVideosPage: React.FC = () => {
   const getPreviewUrl = (video: VideoRecord) => {
     if (!video.hetzner_path) return null;
     // Use HLS path if available, otherwise use direct path
-    const videoPath = video.hls_path || video.hetzner_path;
+    // Use MP4 path directly (HLS may not be available)
+    const videoPath = video.hetzner_path;
     return `${HETZNER_API_URL}${videoPath}`;
   };
 
@@ -1109,7 +1110,7 @@ const AdminHetznerVideosPage: React.FC = () => {
                     controls
                     autoPlay
                     className="w-full h-full"
-                    src={`${HETZNER_API_URL}${previewVideo.hls_path || previewVideo.hetzner_path}`}
+                    src={`${HETZNER_API_URL}${previewVideo.hetzner_path}`}
                   >
                     הדפדפן שלך לא תומך בנגן וידאו
                   </video>
@@ -1140,7 +1141,7 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const url = `${HETZNER_API_URL}${previewVideo.hls_path || previewVideo.hetzner_path}`;
+                      const url = `${HETZNER_API_URL}${previewVideo.hetzner_path}`;
                       window.open(url, '_blank');
                     }}
                   >

@@ -228,7 +228,8 @@ const AdminVideoPreviewPage = () => {
     );
   }
 
-  const videoUrl = `${HETZNER_API_URL}${video.hls_path || video.hetzner_path}`;
+  // Prefer MP4 (hetzner_path) as HLS may not be available
+  const videoUrl = `${HETZNER_API_URL}${video.hetzner_path}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30" dir="rtl">
