@@ -103,8 +103,8 @@ const Index = () => {
               courses: '52+ קורסים',
               icon: Cpu
             }, {
-              id: 'hadassah',
-              name: 'מכללת חדסה',
+id: 'hadassah',
+                      name: 'מכללת הדסה',
               subtitle: 'מכללה אקדמית',
               courses: '34+ קורסים',
               icon: Heart
