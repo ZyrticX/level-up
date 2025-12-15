@@ -15,7 +15,6 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminStudentsPage from "./pages/AdminStudentsPage";
 import AdminInstitutionsPage from "./pages/AdminInstitutionsPage";
 import AdminGroupsPage from "./pages/AdminGroupsPage";
-import AdminContentPage from "./pages/AdminContentPage";
 import AdminVideoLibraryPage from "./pages/AdminVideoLibraryPage";
 import AdminVideoEditorPage from "./pages/AdminVideoEditorPage";
 import AdminCourseBuilderPage from "./pages/AdminCourseBuilderPage";
@@ -70,7 +69,6 @@ const App = () => (
             <Route path="/admin/students" element={<AdminLayout><AdminStudentsPage /></AdminLayout>} />
             <Route path="/admin/institutions" element={<AdminLayout><AdminInstitutionsPage /></AdminLayout>} />
             <Route path="/admin/groups" element={<AdminLayout><AdminGroupsPage /></AdminLayout>} />
-            <Route path="/admin/content" element={<AdminLayout><AdminContentPage /></AdminLayout>} />
             <Route path="/admin/video-library" element={<AdminLayout><AdminVideoLibraryPage /></AdminLayout>} />
             <Route path="/admin/video-editor/:id" element={<AdminLayout><AdminVideoEditorPage /></AdminLayout>} />
             <Route path="/admin/course-builder" element={<AdminLayout><AdminCourseBuilderPage /></AdminLayout>} />
