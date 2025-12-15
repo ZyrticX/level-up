@@ -36,6 +36,7 @@ import AdminLayout from "./components/AdminLayout";
 import CookieConsent from "./components/CookieConsent";
 import PrivacyPage from "./pages/PrivacyPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import CoursesPage from "./pages/CoursesPage";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
           <Header />
           <Routes>
             <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/courses" element={<Layout><CoursesPage /></Layout>} />
             <Route path="/institution/:institutionId" element={<Layout><InstitutionPage /></Layout>} />
             <Route path="/course/:courseId" element={<Layout><CoursePage /></Layout>} />
             <Route path="/checkout/:courseId" element={<Layout><CheckoutPage /></Layout>} />
