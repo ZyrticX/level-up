@@ -61,7 +61,10 @@ import {
   FileVideo,
   FolderUp,
   File,
-  X
+  X,
+  Play,
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 
 // Hetzner config
@@ -116,6 +119,8 @@ const AdminHetznerVideosPage: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [overallProgress, setOverallProgress] = useState(0);
   const [uploadMode, setUploadMode] = useState<'files' | 'folder'>('files');
+  const [previewVideo, setPreviewVideo] = useState<VideoRecord | null>(null);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
   // Fetch courses
   const { data: courses = [] } = useQuery({
@@ -499,6 +504,46 @@ const AdminHetznerVideosPage: React.FC = () => {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Generate admin preview URL
+  const getPreviewUrl = (video: VideoRecord) => {
+    if (!video.hetzner_path) return null;
+    // Use HLS path if available, otherwise use direct path
+    const videoPath = video.hls_path || video.hetzner_path;
+    return `${HETZNER_API_URL}${videoPath}`;
+  };
+
+  // Copy preview link to clipboard
+  const handleCopyPreviewLink = async (video: VideoRecord) => {
+    const previewUrl = getPreviewUrl(video);
+    if (!previewUrl) {
+      toast.error('הסרטון לא מקושר לשרת');
+      return;
+    }
+    
+    try {
+      // Generate a token for admin preview
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('יש להתחבר מחדש');
+        return;
+      }
+
+      // Create the preview link with video ID
+      const adminPreviewUrl = `${window.location.origin}/admin/preview/${video.id}`;
+      
+      await navigator.clipboard.writeText(adminPreviewUrl);
+      toast.success('הלינק הועתק ללוח!');
+    } catch (err) {
+      toast.error('שגיאה בהעתקת הלינק');
+    }
+  };
+
+  // Open preview in new tab
+  const handleOpenPreview = (video: VideoRecord) => {
+    setPreviewVideo(video);
+    setShowPreviewDialog(true);
   };
 
   // Find unlinked videos and orphan files
@@ -906,6 +951,28 @@ const AdminHetznerVideosPage: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
+                          {/* Preview buttons - only for linked videos */}
+                          {video.hetzner_path && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleOpenPreview(video)}
+                                title="צפה בסרטון"
+                              >
+                                <Play className="w-4 h-4 text-green-600" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleCopyPreviewLink(video)}
+                                title="העתק לינק Preview"
+                              >
+                                <Copy className="w-4 h-4 text-blue-600" />
+                              </Button>
+                            </>
+                          )}
+                          
                           {!video.hetzner_path && orphanFiles.length > 0 && (
                             <Dialog>
                               <DialogTrigger asChild>
@@ -1016,6 +1083,83 @@ const AdminHetznerVideosPage: React.FC = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Video Preview Dialog */}
+        <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
+          <DialogContent className="max-w-4xl" dir="rtl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Play className="w-5 h-5 text-green-600" />
+                תצוגה מקדימה: {previewVideo?.title}
+              </DialogTitle>
+              <DialogDescription>
+                {previewVideo?.courses?.title}
+                {previewVideo?.course_chapters?.title && (
+                  <span> &gt; {previewVideo.course_chapters.title}</span>
+                )}
+              </DialogDescription>
+            </DialogHeader>
+            
+            {previewVideo && previewVideo.hetzner_path && (
+              <div className="space-y-4">
+                {/* Video Player */}
+                <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
+                  <video
+                    key={previewVideo.id}
+                    controls
+                    autoPlay
+                    className="w-full h-full"
+                    src={`${HETZNER_API_URL}${previewVideo.hls_path || previewVideo.hetzner_path}`}
+                  >
+                    הדפדפן שלך לא תומך בנגן וידאו
+                  </video>
+                </div>
+
+                {/* Video Info */}
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground">משך</p>
+                    <p className="font-medium">{formatDuration(previewVideo.duration)}</p>
+                  </div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <p className="text-muted-foreground">סטטוס</p>
+                    <p className="font-medium">{previewVideo.is_published ? 'מפורסם' : 'טיוטה'}</p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => handleCopyPreviewLink(previewVideo)}
+                  >
+                    <Copy className="w-4 h-4 ml-2" />
+                    העתק לינק Preview
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const url = `${HETZNER_API_URL}${previewVideo.hls_path || previewVideo.hetzner_path}`;
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    <ExternalLink className="w-4 h-4 ml-2" />
+                    פתח בחלון חדש
+                  </Button>
+                </div>
+
+                {/* Warning */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
+                  <p className="text-yellow-800">
+                    <strong>שים לב:</strong> לינק ה-Preview זמין רק למנהלים. 
+                    משתמשים רגילים לא יוכלו לגשת לסרטון ללא הרשאה מתאימה.
+                  </p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
