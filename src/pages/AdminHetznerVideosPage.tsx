@@ -548,6 +548,7 @@ const AdminHetznerVideosPage: React.FC = () => {
         const pathParts = uploadFile.relativePath.split('/');
         const folderName = pathParts.length > 1 ? pathParts[0] : null;
         const fileName = pathParts[pathParts.length - 1];
+        const videoTitle = fileName.replace(/\.[^/.]+$/, '');
 
         console.log(`Uploading file ${i + 1}/${filesToUpload.length}: ${fileName}`, {
           folderName,
@@ -555,11 +556,33 @@ const AdminHetznerVideosPage: React.FC = () => {
           fileSize: uploadFile.file.size,
         });
 
+        // Check for duplicate video in same location
+        const { data: existingVideo } = await supabase
+          .from('videos')
+          .select('id, title, hetzner_path')
+          .eq('course_id', selectedCourse)
+          .eq('chapter_id', selectedChapter)
+          .eq('topic_id', selectedTopic)
+          .eq('title', videoTitle)
+          .maybeSingle();
+
+        if (existingVideo) {
+          console.log('Duplicate video found:', existingVideo);
+          // Skip this file - mark as duplicate
+          fileProgresses[i] = 100;
+          updateOverallProgress();
+          setUploadFiles(prev => prev.map((f, idx) => 
+            idx === i ? { ...f, status: 'error', error: 'קובץ כפול - כבר קיים במערכת', progress: 0 } : f
+          ));
+          toast.warning(`דילוג על "${videoTitle}" - כבר קיים במערכת`);
+          continue; // Skip to next file
+        }
+
         // Create video record in Supabase
         const { data: videoRecord, error: createError } = await supabase
           .from('videos')
           .insert({
-            title: fileName.replace(/\.[^/.]+$/, ''),
+            title: videoTitle,
             course_id: selectedCourse,
             chapter_id: selectedChapter,
             topic_id: selectedTopic,
@@ -689,11 +712,17 @@ const AdminHetznerVideosPage: React.FC = () => {
     queryClient.invalidateQueries({ queryKey: ['admin-hetzner-videos'] });
     queryClient.invalidateQueries({ queryKey: ['hetzner-files'] });
 
-    const errorCount = uploadFiles.filter(f => f.status === 'error').length;
-    if (errorCount === 0) {
+    // Count results - check current state
+    const currentFiles = uploadFiles;
+    const duplicateCount = currentFiles.filter(f => f.error === 'קובץ כפול - כבר קיים במערכת').length;
+    const errorCount = currentFiles.filter(f => f.status === 'error' && f.error !== 'קובץ כפול - כבר קיים במערכת').length;
+    
+    if (errorCount === 0 && duplicateCount === 0) {
       toast.success(`כל ${totalFiles} הסרטונים הועלו בהצלחה!`);
+    } else if (errorCount === 0 && duplicateCount > 0) {
+      toast.success(`הועלו ${completedCount} סרטונים, ${duplicateCount} כפולים דולגו`);
     } else {
-      toast.warning(`הועלו ${completedCount} סרטונים, ${errorCount} נכשלו`);
+      toast.warning(`הועלו ${completedCount} סרטונים, ${duplicateCount} כפולים, ${errorCount} נכשלו`);
     }
   };
 
