@@ -499,7 +499,7 @@ const AdminHetznerVideosPage: React.FC = () => {
   // Check if can upload
   const canUpload = selectedCourse && selectedChapter && selectedTopic && uploadFiles.length > 0;
 
-  // Upload all files
+  // Upload all files with real progress tracking
   const handleUpload = async () => {
     if (!canUpload) {
       toast.error('יש לבחור קורס, פרק ונושא לפני ההעלאה');
@@ -518,12 +518,18 @@ const AdminHetznerVideosPage: React.FC = () => {
 
     let completedCount = 0;
     const totalFiles = uploadFiles.length;
+    const fileProgresses: number[] = new Array(totalFiles).fill(0);
+
+    const updateOverallProgress = () => {
+      const totalProgress = fileProgresses.reduce((sum, p) => sum + p, 0);
+      setOverallProgress(Math.round(totalProgress / totalFiles));
+    };
 
     for (let i = 0; i < uploadFiles.length; i++) {
       const uploadFile = uploadFiles[i];
       
       setUploadFiles(prev => prev.map((f, idx) => 
-        idx === i ? { ...f, status: 'uploading' } : f
+        idx === i ? { ...f, status: 'uploading', progress: 0 } : f
       ));
 
       try {
@@ -548,7 +554,7 @@ const AdminHetznerVideosPage: React.FC = () => {
 
         if (createError) throw createError;
 
-        // Upload to Hetzner
+        // Upload to Hetzner using XMLHttpRequest for progress tracking
         const formData = new FormData();
         formData.append('video', uploadFile.file);
         formData.append('courseId', selectedCourse);
@@ -560,20 +566,47 @@ const AdminHetznerVideosPage: React.FC = () => {
         }
         formData.append('relativePath', uploadFile.relativePath);
 
-        const response = await fetch(`${HETZNER_API_URL}/api/upload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: formData,
+        const result = await new Promise<any>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          
+          // Track upload progress
+          xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+              const percentComplete = Math.round((event.loaded / event.total) * 100);
+              fileProgresses[i] = percentComplete;
+              updateOverallProgress();
+              setUploadFiles(prev => prev.map((f, idx) => 
+                idx === i ? { ...f, progress: percentComplete } : f
+              ));
+            }
+          };
+          
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const response = JSON.parse(xhr.responseText);
+                resolve(response);
+              } catch (e) {
+                reject(new Error('Invalid response from server'));
+              }
+            } else {
+              try {
+                const errorData = JSON.parse(xhr.responseText);
+                reject(new Error(errorData.error || `Upload failed: ${xhr.status}`));
+              } catch (e) {
+                reject(new Error(`Upload failed: ${xhr.status}`));
+              }
+            }
+          };
+          
+          xhr.onerror = () => reject(new Error('Network error - check your connection'));
+          xhr.ontimeout = () => reject(new Error('Upload timeout - file may be too large'));
+          
+          xhr.open('POST', `${HETZNER_API_URL}/api/upload`);
+          xhr.setRequestHeader('Authorization', `Bearer ${session.access_token}`);
+          xhr.timeout = 3600000; // 1 hour timeout for large files
+          xhr.send(formData);
         });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Upload failed');
-        }
-
-        const result = await response.json();
 
         // Update video record with Hetzner path
         await supabase
@@ -586,18 +619,23 @@ const AdminHetznerVideosPage: React.FC = () => {
           })
           .eq('id', videoRecord.id);
 
+        fileProgresses[i] = 100;
+        updateOverallProgress();
         setUploadFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'completed', progress: 100 } : f
         ));
 
         completedCount++;
-        setOverallProgress(Math.round((completedCount / totalFiles) * 100));
+        toast.success(`הועלה: ${fileName}`, { duration: 2000 });
 
       } catch (error: any) {
         console.error('Upload error:', error);
+        fileProgresses[i] = 0;
+        updateOverallProgress();
         setUploadFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'error', error: error.message } : f
         ));
+        toast.error(`שגיאה ב-${uploadFile.file.name}: ${error.message}`);
       }
     }
 
@@ -1138,35 +1176,47 @@ const AdminHetznerVideosPage: React.FC = () => {
                         return (
                           <div 
                             key={idx} 
-                            className={`flex items-center justify-between p-2 rounded text-sm ${
+                            className={`flex flex-col p-2 rounded text-sm ${
                               file.status === 'completed' ? 'bg-green-500/10' :
                               file.status === 'error' ? 'bg-red-500/10' :
                               file.status === 'uploading' ? 'bg-blue-500/10' :
                               'bg-background'
                             }`}
                           >
-                            <div className="flex items-center gap-2 flex-1 min-w-0">
-                              {file.status === 'completed' && <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />}
-                              {file.status === 'error' && <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />}
-                              {file.status === 'uploading' && <RefreshCw className="w-4 h-4 text-blue-600 animate-spin flex-shrink-0" />}
-                              {file.status === 'pending' && <File className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
-                              <span className="truncate">{file.file.name}</span>
-                              <span className="text-muted-foreground flex-shrink-0">
-                                ({formatFileSize(file.file.size)})
-                              </span>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                {file.status === 'completed' && <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />}
+                                {file.status === 'error' && <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />}
+                                {file.status === 'uploading' && <RefreshCw className="w-4 h-4 text-blue-600 animate-spin flex-shrink-0" />}
+                                {file.status === 'pending' && <File className="w-4 h-4 text-muted-foreground flex-shrink-0" />}
+                                <span className="truncate">{file.file.name}</span>
+                                <span className="text-muted-foreground flex-shrink-0">
+                                  ({formatFileSize(file.file.size)})
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {file.status === 'uploading' && (
+                                  <span className="text-xs font-medium text-blue-600">{file.progress}%</span>
+                                )}
+                                {file.status === 'pending' && !isUploading && (
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => removeFile(globalIdx)}
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </Button>
+                                )}
+                              </div>
                             </div>
-                            {file.status === 'pending' && !isUploading && (
-                              <Button 
-                                variant="ghost" 
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => removeFile(globalIdx)}
-                              >
-                                <X className="w-3 h-3" />
-                              </Button>
+                            {file.status === 'uploading' && (
+                              <div className="mt-2">
+                                <Progress value={file.progress} className="h-1" />
+                              </div>
                             )}
                             {file.error && (
-                              <span className="text-xs text-red-600">{file.error}</span>
+                              <span className="text-xs text-red-600 mt-1">{file.error}</span>
                             )}
                           </div>
                         );
