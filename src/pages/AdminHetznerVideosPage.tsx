@@ -72,7 +72,10 @@ import {
   BookOpen,
   GraduationCap,
   Layers,
-  FileText
+  FileText,
+  ChevronUp,
+  ChevronDown,
+  GripVertical
 } from 'lucide-react';
 
 // Hetzner config
@@ -120,6 +123,7 @@ interface VideoRecord {
   hls_path: string | null;
   duration: number;
   is_published: boolean;
+  order_index: number | null;
   courses?: { title: string };
   course_chapters?: { title: string };
   course_topics?: { title: string };
@@ -259,11 +263,14 @@ const AdminHetznerVideosPage: React.FC = () => {
     enabled: !!selectedChapter,
   });
 
-  // Fetch videos from Supabase
+  // Fetch videos from Supabase - filtered by selected topic
   const { data: videos = [], isLoading: videosLoading, refetch: refetchVideos } = useQuery({
-    queryKey: ['admin-hetzner-videos', selectedCourse],
+    queryKey: ['admin-hetzner-videos', selectedCourse, selectedChapter, selectedTopic],
     queryFn: async () => {
-      let query = supabase
+      // Only fetch if topic is selected
+      if (!selectedTopic) return [];
+      
+      const { data, error } = await supabase
         .from('videos')
         .select(`
           id,
@@ -275,20 +282,19 @@ const AdminHetznerVideosPage: React.FC = () => {
           hls_path,
           duration,
           is_published,
+          order_index,
           courses(title),
           course_chapters(title),
           course_topics(title)
         `)
-        .order('created_at', { ascending: false });
+        .eq('topic_id', selectedTopic)
+        .order('order_index', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: true });
 
-      if (selectedCourse) {
-        query = query.eq('course_id', selectedCourse);
-      }
-
-      const { data, error } = await query;
       if (error) throw error;
       return data as VideoRecord[];
     },
+    enabled: !!selectedTopic,
   });
 
   // Fetch files from Hetzner server
@@ -782,6 +788,47 @@ const AdminHetznerVideosPage: React.FC = () => {
     },
     onError: (error: any) => {
       toast.error(`שגיאה בעדכון: ${error.message}`);
+    },
+  });
+
+  // Reorder video mutation
+  const reorderMutation = useMutation({
+    mutationFn: async ({ videoId, direction }: { videoId: string; direction: 'up' | 'down' }) => {
+      const currentIndex = videos.findIndex(v => v.id === videoId);
+      if (currentIndex === -1) throw new Error('Video not found');
+      
+      const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+      if (targetIndex < 0 || targetIndex >= videos.length) {
+        throw new Error('Cannot move video further');
+      }
+
+      const currentVideo = videos[currentIndex];
+      const targetVideo = videos[targetIndex];
+
+      // Swap order_index values
+      const currentOrderIndex = currentVideo.order_index ?? currentIndex;
+      const targetOrderIndex = targetVideo.order_index ?? targetIndex;
+
+      // Update both videos
+      const { error: error1 } = await supabase
+        .from('videos')
+        .update({ order_index: targetOrderIndex })
+        .eq('id', currentVideo.id);
+
+      if (error1) throw error1;
+
+      const { error: error2 } = await supabase
+        .from('videos')
+        .update({ order_index: currentOrderIndex })
+        .eq('id', targetVideo.id);
+
+      if (error2) throw error2;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-hetzner-videos'] });
+    },
+    onError: (error: any) => {
+      toast.error(`שגיאה בשינוי סדר: ${error.message}`);
     },
   });
 
@@ -1368,14 +1415,26 @@ const AdminHetznerVideosPage: React.FC = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Video className="w-5 h-5" />
-                סרטונים ({videos.length})
-              </CardTitle>
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Video className="w-5 h-5" />
+                  סרטונים בנושא הנבחר ({videos.length})
+                </CardTitle>
+                {selectedTopic && topics.find(t => t.id === selectedTopic) && (
+                  <CardDescription className="mt-1">
+                    {institutions.find(i => i.id === selectedInstitution)?.name} → {departments.find(d => d.id === selectedDepartment)?.name} → {courses.find(c => c.id === selectedCourse)?.title} → {chapters.find(c => c.id === selectedChapter)?.title} → {topics.find(t => t.id === selectedTopic)?.title}
+                  </CardDescription>
+                )}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
-            {videosLoading ? (
+            {!selectedTopic ? (
+              <div className="text-center py-8">
+                <Layers className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">בחר נושא למעלה כדי לראות את הסרטונים</p>
+              </div>
+            ) : videosLoading ? (
               <div className="text-center py-8">
                 <RefreshCw className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
                 <p className="mt-2 text-muted-foreground">טוען...</p>
@@ -1383,32 +1442,48 @@ const AdminHetznerVideosPage: React.FC = () => {
             ) : videos.length === 0 ? (
               <div className="text-center py-8">
                 <Video className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">אין סרטונים</p>
+                <p className="text-muted-foreground">אין סרטונים בנושא זה</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="text-center w-20">סדר</TableHead>
                     <TableHead className="text-right">שם</TableHead>
-                    <TableHead className="text-right">קורס / פרק / נושא</TableHead>
                     <TableHead className="text-right">משך</TableHead>
-                    <TableHead className="text-right">סטטוס שרת</TableHead>
+                    <TableHead className="text-right">סטטוס</TableHead>
                     <TableHead className="text-center">פעולות</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {videos.map(video => (
+                  {videos.map((video, index) => (
                     <TableRow key={video.id}>
-                      <TableCell className="font-medium">{video.title}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
-                        {video.courses?.title || '-'}
-                        {video.course_chapters?.title && (
-                          <span className="text-primary"> &gt; {video.course_chapters.title}</span>
-                        )}
-                        {video.course_topics?.title && (
-                          <span className="text-green-600"> &gt; {video.course_topics.title}</span>
-                        )}
+                      <TableCell>
+                        <div className="flex items-center justify-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => reorderMutation.mutate({ videoId: video.id, direction: 'up' })}
+                            disabled={index === 0 || reorderMutation.isPending}
+                            title="הזז למעלה"
+                          >
+                            <ChevronUp className="w-4 h-4" />
+                          </Button>
+                          <span className="text-sm text-muted-foreground w-6 text-center">{index + 1}</span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7"
+                            onClick={() => reorderMutation.mutate({ videoId: video.id, direction: 'down' })}
+                            disabled={index === videos.length - 1 || reorderMutation.isPending}
+                            title="הזז למטה"
+                          >
+                            <ChevronDown className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
+                      <TableCell className="font-medium">{video.title}</TableCell>
                       <TableCell>{formatDuration(video.duration)}</TableCell>
                       <TableCell>
                         {video.hetzner_path ? (
