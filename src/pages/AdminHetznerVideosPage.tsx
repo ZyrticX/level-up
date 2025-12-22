@@ -525,17 +525,35 @@ const AdminHetznerVideosPage: React.FC = () => {
       setOverallProgress(Math.round(totalProgress / totalFiles));
     };
 
-    for (let i = 0; i < uploadFiles.length; i++) {
-      const uploadFile = uploadFiles[i];
+    // Create a copy of files to upload to avoid state mutation issues
+    const filesToUpload = [...uploadFiles];
+    
+    for (let i = 0; i < filesToUpload.length; i++) {
+      const uploadFile = filesToUpload[i];
       
       setUploadFiles(prev => prev.map((f, idx) => 
         idx === i ? { ...f, status: 'uploading', progress: 0 } : f
       ));
 
+      // Variable to store videoRecord ID for cleanup on error
+      let videoRecordId: string | null = null;
+
       try {
+        // Refresh session for each file (in case of long uploads)
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        if (!currentSession) {
+          throw new Error('Session expired - please login again');
+        }
+
         const pathParts = uploadFile.relativePath.split('/');
         const folderName = pathParts.length > 1 ? pathParts[0] : null;
         const fileName = pathParts[pathParts.length - 1];
+
+        console.log(`Uploading file ${i + 1}/${filesToUpload.length}: ${fileName}`, {
+          folderName,
+          relativePath: uploadFile.relativePath,
+          fileSize: uploadFile.file.size,
+        });
 
         // Create video record in Supabase
         const { data: videoRecord, error: createError } = await supabase
@@ -552,7 +570,13 @@ const AdminHetznerVideosPage: React.FC = () => {
           .select()
           .single();
 
-        if (createError) throw createError;
+        if (createError) {
+          console.error('Supabase insert error:', createError);
+          throw createError;
+        }
+
+        videoRecordId = videoRecord.id;
+        console.log('Video record created:', videoRecordId);
 
         // Upload to Hetzner using XMLHttpRequest for progress tracking
         const formData = new FormData();
@@ -582,6 +606,7 @@ const AdminHetznerVideosPage: React.FC = () => {
           };
           
           xhr.onload = () => {
+            console.log('XHR onload:', xhr.status, xhr.responseText.substring(0, 200));
             if (xhr.status >= 200 && xhr.status < 300) {
               try {
                 const response = JSON.parse(xhr.responseText);
@@ -599,17 +624,25 @@ const AdminHetznerVideosPage: React.FC = () => {
             }
           };
           
-          xhr.onerror = () => reject(new Error('Network error - check your connection'));
-          xhr.ontimeout = () => reject(new Error('Upload timeout - file may be too large'));
+          xhr.onerror = () => {
+            console.error('XHR onerror');
+            reject(new Error('Network error - check your connection'));
+          };
+          xhr.ontimeout = () => {
+            console.error('XHR ontimeout');
+            reject(new Error('Upload timeout - file may be too large'));
+          };
           
           xhr.open('POST', `${HETZNER_API_URL}/api/upload`);
-          xhr.setRequestHeader('Authorization', `Bearer ${session.access_token}`);
+          xhr.setRequestHeader('Authorization', `Bearer ${currentSession.access_token}`);
           xhr.timeout = 3600000; // 1 hour timeout for large files
           xhr.send(formData);
         });
 
+        console.log('Upload result:', result);
+
         // Update video record with Hetzner path
-        await supabase
+        const { error: updateError } = await supabase
           .from('videos')
           .update({
             hetzner_path: result.path,
@@ -618,6 +651,12 @@ const AdminHetznerVideosPage: React.FC = () => {
             duration: result.duration || 0,
           })
           .eq('id', videoRecord.id);
+
+        if (updateError) {
+          console.error('Supabase update error:', updateError);
+          // Don't throw - file is uploaded, just log warning
+          toast.warning(`קובץ הועלה אך עדכון DB נכשל: ${fileName}`);
+        }
 
         fileProgresses[i] = 100;
         updateOverallProgress();
@@ -629,7 +668,14 @@ const AdminHetznerVideosPage: React.FC = () => {
         toast.success(`הועלה: ${fileName}`, { duration: 2000 });
 
       } catch (error: any) {
-        console.error('Upload error:', error);
+        console.error('Upload error for file:', uploadFile.file.name, error);
+        
+        // If video record was created but upload failed, delete the orphan record
+        if (videoRecordId) {
+          console.log('Cleaning up orphan video record:', videoRecordId);
+          await supabase.from('videos').delete().eq('id', videoRecordId);
+        }
+        
         fileProgresses[i] = 0;
         updateOverallProgress();
         setUploadFiles(prev => prev.map((f, idx) => 
@@ -762,6 +808,29 @@ const AdminHetznerVideosPage: React.FC = () => {
   const linkedPaths = new Set(videos.map(v => v.hetzner_path).filter(Boolean));
   const orphanFiles = hetznerFiles.filter((f: HetznerFile) => !linkedPaths.has(f.path));
 
+  // Cleanup orphan video records (no hetzner_path)
+  const cleanupOrphansMutation = useMutation({
+    mutationFn: async () => {
+      const orphanIds = unlinkedVideos.map(v => v.id);
+      if (orphanIds.length === 0) return 0;
+      
+      const { error } = await supabase
+        .from('videos')
+        .delete()
+        .in('id', orphanIds);
+      
+      if (error) throw error;
+      return orphanIds.length;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-hetzner-videos'] });
+      toast.success(`נמחקו ${count} רשומות יתומות`);
+    },
+    onError: (error: any) => {
+      toast.error(`שגיאה במחיקה: ${error.message}`);
+    },
+  });
+
   const groupedFiles = uploadFiles.reduce((acc, file) => {
     const parts = file.relativePath.split('/');
     const folder = parts.length > 1 ? parts[0] : 'קבצים בודדים';
@@ -835,6 +904,22 @@ const AdminHetznerVideosPage: React.FC = () => {
                 </div>
                 <AlertCircle className="w-10 h-10 text-orange-500 opacity-50" />
               </div>
+              {unlinkedVideos.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 w-full text-orange-600 border-orange-300 hover:bg-orange-50"
+                  onClick={() => {
+                    if (confirm(`למחוק ${unlinkedVideos.length} רשומות יתומות?`)) {
+                      cleanupOrphansMutation.mutate();
+                    }
+                  }}
+                  disabled={cleanupOrphansMutation.isPending}
+                >
+                  <Trash2 className="w-4 h-4 ml-2" />
+                  {cleanupOrphansMutation.isPending ? 'מוחק...' : 'נקה רשומות יתומות'}
+                </Button>
+              )}
             </CardContent>
           </Card>
           
