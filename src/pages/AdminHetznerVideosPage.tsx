@@ -2,6 +2,7 @@
  * Admin Hetzner Videos Management Page
  * 
  * Features:
+ * - Hierarchical upload: Institution → Department → Course → Chapter → Topic → Videos
  * - Upload individual videos or entire folders to Hetzner server
  * - Maintain folder structure
  * - View and manage videos on Hetzner
@@ -9,11 +10,12 @@
  * - Monitor upload progress
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -64,21 +66,48 @@ import {
   X,
   Play,
   Copy,
-  ExternalLink
+  ExternalLink,
+  Plus,
+  Landmark,
+  BookOpen,
+  GraduationCap,
+  Layers,
+  FileText
 } from 'lucide-react';
 
 // Hetzner config
 const HETZNER_API_URL = import.meta.env.VITE_HETZNER_API_URL || '';
 
+interface Institution {
+  id: string;
+  name: string;
+}
+
+interface Department {
+  id: string;
+  name: string;
+  institution_id: string;
+}
+
 interface Course {
   id: string;
   title: string;
+  institution: string | null;
+  department: string | null;
 }
 
 interface Chapter {
   id: string;
   title: string;
   course_id: string;
+  order_index: number;
+}
+
+interface Topic {
+  id: string;
+  title: string;
+  chapter_id: string;
+  order_index: number;
 }
 
 interface VideoRecord {
@@ -86,12 +115,14 @@ interface VideoRecord {
   title: string;
   course_id: string;
   chapter_id: string | null;
+  topic_id: string | null;
   hetzner_path: string | null;
   hls_path: string | null;
   duration: number;
   is_published: boolean;
   courses?: { title: string };
   course_chapters?: { title: string };
+  course_topics?: { title: string };
 }
 
 interface UploadFile {
@@ -113,42 +144,119 @@ const AdminHetznerVideosPage: React.FC = () => {
   const folderInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Selection state - hierarchical
+  const [selectedInstitution, setSelectedInstitution] = useState<string>('');
+  const [selectedDepartment, setSelectedDepartment] = useState<string>('');
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedChapter, setSelectedChapter] = useState<string>('');
+  const [selectedTopic, setSelectedTopic] = useState<string>('');
+  
+  // Upload state
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [overallProgress, setOverallProgress] = useState(0);
   const [uploadMode, setUploadMode] = useState<'files' | 'folder'>('files');
+  
+  // Preview state
   const [previewVideo, setPreviewVideo] = useState<VideoRecord | null>(null);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+  
+  // Inline creation state
+  const [newChapterName, setNewChapterName] = useState('');
+  const [newTopicName, setNewTopicName] = useState('');
+  const [showNewChapter, setShowNewChapter] = useState(false);
+  const [showNewTopic, setShowNewTopic] = useState(false);
 
-  // Fetch courses
-  const { data: courses = [] } = useQuery({
-    queryKey: ['admin-courses'],
+  // Fetch institutions
+  const { data: institutions = [] } = useQuery({
+    queryKey: ['upload-institutions'],
     queryFn: async () => {
       const { data, error } = await supabase
+        .from('institutions')
+        .select('id, name')
+        .eq('is_active', true)
+        .order('name');
+      if (error) throw error;
+      return data as Institution[];
+    },
+  });
+
+  // Fetch departments for selected institution
+  const { data: departments = [] } = useQuery({
+    queryKey: ['upload-departments', selectedInstitution],
+    queryFn: async () => {
+      if (!selectedInstitution) return [];
+      const { data, error } = await supabase
+        .from('departments')
+        .select('id, name, institution_id')
+        .eq('institution_id', selectedInstitution)
+        .eq('is_active', true)
+        .order('name');
+      if (error) throw error;
+      return data as Department[];
+    },
+    enabled: !!selectedInstitution,
+  });
+
+  // Fetch courses for selected institution/department
+  const { data: courses = [] } = useQuery({
+    queryKey: ['upload-courses', selectedInstitution, selectedDepartment],
+    queryFn: async () => {
+      if (!selectedInstitution) return [];
+      
+      // Get institution name
+      const institution = institutions.find(i => i.id === selectedInstitution);
+      if (!institution) return [];
+      
+      let query = supabase
         .from('courses')
-        .select('id, title')
-        .order('title');
+        .select('id, title, institution, department')
+        .eq('institution', institution.name);
+      
+      if (selectedDepartment) {
+        const department = departments.find(d => d.id === selectedDepartment);
+        if (department) {
+          query = query.eq('department', department.name);
+        }
+      }
+      
+      const { data, error } = await query.order('title');
       if (error) throw error;
       return data as Course[];
     },
+    enabled: !!selectedInstitution,
   });
 
   // Fetch chapters for selected course
   const { data: chapters = [] } = useQuery({
-    queryKey: ['admin-chapters', selectedCourse],
+    queryKey: ['upload-chapters', selectedCourse],
     queryFn: async () => {
-      if (!selectedCourse || selectedCourse === 'all') return [];
+      if (!selectedCourse) return [];
       const { data, error } = await supabase
         .from('course_chapters')
-        .select('id, title, course_id')
+        .select('id, title, course_id, order_index')
         .eq('course_id', selectedCourse)
         .order('order_index');
       if (error) throw error;
       return data as Chapter[];
     },
-    enabled: !!selectedCourse && selectedCourse !== 'all',
+    enabled: !!selectedCourse,
+  });
+
+  // Fetch topics for selected chapter
+  const { data: topics = [] } = useQuery({
+    queryKey: ['upload-topics', selectedChapter],
+    queryFn: async () => {
+      if (!selectedChapter) return [];
+      const { data, error } = await supabase
+        .from('course_topics')
+        .select('id, title, chapter_id, order_index')
+        .eq('chapter_id', selectedChapter)
+        .order('order_index');
+      if (error) throw error;
+      return data as Topic[];
+    },
+    enabled: !!selectedChapter,
   });
 
   // Fetch videos from Supabase
@@ -162,16 +270,18 @@ const AdminHetznerVideosPage: React.FC = () => {
           title,
           course_id,
           chapter_id,
+          topic_id,
           hetzner_path,
           hls_path,
           duration,
           is_published,
           courses(title),
-          course_chapters(title)
+          course_chapters(title),
+          course_topics(title)
         `)
         .order('created_at', { ascending: false });
 
-      if (selectedCourse && selectedCourse !== 'all') {
+      if (selectedCourse) {
         query = query.eq('course_id', selectedCourse);
       }
 
@@ -210,6 +320,100 @@ const AdminHetznerVideosPage: React.FC = () => {
     enabled: !!HETZNER_API_URL,
   });
 
+  // Create chapter mutation
+  const createChapterMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const maxOrder = chapters.length > 0 
+        ? Math.max(...chapters.map(c => c.order_index)) + 1 
+        : 0;
+      
+      const { data, error } = await supabase
+        .from('course_chapters')
+        .insert({
+          course_id: selectedCourse,
+          title: name,
+          order_index: maxOrder,
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['upload-chapters'] });
+      setSelectedChapter(data.id);
+      setNewChapterName('');
+      setShowNewChapter(false);
+      toast.success('הפרק נוצר בהצלחה!');
+    },
+    onError: (error: any) => {
+      toast.error(`שגיאה: ${error.message}`);
+    },
+  });
+
+  // Create topic mutation
+  const createTopicMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const maxOrder = topics.length > 0 
+        ? Math.max(...topics.map(t => t.order_index)) + 1 
+        : 0;
+      
+      const { data, error } = await supabase
+        .from('course_topics')
+        .insert({
+          chapter_id: selectedChapter,
+          title: name,
+          order_index: maxOrder,
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['upload-topics'] });
+      setSelectedTopic(data.id);
+      setNewTopicName('');
+      setShowNewTopic(false);
+      toast.success('הנושא נוצר בהצלחה!');
+    },
+    onError: (error: any) => {
+      toast.error(`שגיאה: ${error.message}`);
+    },
+  });
+
+  // Handle institution change - reset downstream
+  const handleInstitutionChange = (value: string) => {
+    setSelectedInstitution(value);
+    setSelectedDepartment('');
+    setSelectedCourse('');
+    setSelectedChapter('');
+    setSelectedTopic('');
+  };
+
+  // Handle department change - reset downstream
+  const handleDepartmentChange = (value: string) => {
+    setSelectedDepartment(value);
+    setSelectedCourse('');
+    setSelectedChapter('');
+    setSelectedTopic('');
+  };
+
+  // Handle course change - reset downstream
+  const handleCourseChange = (value: string) => {
+    setSelectedCourse(value);
+    setSelectedChapter('');
+    setSelectedTopic('');
+  };
+
+  // Handle chapter change - reset downstream
+  const handleChapterChange = (value: string) => {
+    setSelectedChapter(value);
+    setSelectedTopic('');
+  };
+
   // Handle folder selection
   const handleFolderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -223,9 +427,7 @@ const AdminHetznerVideosPage: React.FC = () => {
     
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      // Only accept video files
       if (file.type.startsWith('video/')) {
-        // Get relative path (folder structure)
         const relativePath = (file as any).webkitRelativePath || file.name;
         videoFiles.push({
           file,
@@ -248,8 +450,6 @@ const AdminHetznerVideosPage: React.FC = () => {
       ? `נמצאו ${videoFiles.length} סרטונים (${skippedCount} קבצים אחרים דולגו)`
       : `נמצאו ${videoFiles.length} סרטונים בתיקייה`;
     toast.success(message);
-    
-    // Reset input to allow selecting the same folder again
     e.target.value = '';
   };
 
@@ -279,7 +479,7 @@ const AdminHetznerVideosPage: React.FC = () => {
     }
 
     if (videoFiles.length === 0) {
-      toast.error('לא נבחרו קבצי וידאו. אנא בחר קבצים בפורמט וידאו (mp4, mov, avi וכו\')');
+      toast.error('לא נבחרו קבצי וידאו');
       return;
     }
 
@@ -288,8 +488,6 @@ const AdminHetznerVideosPage: React.FC = () => {
       ? `נבחרו ${videoFiles.length} סרטונים (${skippedCount} קבצים אחרים דולגו)`
       : `נבחרו ${videoFiles.length} סרטונים`;
     toast.success(message);
-    
-    // Reset input to allow selecting the same files again
     e.target.value = '';
   };
 
@@ -298,14 +496,13 @@ const AdminHetznerVideosPage: React.FC = () => {
     setUploadFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Check if can upload
+  const canUpload = selectedCourse && selectedChapter && selectedTopic && uploadFiles.length > 0;
+
   // Upload all files
   const handleUpload = async () => {
-    if (!selectedCourse || selectedCourse === 'all') {
-      toast.error('נא לבחור קורס');
-      return;
-    }
-    if (uploadFiles.length === 0) {
-      toast.error('נא לבחור קבצים להעלאה');
+    if (!canUpload) {
+      toast.error('יש לבחור קורס, פרק ונושא לפני ההעלאה');
       return;
     }
 
@@ -325,27 +522,26 @@ const AdminHetznerVideosPage: React.FC = () => {
     for (let i = 0; i < uploadFiles.length; i++) {
       const uploadFile = uploadFiles[i];
       
-      // Update status to uploading
       setUploadFiles(prev => prev.map((f, idx) => 
         idx === i ? { ...f, status: 'uploading' } : f
       ));
 
       try {
-        // Extract folder name from path for organization
         const pathParts = uploadFile.relativePath.split('/');
         const folderName = pathParts.length > 1 ? pathParts[0] : null;
         const fileName = pathParts[pathParts.length - 1];
 
-        // Create video record in Supabase first
+        // Create video record in Supabase
         const { data: videoRecord, error: createError } = await supabase
           .from('videos')
           .insert({
             title: fileName.replace(/\.[^/.]+$/, ''),
             course_id: selectedCourse,
-            chapter_id: selectedChapter && selectedChapter !== 'none' ? selectedChapter : null,
+            chapter_id: selectedChapter,
+            topic_id: selectedTopic,
             duration: 0,
             video_url: '',
-            is_published: true, // Auto-publish when admin uploads
+            is_published: true,
           })
           .select()
           .single();
@@ -357,10 +553,8 @@ const AdminHetznerVideosPage: React.FC = () => {
         formData.append('video', uploadFile.file);
         formData.append('courseId', selectedCourse);
         formData.append('videoId', videoRecord.id);
-        if (selectedChapter && selectedChapter !== 'none') {
-          formData.append('chapterId', selectedChapter);
-        }
-        // Include folder structure in path
+        formData.append('chapterId', selectedChapter);
+        formData.append('topicId', selectedTopic);
         if (folderName) {
           formData.append('folderName', folderName);
         }
@@ -392,7 +586,6 @@ const AdminHetznerVideosPage: React.FC = () => {
           })
           .eq('id', videoRecord.id);
 
-        // Update status to completed
         setUploadFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'completed', progress: 100 } : f
         ));
@@ -402,8 +595,6 @@ const AdminHetznerVideosPage: React.FC = () => {
 
       } catch (error: any) {
         console.error('Upload error:', error);
-        
-        // Update status to error
         setUploadFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'error', error: error.message } : f
         ));
@@ -411,8 +602,6 @@ const AdminHetznerVideosPage: React.FC = () => {
     }
 
     setIsUploading(false);
-    
-    // Refresh data
     queryClient.invalidateQueries({ queryKey: ['admin-hetzner-videos'] });
     queryClient.invalidateQueries({ queryKey: ['hetzner-files'] });
 
@@ -424,7 +613,7 @@ const AdminHetznerVideosPage: React.FC = () => {
     }
   };
 
-  // Delete video
+  // Delete video mutation
   const deleteMutation = useMutation({
     mutationFn: async ({ videoId, hetznerPath }: { videoId: string; hetznerPath: string }) => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -444,7 +633,6 @@ const AdminHetznerVideosPage: React.FC = () => {
         throw new Error(errorData.error || 'Delete failed');
       }
 
-      // Delete from Supabase
       const { error } = await supabase
         .from('videos')
         .delete()
@@ -462,7 +650,7 @@ const AdminHetznerVideosPage: React.FC = () => {
     },
   });
 
-  // Sync Hetzner path to video
+  // Sync mutation
   const syncMutation = useMutation({
     mutationFn: async ({ videoId, hetznerPath }: { videoId: string; hetznerPath: string }) => {
       const { error } = await supabase
@@ -506,16 +694,11 @@ const AdminHetznerVideosPage: React.FC = () => {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Generate admin preview URL
   const getPreviewUrl = (video: VideoRecord) => {
     if (!video.hetzner_path) return null;
-    // Use HLS path if available, otherwise use direct path
-    // Use MP4 path directly (HLS may not be available)
-    const videoPath = video.hetzner_path;
-    return `${HETZNER_API_URL}${videoPath}`;
+    return `${HETZNER_API_URL}${video.hetzner_path}`;
   };
 
-  // Copy preview link to clipboard
   const handleCopyPreviewLink = async (video: VideoRecord) => {
     const previewUrl = getPreviewUrl(video);
     if (!previewUrl) {
@@ -524,16 +707,7 @@ const AdminHetznerVideosPage: React.FC = () => {
     }
     
     try {
-      // Generate a token for admin preview
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error('יש להתחבר מחדש');
-        return;
-      }
-
-      // Create the preview link with video ID
       const adminPreviewUrl = `${window.location.origin}/admin/preview/${video.id}`;
-      
       await navigator.clipboard.writeText(adminPreviewUrl);
       toast.success('הלינק הועתק ללוח!');
     } catch (err) {
@@ -541,18 +715,15 @@ const AdminHetznerVideosPage: React.FC = () => {
     }
   };
 
-  // Open preview in new tab
   const handleOpenPreview = (video: VideoRecord) => {
     setPreviewVideo(video);
     setShowPreviewDialog(true);
   };
 
-  // Find unlinked videos and orphan files
   const unlinkedVideos = videos.filter(v => !v.hetzner_path);
   const linkedPaths = new Set(videos.map(v => v.hetzner_path).filter(Boolean));
   const orphanFiles = hetznerFiles.filter((f: HetznerFile) => !linkedPaths.has(f.path));
 
-  // Group upload files by folder
   const groupedFiles = uploadFiles.reduce((acc, file) => {
     const parts = file.relativePath.split('/');
     const folder = parts.length > 1 ? parts[0] : 'קבצים בודדים';
@@ -650,30 +821,75 @@ const AdminHetznerVideosPage: React.FC = () => {
               העלאת סרטונים לשרת Hetzner
             </CardTitle>
             <CardDescription>
-              העלה קבצים בודדים או תיקיות שלמות. מבנה התיקיות יישמר בשרת.
+              בחר מוסד → תחום → קורס → פרק → נושא ואז העלה סרטונים
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* No courses warning */}
-            {courses.length === 0 && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-yellow-800">אין קורסים במערכת</p>
-                  <p className="text-sm text-yellow-700">
-                    כדי להעלות סרטונים, קודם צריך ליצור קורס בעמוד "ניהול קורסים"
-                  </p>
+          <CardContent className="space-y-6">
+            {/* Hierarchical Selection */}
+            <div className="bg-muted/30 rounded-xl p-6 space-y-4">
+              <h3 className="font-semibold flex items-center gap-2 mb-4">
+                <Layers className="w-5 h-5 text-primary" />
+                בחר מיקום להעלאה
+              </h3>
+              
+              {/* Row 1: Institution & Department */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Landmark className="w-4 h-4" />
+                    מוסד לימודים *
+                  </Label>
+                  <Select value={selectedInstitution} onValueChange={handleInstitutionChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="בחר מוסד" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {institutions.map(inst => (
+                        <SelectItem key={inst.id} value={inst.id}>
+                          {inst.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    תחום/מחלקה *
+                  </Label>
+                  <Select 
+                    value={selectedDepartment} 
+                    onValueChange={handleDepartmentChange}
+                    disabled={!selectedInstitution}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={selectedInstitution ? "בחר תחום" : "בחר מוסד קודם"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map(dept => (
+                        <SelectItem key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-            )}
 
-            {/* Course/Chapter Selection */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">קורס *</label>
-                <Select value={selectedCourse} onValueChange={setSelectedCourse} disabled={courses.length === 0}>
+              {/* Row 2: Course */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4" />
+                  קורס *
+                </Label>
+                <Select 
+                  value={selectedCourse} 
+                  onValueChange={handleCourseChange}
+                  disabled={!selectedDepartment}
+                >
                   <SelectTrigger>
-                    <SelectValue placeholder={courses.length === 0 ? "אין קורסים - צור קורס קודם" : "בחר קורס"} />
+                    <SelectValue placeholder={selectedDepartment ? "בחר קורס" : "בחר תחום קודם"} />
                   </SelectTrigger>
                   <SelectContent>
                     {courses.map(course => (
@@ -683,28 +899,142 @@ const AdminHetznerVideosPage: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                {selectedDepartment && courses.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    אין קורסים בתחום זה. צור קורס חדש בעמוד "ניהול קורסים"
+                  </p>
+                )}
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">פרק (אופציונלי)</label>
-                <Select 
-                  value={selectedChapter} 
-                  onValueChange={setSelectedChapter}
-                  disabled={!selectedCourse || selectedCourse === 'all'}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="בחר פרק" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">ללא פרק</SelectItem>
-                    {chapters.map(chapter => (
-                      <SelectItem key={chapter.id} value={chapter.id}>
-                        {chapter.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Row 3: Chapter with inline creation */}
+              {selectedCourse && (
+                <div className="space-y-2 pt-4 border-t">
+                  <div className="flex items-center justify-between">
+                    <Label className="flex items-center gap-2">
+                      <Layers className="w-4 h-4" />
+                      פרק *
+                    </Label>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowNewChapter(!showNewChapter)}
+                    >
+                      <Plus className="w-4 h-4 ml-1" />
+                      פרק חדש
+                    </Button>
+                  </div>
+                  
+                  {showNewChapter ? (
+                    <div className="flex gap-2">
+                      <Input
+                        value={newChapterName}
+                        onChange={(e) => setNewChapterName(e.target.value)}
+                        placeholder="שם הפרק..."
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={() => createChapterMutation.mutate(newChapterName)}
+                        disabled={!newChapterName.trim() || createChapterMutation.isPending}
+                      >
+                        צור
+                      </Button>
+                      <Button 
+                        variant="ghost"
+                        onClick={() => {
+                          setShowNewChapter(false);
+                          setNewChapterName('');
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Select value={selectedChapter} onValueChange={handleChapterChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={chapters.length === 0 ? "צור פרק חדש" : "בחר פרק"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {chapters.map(chapter => (
+                          <SelectItem key={chapter.id} value={chapter.id}>
+                            {chapter.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              )}
+
+              {/* Row 4: Topic with inline creation */}
+              {selectedChapter && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      נושא *
+                    </Label>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowNewTopic(!showNewTopic)}
+                    >
+                      <Plus className="w-4 h-4 ml-1" />
+                      נושא חדש
+                    </Button>
+                  </div>
+                  
+                  {showNewTopic ? (
+                    <div className="flex gap-2">
+                      <Input
+                        value={newTopicName}
+                        onChange={(e) => setNewTopicName(e.target.value)}
+                        placeholder="שם הנושא..."
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={() => createTopicMutation.mutate(newTopicName)}
+                        disabled={!newTopicName.trim() || createTopicMutation.isPending}
+                      >
+                        צור
+                      </Button>
+                      <Button 
+                        variant="ghost"
+                        onClick={() => {
+                          setShowNewTopic(false);
+                          setNewTopicName('');
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Select value={selectedTopic} onValueChange={setSelectedTopic}>
+                      <SelectTrigger>
+                        <SelectValue placeholder={topics.length === 0 ? "צור נושא חדש" : "בחר נושא"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {topics.map(topic => (
+                          <SelectItem key={topic.id} value={topic.id}>
+                            {topic.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              )}
+
+              {/* Selection Summary */}
+              {selectedTopic && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-4">
+                  <p className="text-sm text-green-800 font-medium">
+                    ✓ מוכן להעלאה
+                  </p>
+                  <p className="text-xs text-green-700 mt-1">
+                    הסרטונים יועלו ל: {institutions.find(i => i.id === selectedInstitution)?.name} → {departments.find(d => d.id === selectedDepartment)?.name} → {courses.find(c => c.id === selectedCourse)?.title} → {chapters.find(c => c.id === selectedChapter)?.title} → {topics.find(t => t.id === selectedTopic)?.title}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Upload Type Tabs */}
@@ -737,13 +1067,13 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading || courses.length === 0 || !selectedCourse || selectedCourse === 'all'}
+                    disabled={isUploading || !selectedTopic}
                   >
                     <Upload className="w-4 h-4 ml-2" />
                     בחר קבצים
                   </Button>
-                  {(!selectedCourse || selectedCourse === 'all') && courses.length > 0 && (
-                    <p className="text-sm text-muted-foreground mt-2">יש לבחור קורס קודם</p>
+                  {!selectedTopic && (
+                    <p className="text-sm text-muted-foreground mt-2">יש לבחור מוסד, תחום, קורס, פרק ונושא קודם</p>
                   )}
                 </div>
               </TabsContent>
@@ -752,12 +1082,12 @@ const AdminHetznerVideosPage: React.FC = () => {
                 <div className="border-2 border-dashed border-primary/30 rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
                   <FolderUp className="w-12 h-12 text-primary/50 mx-auto mb-4" />
                   <p className="text-muted-foreground mb-4">
-                    בחר תיקייה שלמה להעלאה - מבנה התיקיות יישמר
+                    בחר תיקייה שלמה להעלאה
                   </p>
                   <input
                     ref={folderInputRef}
                     type="file"
-                    // @ts-ignore - webkitdirectory is not in the type definitions
+                    // @ts-ignore
                     webkitdirectory=""
                     directory=""
                     multiple
@@ -767,13 +1097,13 @@ const AdminHetznerVideosPage: React.FC = () => {
                   <Button 
                     variant="outline" 
                     onClick={() => folderInputRef.current?.click()}
-                    disabled={isUploading || courses.length === 0 || !selectedCourse || selectedCourse === 'all'}
+                    disabled={isUploading || !selectedTopic}
                   >
                     <FolderOpen className="w-4 h-4 ml-2" />
                     בחר תיקייה
                   </Button>
-                  {(!selectedCourse || selectedCourse === 'all') && courses.length > 0 && (
-                    <p className="text-sm text-muted-foreground mt-2">יש לבחור קורס קודם</p>
+                  {!selectedTopic && (
+                    <p className="text-sm text-muted-foreground mt-2">יש לבחור מוסד, תחום, קורס, פרק ונושא קודם</p>
                   )}
                 </div>
               </TabsContent>
@@ -860,7 +1190,7 @@ const AdminHetznerVideosPage: React.FC = () => {
             {/* Upload Button */}
             <Button
               onClick={handleUpload}
-              disabled={isUploading || uploadFiles.length === 0 || !selectedCourse || selectedCourse === 'all'}
+              disabled={!canUpload || isUploading}
               className="w-full"
               size="lg"
             >
@@ -878,19 +1208,6 @@ const AdminHetznerVideosPage: React.FC = () => {
                 <Video className="w-5 h-5" />
                 סרטונים ({videos.length})
               </CardTitle>
-              <Select value={selectedCourse} onValueChange={setSelectedCourse}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="סנן לפי קורס" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">כל הקורסים</SelectItem>
-                  {courses.map(course => (
-                    <SelectItem key={course.id} value={course.id}>
-                      {course.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </CardHeader>
           <CardContent>
@@ -909,10 +1226,9 @@ const AdminHetznerVideosPage: React.FC = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-right">שם</TableHead>
-                    <TableHead className="text-right">קורס / פרק</TableHead>
+                    <TableHead className="text-right">קורס / פרק / נושא</TableHead>
                     <TableHead className="text-right">משך</TableHead>
                     <TableHead className="text-right">סטטוס שרת</TableHead>
-                    <TableHead className="text-right">HLS</TableHead>
                     <TableHead className="text-center">פעולות</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -924,6 +1240,9 @@ const AdminHetznerVideosPage: React.FC = () => {
                         {video.courses?.title || '-'}
                         {video.course_chapters?.title && (
                           <span className="text-primary"> &gt; {video.course_chapters.title}</span>
+                        )}
+                        {video.course_topics?.title && (
+                          <span className="text-green-600"> &gt; {video.course_topics.title}</span>
                         )}
                       </TableCell>
                       <TableCell>{formatDuration(video.duration)}</TableCell>
@@ -941,18 +1260,7 @@ const AdminHetznerVideosPage: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        {video.hls_path ? (
-                          <Badge variant="secondary">
-                            <CheckCircle2 className="w-3 h-3 ml-1" />
-                            זמין
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
                         <div className="flex items-center justify-center gap-2">
-                          {/* Preview buttons - only for linked videos */}
                           {video.hetzner_path && (
                             <>
                               <Button
@@ -1098,12 +1406,14 @@ const AdminHetznerVideosPage: React.FC = () => {
                 {previewVideo?.course_chapters?.title && (
                   <span> &gt; {previewVideo.course_chapters.title}</span>
                 )}
+                {previewVideo?.course_topics?.title && (
+                  <span> &gt; {previewVideo.course_topics.title}</span>
+                )}
               </DialogDescription>
             </DialogHeader>
             
             {previewVideo && previewVideo.hetzner_path && (
               <div className="space-y-4">
-                {/* Video Player */}
                 <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
                   <video
                     key={previewVideo.id}
@@ -1116,7 +1426,6 @@ const AdminHetznerVideosPage: React.FC = () => {
                   </video>
                 </div>
 
-                {/* Video Info */}
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="bg-muted/50 rounded-lg p-3">
                     <p className="text-muted-foreground">משך</p>
@@ -1128,7 +1437,6 @@ const AdminHetznerVideosPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -1150,11 +1458,9 @@ const AdminHetznerVideosPage: React.FC = () => {
                   </Button>
                 </div>
 
-                {/* Warning */}
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
                   <p className="text-yellow-800">
-                    <strong>שים לב:</strong> לינק ה-Preview זמין רק למנהלים. 
-                    משתמשים רגילים לא יוכלו לגשת לסרטון ללא הרשאה מתאימה.
+                    <strong>שים לב:</strong> לינק ה-Preview זמין רק למנהלים.
                   </p>
                 </div>
               </div>

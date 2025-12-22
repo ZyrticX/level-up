@@ -64,8 +64,8 @@ export type Database = {
           id: string
           payment_method: string | null
           payment_status: string
-          user_id: string
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           amount_paid: number
@@ -78,8 +78,8 @@ export type Database = {
           id?: string
           payment_method?: string | null
           payment_status?: string
-          user_id: string
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           amount_paid?: number
@@ -92,8 +92,8 @@ export type Database = {
           id?: string
           payment_method?: string | null
           payment_status?: string
-          user_id?: string
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -183,6 +183,44 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_topics: {
+        Row: {
+          chapter_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          order_index: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index?: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_topics_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "course_chapters"
             referencedColumns: ["id"]
           },
         ]
@@ -294,6 +332,44 @@ export type Database = {
           },
         ]
       }
+      device_login_logs: {
+        Row: {
+          created_at: string | null
+          device_id: string | null
+          id: string
+          ip_address: string | null
+          login_status: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          device_id?: string | null
+          id?: string
+          ip_address?: string | null
+          login_status?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          device_id?: string | null
+          id?: string
+          ip_address?: string | null
+          login_status?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_login_logs_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "user_devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       discount_codes: {
         Row: {
           applicable_courses: string[] | null
@@ -342,6 +418,229 @@ export type Database = {
           updated_at?: string | null
           valid_from?: string | null
           valid_to?: string | null
+        }
+        Relationships: []
+      }
+      download_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          duration: number | null
+          error_message: string | null
+          eta_seconds: number | null
+          file_name: string | null
+          file_path: string | null
+          file_size: number | null
+          id: string
+          jd_job_id: number | null
+          jd_link_ids: number[] | null
+          jd_package_id: number | null
+          media_type: Database["public"]["Enums"]["media_type"] | null
+          preferred_quality: string | null
+          progress: number | null
+          retry_count: number | null
+          source_metadata: Json | null
+          source_platform: string | null
+          source_url: string
+          speed_bps: number | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["download_status"] | null
+          storage_url: string | null
+          target_chapter_id: string | null
+          target_course_id: string | null
+          target_video_id: string | null
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration?: number | null
+          error_message?: string | null
+          eta_seconds?: number | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          jd_job_id?: number | null
+          jd_link_ids?: number[] | null
+          jd_package_id?: number | null
+          media_type?: Database["public"]["Enums"]["media_type"] | null
+          preferred_quality?: string | null
+          progress?: number | null
+          retry_count?: number | null
+          source_metadata?: Json | null
+          source_platform?: string | null
+          source_url: string
+          speed_bps?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["download_status"] | null
+          storage_url?: string | null
+          target_chapter_id?: string | null
+          target_course_id?: string | null
+          target_video_id?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration?: number | null
+          error_message?: string | null
+          eta_seconds?: number | null
+          file_name?: string | null
+          file_path?: string | null
+          file_size?: number | null
+          id?: string
+          jd_job_id?: number | null
+          jd_link_ids?: number[] | null
+          jd_package_id?: number | null
+          media_type?: Database["public"]["Enums"]["media_type"] | null
+          preferred_quality?: string | null
+          progress?: number | null
+          retry_count?: number | null
+          source_metadata?: Json | null
+          source_platform?: string | null
+          source_url?: string
+          speed_bps?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["download_status"] | null
+          storage_url?: string | null
+          target_chapter_id?: string | null
+          target_course_id?: string | null
+          target_video_id?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "download_jobs_target_chapter_id_fkey"
+            columns: ["target_chapter_id"]
+            isOneToOne: false
+            referencedRelation: "course_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_jobs_target_course_id_fkey"
+            columns: ["target_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "download_jobs_target_video_id_fkey"
+            columns: ["target_video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_logs: {
+        Row: {
+          clicked_at: string | null
+          created_at: string | null
+          email_type: string
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          opened_at: string | null
+          recipient_email: string
+          recipient_user_id: string | null
+          resend_id: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          created_at?: string | null
+          email_type: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          recipient_email: string
+          recipient_user_id?: string | null
+          resend_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          created_at?: string | null
+          email_type?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          recipient_email?: string
+          recipient_user_id?: string | null
+          resend_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+        }
+        Relationships: []
+      }
+      email_preferences: {
+        Row: {
+          created_at: string | null
+          id: string
+          preferred_language: string | null
+          receive_course_updates: boolean | null
+          receive_marketing: boolean | null
+          receive_new_courses: boolean | null
+          receive_newsletter: boolean | null
+          receive_password_emails: boolean | null
+          receive_progress_reminders: boolean | null
+          receive_purchase_emails: boolean | null
+          receive_weekly_summary: boolean | null
+          unsubscribed_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          preferred_language?: string | null
+          receive_course_updates?: boolean | null
+          receive_marketing?: boolean | null
+          receive_new_courses?: boolean | null
+          receive_newsletter?: boolean | null
+          receive_password_emails?: boolean | null
+          receive_progress_reminders?: boolean | null
+          receive_purchase_emails?: boolean | null
+          receive_weekly_summary?: boolean | null
+          unsubscribed_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          preferred_language?: string | null
+          receive_course_updates?: boolean | null
+          receive_marketing?: boolean | null
+          receive_new_courses?: boolean | null
+          receive_newsletter?: boolean | null
+          receive_password_emails?: boolean | null
+          receive_progress_reminders?: boolean | null
+          receive_purchase_emails?: boolean | null
+          receive_weekly_summary?: boolean | null
+          unsubscribed_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -539,6 +838,90 @@ export type Database = {
         }
         Relationships: []
       }
+      user_device_settings: {
+        Row: {
+          blocked_at: string | null
+          blocked_reason: string | null
+          created_at: string | null
+          device_switches: number | null
+          id: string
+          is_blocked: boolean | null
+          max_switches_allowed: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          blocked_at?: string | null
+          blocked_reason?: string | null
+          created_at?: string | null
+          device_switches?: number | null
+          id?: string
+          is_blocked?: boolean | null
+          max_switches_allowed?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          blocked_at?: string | null
+          blocked_reason?: string | null
+          created_at?: string | null
+          device_switches?: number | null
+          id?: string
+          is_blocked?: boolean | null
+          max_switches_allowed?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_devices: {
+        Row: {
+          browser: string | null
+          created_at: string | null
+          device_fingerprint: string
+          device_type: string | null
+          first_seen_at: string | null
+          id: string
+          ip_address: string | null
+          is_trusted: boolean | null
+          last_seen_at: string | null
+          login_count: number | null
+          os: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint: string
+          device_type?: string | null
+          first_seen_at?: string | null
+          id?: string
+          ip_address?: string | null
+          is_trusted?: boolean | null
+          last_seen_at?: string | null
+          login_count?: number | null
+          os?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          browser?: string | null
+          created_at?: string | null
+          device_fingerprint?: string
+          device_type?: string | null
+          first_seen_at?: string | null
+          id?: string
+          ip_address?: string | null
+          is_trusted?: boolean | null
+          last_seen_at?: string | null
+          login_count?: number | null
+          os?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -559,6 +942,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      video_access_tokens: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: string | null
+          token: string
+          used_at: string | null
+          user_agent: string | null
+          user_id: string
+          video_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: string | null
+          token: string
+          used_at?: string | null
+          user_agent?: string | null
+          user_id: string
+          video_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: string | null
+          token?: string
+          used_at?: string | null
+          user_agent?: string | null
+          user_id?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_access_tokens_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       video_progress: {
         Row: {
@@ -601,54 +1028,57 @@ export type Database = {
       videos: {
         Row: {
           chapter_id: string | null
-          course_id: string
+          course_id: string | null
           created_at: string | null
           description: string | null
           duration: number
+          hetzner_path: string | null
+          hls_path: string | null
           id: string
-          is_published: boolean | null
           is_preview: boolean | null
+          is_published: boolean | null
           order_index: number
           thumbnail_url: string | null
           title: string
+          topic_id: string | null
           updated_at: string | null
           video_url: string
-          hetzner_path: string | null
-          hls_path: string | null
         }
         Insert: {
           chapter_id?: string | null
-          course_id: string
+          course_id?: string | null
           created_at?: string | null
           description?: string | null
           duration?: number
+          hetzner_path?: string | null
+          hls_path?: string | null
           id?: string
-          is_published?: boolean | null
           is_preview?: boolean | null
+          is_published?: boolean | null
           order_index?: number
           thumbnail_url?: string | null
           title: string
+          topic_id?: string | null
           updated_at?: string | null
           video_url: string
-          hetzner_path?: string | null
-          hls_path?: string | null
         }
         Update: {
           chapter_id?: string | null
-          course_id?: string
+          course_id?: string | null
           created_at?: string | null
           description?: string | null
           duration?: number
+          hetzner_path?: string | null
+          hls_path?: string | null
           id?: string
-          is_published?: boolean | null
           is_preview?: boolean | null
+          is_published?: boolean | null
           order_index?: number
           thumbnail_url?: string | null
           title?: string
+          topic_id?: string | null
           updated_at?: string | null
           video_url?: string
-          hetzner_path?: string | null
-          hls_path?: string | null
         }
         Relationships: [
           {
@@ -665,6 +1095,13 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "videos_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "course_topics"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
@@ -672,9 +1109,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_reset_device_switches: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
+      admin_unblock_user: { Args: { p_user_id: string }; Returns: Json }
+      admin_update_device_switches: {
+        Args: { p_switches: number; p_user_id: string }
+        Returns: Json
+      }
+      admin_update_max_switches: {
+        Args: { p_max_switches: number; p_user_id: string }
+        Returns: Json
+      }
       check_user_has_access: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
+      }
+      cleanup_expired_video_tokens: { Args: never; Returns: number }
+      generate_video_token: {
+        Args: {
+          p_expires_in_minutes?: number
+          p_ip_address?: string
+          p_user_agent?: string
+          p_user_id: string
+          p_video_id: string
+        }
+        Returns: string
       }
       get_course_progress: {
         Args: { _course_id: string; _user_id: string }
@@ -695,6 +1156,7 @@ export type Database = {
           total_videos: number
         }[]
       }
+      get_user_tracking_data: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -706,6 +1168,28 @@ export type Database = {
         Args: { _code: string }
         Returns: undefined
       }
+      queue_email: {
+        Args: {
+          p_email_type: string
+          p_metadata?: Json
+          p_recipient_email: string
+          p_recipient_user_id?: string
+        }
+        Returns: string
+      }
+      register_device_login: {
+        Args: {
+          p_browser?: string
+          p_device_fingerprint: string
+          p_device_type?: string
+          p_ip_address?: string
+          p_os?: string
+          p_user_agent?: string
+        }
+        Returns: Json
+      }
+      send_continue_learning_reminders: { Args: never; Returns: undefined }
+      send_weekly_progress_emails: { Args: never; Returns: undefined }
       update_course_statistics: {
         Args: { _course_id: string }
         Returns: undefined
@@ -716,6 +1200,16 @@ export type Database = {
           discount_amount: number
           error_message: string
           is_valid: boolean
+        }[]
+      }
+      validate_video_token: {
+        Args: { p_ip_address?: string; p_token: string; p_video_id?: string }
+        Returns: {
+          hetzner_path: string
+          hls_path: string
+          is_valid: boolean
+          user_id: string
+          video_id: string
         }[]
       }
     }
@@ -736,6 +1230,15 @@ export type Database = {
         | "mechanics"
         | "magnetism"
         | "general"
+      download_status:
+        | "pending"
+        | "crawling"
+        | "ready"
+        | "downloading"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      media_type: "video" | "audio" | "both"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -880,6 +1383,16 @@ export const Constants = {
         "magnetism",
         "general",
       ],
+      download_status: [
+        "pending",
+        "crawling",
+        "ready",
+        "downloading",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      media_type: ["video", "audio", "both"],
     },
   },
 } as const

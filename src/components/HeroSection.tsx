@@ -12,19 +12,13 @@ const HeroSection = () => {
               מרתונים מוקלטים ועשירים בהסברים ותרגולים מותאמים לבחינות הסופיות. התוכן נבנה כמסלול מסודר ובהתאמה דקדקנית לחומר המועבר בכיתה, מונגש מהבסיס ואינו מצריך ידע מוקדם.
             </p>
             
-            {/* CTA Buttons */}
+            {/* CTA Button */}
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
               <a 
                 href="/courses" 
                 className="px-8 py-4 bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:from-cyan-300 hover:to-blue-400 font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105"
               >
                 לקורסים שלנו
-              </a>
-              <a 
-                href="/signup" 
-                className="px-8 py-4 bg-white/5 backdrop-blur-sm hover:bg-white/10 text-cyan-100 font-semibold rounded-xl border border-cyan-400/30 hover:border-cyan-400/50 transition-all duration-300"
-              >
-                הרשמה חינם
               </a>
             </div>
           </div>

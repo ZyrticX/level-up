@@ -271,8 +271,8 @@ const AdminPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.description) {
-      toast.error("נא למלא את כל השדות הנדרשים");
+    if (!formData.title) {
+      toast.error("נא להזין שם קורס");
       return;
     }
 
@@ -451,26 +451,31 @@ const AdminPage = () => {
                   </div>
                   
                   <div className="space-y-2">
+                    <Label>סטטוס פרסום</Label>
                     <Button
                       type="button"
                       variant={formData.is_published ? "default" : "outline"}
                       onClick={() => setFormData({...formData, is_published: !formData.is_published})}
                       className="w-full"
                     >
-                      {formData.is_published ? "✓ קורס מפורסם" : "פרסם קורס"}
+                      {formData.is_published ? "✓ קורס מפורסם" : "טיוטה - לא מפורסם"}
                     </Button>
+                    <p className="text-xs text-muted-foreground">
+                      {formData.is_published 
+                        ? "הקורס יוצג לסטודנטים באתר" 
+                        : "הקורס נראה רק למנהלים"}
+                    </p>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">תיאור הקורס *</Label>
+                  <Label htmlFor="description">תיאור הקורס (אופציונלי)</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     placeholder="תאר את הקורס, מה הסטודנטים ילמדו..."
                     className="min-h-[100px]"
-                    required
                   />
                 </div>
                 
@@ -527,7 +532,7 @@ const AdminPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">כל המוסדות</SelectItem>
-                  {uniqueInstitutions.filter(inst => inst && inst.trim() !== '').map((inst) => (
+                  {uniqueInstitutions.filter((inst): inst is string => typeof inst === 'string' && inst.trim() !== '').map((inst) => (
                     <SelectItem key={inst} value={inst}>{inst}</SelectItem>
                   ))}
                 </SelectContent>
@@ -539,7 +544,7 @@ const AdminPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">כל החוגים</SelectItem>
-                  {uniqueDepartments.filter(dept => dept && dept.trim() !== '').map((dept) => (
+                  {uniqueDepartments.filter((dept): dept is string => typeof dept === 'string' && dept.trim() !== '').map((dept) => (
                     <SelectItem key={dept} value={dept}>{dept}</SelectItem>
                   ))}
                 </SelectContent>

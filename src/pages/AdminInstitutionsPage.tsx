@@ -4,19 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Trash2, Edit, Plus, Save, X, Search, GraduationCap, Building2, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, Edit, Plus, Save, X, Search, GraduationCap, Building2, ChevronDown, ChevronUp, Landmark } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Collapsible,
   CollapsibleContent,
@@ -26,17 +17,12 @@ import {
 interface Department {
   id: string;
   name: string;
-  description: string | null;
   is_active: boolean;
 }
 
 interface Institution {
   id: string;
   name: string;
-  description: string | null;
-  website: string | null;
-  contact_email: string | null;
-  contact_phone: string | null;
   logo_url: string | null;
   is_active: boolean;
   created_at: string;
@@ -54,10 +40,6 @@ const AdminInstitutionsPage = () => {
   
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
-    website: "",
-    contact_email: "",
-    contact_phone: "",
   });
 
   // Fetch institutions with departments
@@ -114,10 +96,6 @@ const AdminInstitutionsPage = () => {
         .from('institutions')
         .insert([{
           name: institutionData.name,
-          description: institutionData.description || null,
-          website: institutionData.website || null,
-          contact_email: institutionData.contact_email || null,
-          contact_phone: institutionData.contact_phone || null,
           is_active: true,
         }])
         .select()
@@ -128,6 +106,7 @@ const AdminInstitutionsPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
+      queryClient.invalidateQueries({ queryKey: ['homepage-institutions'] });
       toast.success('המוסד נוסף בהצלחה!');
       resetForm();
     },
@@ -143,10 +122,6 @@ const AdminInstitutionsPage = () => {
         .from('institutions')
         .update({
           name: data.name,
-          description: data.description || null,
-          website: data.website || null,
-          contact_email: data.contact_email || null,
-          contact_phone: data.contact_phone || null,
         })
         .eq('id', id);
       
@@ -154,6 +129,7 @@ const AdminInstitutionsPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
+      queryClient.invalidateQueries({ queryKey: ['homepage-institutions'] });
       toast.success('המוסד עודכן בהצלחה!');
       resetForm();
     },
@@ -174,6 +150,7 @@ const AdminInstitutionsPage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['institutions-with-departments'] });
+      queryClient.invalidateQueries({ queryKey: ['homepage-institutions'] });
       toast.success('המוסד נמחק בהצלחה!');
     },
     onError: (error) => {
@@ -225,7 +202,7 @@ const AdminInstitutionsPage = () => {
   });
 
   const resetForm = () => {
-    setFormData({ name: "", description: "", website: "", contact_email: "", contact_phone: "" });
+    setFormData({ name: "" });
     setIsCreating(false);
     setEditingId(null);
   };
@@ -248,17 +225,13 @@ const AdminInstitutionsPage = () => {
   const handleEdit = (institution: Institution) => {
     setFormData({
       name: institution.name,
-      description: institution.description || "",
-      website: institution.website || "",
-      contact_email: institution.contact_email || "",
-      contact_phone: institution.contact_phone || "",
     });
     setEditingId(institution.id);
     setIsCreating(true);
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('האם אתה בטוח שברצונך למחוק מוסד זה? כל החוגים המשויכים יימחקו גם.')) {
+    if (confirm('האם אתה בטוח שברצונך למחוק מוסד זה? כל החוגים והקורסים המשויכים יושפעו.')) {
       deleteMutation.mutate(id);
     }
   };
@@ -270,7 +243,7 @@ const AdminInstitutionsPage = () => {
   };
 
   const handleDeleteDepartment = (deptId: string) => {
-    if (confirm('האם אתה בטוח שברצונך למחוק חוג זה?')) {
+    if (confirm('האם אתה בטוח? מחיקת החוג תשפיע על כל הקורסים המשויכים אליו.')) {
       deleteDepartmentMutation.mutate(deptId);
     }
   };
@@ -296,7 +269,7 @@ const AdminInstitutionsPage = () => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-foreground mb-6">ניהול מוסדות וחוגים</h1>
 
-        {/* Institution Form */}
+        {/* Institution Form - Simplified */}
         {(isCreating || editingId) && (
           <Card className="mb-8 border-2 border-primary/20">
             <CardHeader>
@@ -306,72 +279,30 @@ const AdminInstitutionsPage = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className="flex items-end gap-4">
+                  {/* Icon Preview */}
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <Landmark className="w-8 h-8 text-white" />
+                  </div>
+                  
+                  {/* Name Input */}
+                  <div className="flex-1 space-y-2">
                     <Label htmlFor="name">שם המוסד *</Label>
                     <Input
                       id="name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="למשל: הטכניון - מכון טכנולוגי לישראל"
+                      placeholder="למשל: אוניברסיטת בר אילן"
                       required
                       className="text-right"
                     />
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="website">אתר אינטרנט</Label>
-                    <Input
-                      id="website"
-                      value={formData.website}
-                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                      placeholder="https://www.example.ac.il"
-                      className="text-right"
-                      dir="ltr"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="contact_email">אימייל ליצירת קשר</Label>
-                    <Input
-                      id="contact_email"
-                      type="email"
-                      value={formData.contact_email}
-                      onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                      placeholder="contact@example.ac.il"
-                      className="text-right"
-                      dir="ltr"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="contact_phone">טלפון ליצירת קשר</Label>
-                    <Input
-                      id="contact_phone"
-                      value={formData.contact_phone}
-                      onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
-                      placeholder="03-1234567"
-                      className="text-right"
-                    />
-                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">תיאור</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="תיאור קצר על המוסד..."
-                    className="text-right min-h-[80px]"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4">
+                <div className="flex gap-3 pt-2">
                   <Button 
                     type="submit" 
                     disabled={createMutation.isPending || updateMutation.isPending}
-                    className="flex-1"
                   >
                     <Save className="w-4 h-4 ml-2" />
                     {editingId ? 'עדכן מוסד' : 'הוסף מוסד'}
@@ -380,7 +311,6 @@ const AdminInstitutionsPage = () => {
                     type="button" 
                     variant="outline" 
                     onClick={resetForm}
-                    className="flex-1"
                   >
                     <X className="w-4 h-4 ml-2" />
                     ביטול
@@ -447,7 +377,9 @@ const AdminInstitutionsPage = () => {
                       <CollapsibleTrigger asChild>
                         <div className="flex items-center justify-between p-4 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
                           <div className="flex items-center gap-3">
-                            <GraduationCap className="w-6 h-6 text-primary" />
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow">
+                              <Landmark className="w-5 h-5 text-white" />
+                            </div>
                             <div>
                               <h3 className="font-semibold text-lg">{institution.name}</h3>
                               <p className="text-sm text-muted-foreground">
@@ -531,6 +463,7 @@ const AdminInstitutionsPage = () => {
                                     onClick={() => handleDeleteDepartment(dept.id)}
                                     className="hover:text-destructive transition-colors"
                                     disabled={deleteDepartmentMutation.isPending}
+                                    title="מחק חוג"
                                   >
                                     <X className="w-3 h-3" />
                                   </button>
