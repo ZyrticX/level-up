@@ -32,7 +32,7 @@ const HeroSection = () => {
               {/* Square Image Container */}
               <div className="relative w-[400px] h-[400px] xl:w-[480px] xl:h-[480px] rounded-3xl overflow-hidden shadow-2xl shadow-cyan-500/20 border-2 border-cyan-400/20">
                 <img 
-                  src="/hero-levelup.png.jpg" 
+                  src="/hero-levelup.png" 
                   alt="LevelUp Academy - פלטפורמת למידה" 
                   className="w-full h-full object-cover"
                 />
